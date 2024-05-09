@@ -1,35 +1,35 @@
 {
     "languages": [
-      { "name": "TypeScript", "icon": "/icons/language/Typescript.png", "link": "" },
-      { "name": "JavaScript", "icon": "/icons/language/Javascript.png", "link": "" },
-      { "name": "C#", "icon": "/icons/language/C-sharp.png", "link": "" },
-      { "name": "Bootstrap", "icon": "/icons/language/Bootstrap.png", "link": "" },
-      { "name": "C++", "icon": "/icons/language/C++.png", "link": "" },
-      { "name": "Html", "icon": "/icons/language/Html.png", "link": "" },
-      { "name": "Java", "icon": "/icons/language/Java.png", "link": "" },
-      { "name": "Tailwindcss", "icon": "/icons/language/Tailwindcss.png", "link": "" }
+      { "name": "TypeScript", "icon": "/icons/language/Typescript.png", "link": "https://www.typescriptlang.org/" },
+      { "name": "JavaScript", "icon": "/icons/language/Javascript.png", "link": "https://www.javascript.com/" },
+      { "name": "C#", "icon": "/icons/language/C-sharp.png", "link": "https://www.w3schools.com/cs/index.php" },
+      { "name": "Bootstrap", "icon": "/icons/language/Bootstrap.png", "link": "https://getbootstrap.com/" },
+      { "name": "C++", "icon": "/icons/language/C++.png", "link": "https://cplusplus.com/" },
+      { "name": "Html", "icon": "/icons/language/Html.png", "link": "https://www.w3schools.com/html/" },
+      { "name": "Java", "icon": "/icons/language/Java.png", "link": "https://www.java.com/zh-CN/" },
+      { "name": "Tailwindcss", "icon": "/icons/language/Tailwindcss.png", "link": "https://tailwindcss.com/" }
     ],
     "frameworks": [
-      { "name": ".NET", "icon": "/icons/framework/dotNet.png", "link": "" },
-      { "name": "React", "icon": "/icons/framework/React.png", "link": "" },
-      { "name": "Nodejs", "icon": "/icons/framework/NodeJS.jpg", "link": "" },
-      { "name": "Angular", "icon": "/icons/framework/Angular.jpg", "link": "" },
-      { "name": "Django", "icon": "/icons/framework/Django.png", "link": "" },
-      { "name": "Express", "icon": "/icons/framework/Express.jpg", "link": "" },
-      { "name": "JavaFx", "icon": "/icons/framework/JavaFx.jpg"," link": "" },
-      { "name": "PyTorch", "icon": "/icons/framework/PyTorch.jpg", "link": "" },
-      { "name": "SpringBoot", "icon": "/icons/framework/SpringBoot.png", "link": "" }
+      { "name": ".NET", "icon": "/icons/framework/dotNet.png", "link": "https://dotnet.microsoft.com/zh-cn/" },
+      { "name": "React", "icon": "/icons/framework/React.png", "link": "https://react.dev/" },
+      { "name": "Nodejs", "icon": "/icons/framework/NodeJS.jpg", "link": "https://nodejs.org/en" },
+      { "name": "Angular", "icon": "/icons/framework/Angular.jpg", "link": "https://angular.io/" },
+      { "name": "Django", "icon": "/icons/framework/Django.png", "link": "https://www.djangoproject.com/" },
+      { "name": "ExpressJS", "icon": "/icons/framework/Express.jpg", "link": "https://expressjs.com/" },
+      { "name": "JavaFx", "icon": "/icons/framework/JavaFx.jpg"," link": "https://openjfx.io/" },
+      { "name": "PyTorch", "icon": "/icons/framework/PyTorch.jpg", "link": "https://pytorch.org/" },
+      { "name": "SpringBoot", "icon": "/icons/framework/SpringBoot.png", "link": "https://spring.io/projects/spring-boot" }
     ],
     "tools": [
-      { "name": "Git", "icon": "/icons/system/Git.png", "link": "" },
-      { "name": "Linux", "icon": "/icons/system/Linux.png", "link": "" },
-      { "name": "JUnit", "icon": "/icons/system/Junit.png", "link": "" },
-      { "name": "Anaconda", "icon": "/icons/system/Anaconda.png", "link": "" },
-      { "name": "Eclipse", "icon": "/icons/system/Eclipse.png", "link": "" },
-      { "name": "IntelliJ IDEA", "icon": "/icons/system/Idea.png", "link": "" },
-      { "name": "Apache NetBeans IDE", "icon": "/icons/system/NetBeans.png", "link": "" },
-      { "name": "Visual Studio", "icon": "/icons/system/VS.png", "link": "" },
-      { "name": "VScode", "icon": "/icons/system/Vscode.png", "link": "" }
+      { "name": "Git", "icon": "/icons/system/Git.png", "link": "https://git-scm.com/" },
+      { "name": "Linux", "icon": "/icons/system/Linux.png", "link": "https://www.linux.org/" },
+      { "name": "JUnit", "icon": "/icons/system/JUnit.png", "link": "https://junit.org/junit5/" },
+      { "name": "Anaconda", "icon": "/icons/system/Anaconda.png", "link": "https://www.anaconda.com/" },
+      { "name": "Eclipse", "icon": "/icons/system/Eclipse.png", "link": "https://www.eclipse.org/" },
+      { "name": "IntelliJ IDEA", "icon": "/icons/system/Idea.png", "link": "https://www.jetbrains.com/idea/" },
+      { "name": "Apache NetBeans IDE", "icon": "/icons/system/NetBeans.png", "link": "https://netbeans.apache.org/front/main/index.html" },
+      { "name": "Visual Studio", "icon": "/icons/system/VS.png", "link": "https://visualstudio.microsoft.com/zh-hans/" },
+      { "name": "VScode", "icon": "/icons/system/Vscode.png", "link": "https://code.visualstudio.com/" }
     ]
   }
   
