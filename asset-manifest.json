@@ -1,14 +1,13 @@
 {
   "files": {
     "main.css": "/jsheng0722/jsheng0722.github.io/static/css/main.07e3d38b.css",
-    "main.js": "/jsheng0722/jsheng0722.github.io/static/js/main.73d72f35.js",
-    "static/media/avatar.png": "/jsheng0722/jsheng0722.github.io/static/media/avatar.24ab5859f07e15f026ef.png",
+    "main.js": "/jsheng0722/jsheng0722.github.io/static/js/main.78e32e28.js",
     "index.html": "/jsheng0722/jsheng0722.github.io/index.html",
     "main.07e3d38b.css.map": "/jsheng0722/jsheng0722.github.io/static/css/main.07e3d38b.css.map",
-    "main.73d72f35.js.map": "/jsheng0722/jsheng0722.github.io/static/js/main.73d72f35.js.map"
+    "main.78e32e28.js.map": "/jsheng0722/jsheng0722.github.io/static/js/main.78e32e28.js.map"
   },
   "entrypoints": [
     "static/css/main.07e3d38b.css",
-    "static/js/main.73d72f35.js"
+    "static/js/main.78e32e28.js"
   ]
 }
