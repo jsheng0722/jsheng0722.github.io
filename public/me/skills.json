@@ -1,0 +1,35 @@
+{
+    "languages": [
+      { "name": "TypeScript", "icon": "/icons/language/Typescript.png", "link": "" },
+      { "name": "JavaScript", "icon": "/icons/language/Javascript.png", "link": "" },
+      { "name": "C#", "icon": "/icons/language/C-sharp.png", "link": "" },
+      { "name": "Bootstrap", "icon": "/icons/language/Bootstrap.png", "link": "" },
+      { "name": "C++", "icon": "/icons/language/C++.png", "link": "" },
+      { "name": "Html", "icon": "/icons/language/Html.png", "link": "" },
+      { "name": "Java", "icon": "/icons/language/Java.png", "link": "" },
+      { "name": "Tailwindcss", "icon": "/icons/language/Tailwindcss.png", "link": "" }
+    ],
+    "frameworks": [
+      { "name": ".NET", "icon": "/icons/framework/dotNet.png", "link": "" },
+      { "name": "React", "icon": "/icons/framework/React.png", "link": "" },
+      { "name": "Nodejs", "icon": "/icons/framework/NodeJS.jpg", "link": "" },
+      { "name": "Angular", "icon": "/icons/framework/Angular.jpg", "link": "" },
+      { "name": "Django", "icon": "/icons/framework/Django.png", "link": "" },
+      { "name": "Express", "icon": "/icons/framework/Express.jpg", "link": "" },
+      { "name": "JavaFx", "icon": "/icons/framework/JavaFx.jpg"," link": "" },
+      { "name": "PyTorch", "icon": "/icons/framework/PyTorch.jpg", "link": "" },
+      { "name": "SpringBoot", "icon": "/icons/framework/SpringBoot.png", "link": "" }
+    ],
+    "tools": [
+      { "name": "Git", "icon": "/icons/system/Git.png", "link": "" },
+      { "name": "Linux", "icon": "/icons/system/Linux.png", "link": "" },
+      { "name": "JUnit", "icon": "/icons/system/Junit.png", "link": "" },
+      { "name": "Anaconda", "icon": "/icons/system/Anaconda.png", "link": "" },
+      { "name": "Eclipse", "icon": "/icons/system/Eclipse.png", "link": "" },
+      { "name": "IntelliJ IDEA", "icon": "/icons/system/Idea.png", "link": "" },
+      { "name": "Apache NetBeans IDE", "icon": "/icons/system/NetBeans.png", "link": "" },
+      { "name": "Visual Studio", "icon": "/icons/system/VS.png", "link": "" },
+      { "name": "VScode", "icon": "/icons/system/Vscode.png", "link": "" }
+    ]
+  }
+  
