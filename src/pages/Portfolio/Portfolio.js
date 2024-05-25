@@ -63,7 +63,7 @@ const About = ({ scrollToContact }) => {
                 </div>
             </div>
             <div className='w-[50%] lg:block hidden'>
-                <img src="/images/me.jpg" alt="About Me" className="mt-4 rounded"/>
+                <img src={`${process.env.PUBLIC_URL + "/images/me.jpg"}`} alt="About Me" className="mt-4 rounded"/>
             </div>
         </div>
     );
@@ -74,7 +74,7 @@ const Education = () => {
     const [educationData, setEducationData] = useState([]);
 
     useEffect(() => {
-        fetch('/me/schools.json') // Adjust the path if your JSON file is located elsewhere
+        fetch(`${process.env.PUBLIC_URL}/me/schools.json`) // Adjust the path if your JSON file is located elsewhere
         .then(response => response.json())
         .then(data => setEducationData(data))
         .catch(error => console.error('Error loading education data:', error));
@@ -86,7 +86,7 @@ const Education = () => {
             <p className='text-sm mt-2 text-gray-400 w-[70%]'>Below are some of the projects I've worked on, showcasing my skills and expertise in software development and engineering:</p>
             <div className="flex flex-row flex-wrap justify-center items-center content-center self-stretch">
                 <div className='flex-[4] hidden sm:inline'>
-                    <img src="/images/edu.jpg" alt="Placeholder" className="w-full h-auto rounded-[30%]" />
+                    <img src={`${process.env.PUBLIC_URL + "/images/edu.jpg"}`} alt="Placeholder" className="w-full h-auto rounded-[30%]" />
                 </div>
                 <div className='flex-[8] ml-10'>
                 {educationData.map((edu, index) => (
@@ -112,7 +112,7 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        fetch('/me/projects.json')
+        fetch(`${process.env.PUBLIC_URL}/me/projects.json`)
         .then(response => response.json())
         .then(data => setProjects(data))
         .catch(error => console.error('Error loading the projects data:', error));
@@ -149,7 +149,7 @@ const Skills = () => {
     const [skillsData, setSkillsData] = useState({ languages: [], frameworks: [], tools: [] });
 
     useEffect(() => {
-        fetch('/me/skills.json')
+        fetch(`${process.env.PUBLIC_URL}/me/skills.json`)
             .then(response => response.json())
             .then(data => setSkillsData(data))
             .catch(error => console.error('Error loading skills data:', error));
@@ -172,7 +172,7 @@ const Testimonials = () => {
     const [testimonials, setTestimonials] = useState([]);
 
     useEffect(() => {
-        fetch('/me/testimonial.json')  // Adjust the path if your JSON file is located elsewhere
+        fetch(`${process.env.PUBLIC_URL}/me/testimonial.json`)  // Adjust the path if your JSON file is located elsewhere
             .then(response => response.json())
             .then(data => setTestimonials(data))
             .catch(error => console.error('Error loading testimonials data:', error));
@@ -206,7 +206,7 @@ const Contact = forwardRef((props, ref) => {
     return (
         <div className='flex flex-row justify-center items-center mt-8 mb-10'>
             <div className='flex-1 w-[80%] ml-5 hidden md:inline'>
-                <img src="/images/contact.jpg" alt="Contact me" className="w-full h-auto rounded" />
+                <img src={`${process.env.PUBLIC_URL + "/images/contact.jpg"}`} alt="Contact me" className="w-full h-auto rounded" />
             </div>
             <div ref={ref} className="flex-1 bg-blue-500 text-white p-10 ml-10 mr-10 rounded">
                 <h2 className="text-3xl font-semibold">Contact Me</h2>

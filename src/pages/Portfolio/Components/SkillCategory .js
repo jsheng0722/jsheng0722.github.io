@@ -7,7 +7,7 @@ function SkillCategory ({ title, skills }) {
             <div className="grid grid-cols-3 gap-8">
                 {skills.map((skill, index) => (
                     <a key={index} href={skill.link} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center">
-                        <img src={skill.icon} alt={skill.name} className="h-12 w-12 rounded-full"/>
+                        <img src={`${process.env.PUBLIC_URL + skill.icon}`} alt={skill.name} className="h-12 w-12 rounded-full"/>
                         <span className="text-sm mt-1 w-20 text-center overflow-hidden">{skill.name}</span>
                     </a>
                 ))}

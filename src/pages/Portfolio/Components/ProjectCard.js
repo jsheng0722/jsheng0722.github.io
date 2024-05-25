@@ -5,7 +5,7 @@ const ProjectCard = ({ title, description, listItems, imageUrl, technology, peri
         <div className="w-full p-4">
             <div className="h-full p-6 rounded shadow-lg bg-gray-50 flex flex-row justify-between items-center">
                 <div className='flex-[3]'>
-                    <img src={imageUrl} alt={title} className="w-full h-32 object-cover rounded" />
+                    <img src={`${process.env.PUBLIC_URL + imageUrl}`} alt={title} className="w-full h-32 object-cover rounded" />
                 </div>
                 <div className='flex flex-[9] flex-col ml-10'>
                     <h3 className="mt-2 mb-2 font-bold text-lg">{title}</h3>

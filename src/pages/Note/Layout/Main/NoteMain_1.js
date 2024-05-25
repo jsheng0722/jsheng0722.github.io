@@ -51,7 +51,10 @@ function NoteMain_1({ note }) {
                     ))}
                     <hr className='mt-2 mb-2' />
                     <div className="mt-8">
-                        <ReactMarkdown className='markdown-body'>{note.content}</ReactMarkdown>
+                        <ReactMarkdown 
+                          className='markdown-body' 
+                          children={note.content}
+                        />
                     </div>
                 </div>
             )}

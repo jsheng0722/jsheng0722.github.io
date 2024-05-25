@@ -3,7 +3,6 @@ import UserProfile from "../../UserRelated/Profile/UserProfile";
 // import SearchBar from '../Searchbar/Searchbar';
 import LeftSideMenu from "../../UserRelated/SideMenu/LeftSideMenu";
 import React, { useState } from 'react';
-import avatar from '../../../images/avatar.png';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +14,7 @@ function Header() {
     <div className="flex w-[20%]">
       {/* Top bar for mobile */}
       <div className="flex bg-green-900 w-full md:hidden text-white items-center justify-center">
-          <LeftSideMenu avatar={avatar} isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          <LeftSideMenu avatar='/images/avatar.png' isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
       </div>
     </div>
     <div className="flex w-full items-center justify-center">

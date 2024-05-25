@@ -1,12 +1,10 @@
 import React from 'react';
-import avatar from '../../../images/avatar.png';
-import faceIconDataUrl from '../../../images/faceIcon.dataurl';
 
 function CommentSend(props) {
   const { comment, setComment, handleAddComment } = props;
 
   const customIconStyle = {
-    backgroundImage: `url('${faceIconDataUrl}')`,
+    backgroundImage: `url('images/faceIcon.dataurl')`,
     backgroundSize: 'cover', // Cover the entire area of the icon
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat'
@@ -25,7 +23,7 @@ function CommentSend(props) {
   return (
     <div className="my-2.5 w-[90%]">  
       <div className="float-left relative m-1.5 ml-1">
-        <img className="w-12 h-12 rounded-full" src={avatar} alt="User Avatar" />
+        <img className="w-12 h-12 rounded-full" src=`${process.env.PUBLIC_URL +'/images/avatar.png'}` alt="User Avatar" />
       </div>
       <div className="flex w-full relative ml-20 mr-20">
         <textarea

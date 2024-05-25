@@ -1,5 +1,6 @@
 // webpack.config.js
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   // Basic Webpack setup
@@ -7,6 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -15,8 +17,12 @@ module.exports = {
         type: 'asset/source',
       },
       {
-        test: /\.(txt|md)$/,
+        test: /\.(txt|md|json)$/,
         type: 'asset/source',
+      },
+      {
+        test: /\.(png|jpg|jpeg|gif|svg)$/,  // 确保可以处理图片
+        type: 'asset/resource',
       },
       {
         test: /\.css$/,
@@ -47,5 +53,5 @@ module.exports = {
         }
       },
     ],
-  },
+  }
 }

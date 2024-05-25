@@ -3,7 +3,7 @@ import React from 'react';
 const Card = ({ title, region, major, destitle, description, imageUrl }) => {
     return (
         <div className="flex sm:flex-row m-4 items-center justify-center flex-col">
-            <img className="w-auto h-[100px]" src={imageUrl} alt="Display" />
+            <img className="w-auto h-[100px]" src={`${process.env.PUBLIC_URL + imageUrl}`} alt="Display" />
             <div className="p-4">
                 <div className="text-x mb-2">
                     <div className='text-x text-right'><strong className='flex text-left'>{title}</strong>{region}</div>

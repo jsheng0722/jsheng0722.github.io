@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import avatar from '../../../images/avatar.png';
 import UserAvatarDropdown from './UserAvatarDropDown';
 
 function UserProfile() {
@@ -12,7 +11,7 @@ function UserProfile() {
         <div className="flex">
             {/* Main content area might include these components conditionally */}
             <header className="flex flex-row justify-between items-center p-4">
-                <UserAvatarDropdown avatar={avatar} isDropdownOpen={isDropdownOpen} toggleDropdown={toggleDropdown} />
+                <UserAvatarDropdown avatar='/images/avatar.png' isDropdownOpen={isDropdownOpen} toggleDropdown={toggleDropdown} />
             </header>
             {/* Rest of the page content */}
         </div>

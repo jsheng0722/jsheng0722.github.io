@@ -13,6 +13,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/notes" element={<NotePage />} />
         <Route path="/portfolio" element={<Portfolio />} />
+        {/* <Route path="/projects" component={Projects /} /> */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
