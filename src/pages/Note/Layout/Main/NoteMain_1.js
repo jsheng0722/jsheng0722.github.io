@@ -3,6 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import 'github-markdown-css';
 import { useModal } from '../../ModalProvider';
 import Modal from 'react-modal';
+// import Comment from '../../../../components/Comment/Comment_1'
+// import Comments from '../../../../components/Comment_1/Comments';
 
 Modal.setAppElement('#root');
 
@@ -28,7 +30,7 @@ const TutorModal = ({ closeModal, isOpen }) => {
 };
 
 function NoteMain_1({ note }) {
-    const excludeKeys = ['id', 'title', 'author', 'date', 'content'];
+    const excludeKeys = ['id', 'title', 'author', 'date', 'tags', 'content'];
     const { modalIsOpen, closeModal } = useModal();
     const formatKey = (key) => key.charAt(0).toUpperCase() + key.slice(1);
 
@@ -44,18 +46,36 @@ function NoteMain_1({ note }) {
                     <div className='mt-3'>
                         <strong>Date:</strong> {note.date}
                     </div>
+                    <div className='mt-3'>
+                        <strong className='mr-2'>Tags:</strong>
+                        {note.tags.map(tag => (
+                            <span key={tag} className="p-2 rounded text-[white] bg-gray-600 m-2">{tag}</span>
+                        ))}
+                    </div>
+
                     {Object.entries(note).filter(([key]) => !excludeKeys.includes(key)).map(([key, value]) => (
                         <div className='mt-3' key={key}>
                             <strong>{formatKey(key)}:</strong> {value}
                         </div>
                     ))}
                     <hr className='mt-2 mb-2' />
-                    <div className="mt-8">
+                    <div className="mt-8 mb-20">
                         <ReactMarkdown 
                           className='markdown-body' 
                           children={note.content}
                         />
                     </div>
+                    {/* <div className='pt-10'>
+                        <hr />
+                        <p className='p-2 text-[1.7vw]'>Comments: </p>
+                        <Comment />
+                    </div> */}
+
+                    {/* <div className='pt-10'>
+                        <hr />
+                        <p className='p-2 text-[1.7vw]'>Comments: </p>
+                        <Comments currentUserId="1"/>
+                    </div> */}
                 </div>
             )}
 

@@ -7,6 +7,32 @@ const srcDirectory = path.join(__dirname, '../src/content');
 const destDirectory = path.join(__dirname, '../public/content');
 const outputJson = path.join(destDirectory, 'noteList_p.json');
 const outputJson_1 = path.join(destDirectory, 'noteList_s.json');
+const tagsJson = path.join(destDirectory, 'tags.json');
+
+const updateTagsJson = (newTags) => {
+    fs.readFile(tagsJson, 'utf8', (err, data) => {
+        let tags = {};
+        if (!err && data) {
+            tags = JSON.parse(data);
+        }
+
+        newTags.forEach(tag => {
+            if (tags[tag]) {
+                tags[tag]++;
+            } else {
+                tags[tag] = 1;
+            }
+        });
+
+        fs.writeFile(tagsJson, JSON.stringify(tags, null, 2), 'utf8', err => {
+            if (err) {
+                console.error('Failed to write tags:', err);
+            } else {
+                console.log('Tags updated successfully.');
+            }
+        });
+    });
+};
 
 
 const readMarkdown = (filePath) => {
@@ -57,6 +83,7 @@ let postlist = []
 const getPosts = () => {
     const promises = [];
     fs.readdir(srcDirectory, (err, files) => {
+        let allTags = []
         console.log("There are " + files.length + " files in the content folder.")
         if (err) {
             console.error('Failed to read directory:', err);
@@ -87,10 +114,14 @@ const getPosts = () => {
                                 if (metadataIndices.length > 0){
                                     let metadata = lines.slice(metadataIndices[0] + 1,metadataIndices[1])
                                     metadata.forEach(line => {
-                                        let l = line.split(": ")
-                                        obj[l[0]] = l[1]
-                                    })
-                                    return obj
+                                        let [key, value] = line.split(": ").map(item => item.trim());
+                                        if (value.startsWith('[') && value.endsWith(']')) {
+                                            obj[key] = value.slice(1, -1).split(',').map(tag => tag.trim());
+                                        } else {
+                                            obj[key] = value;
+                                        }
+                                    });
+                                    return obj;
                                 }
                             }
                             const parseContent = ({lines,metadataIndices}) =>{
@@ -109,10 +140,14 @@ const getPosts = () => {
                                 title: metadata.title ? metadata.title : "No title",
                                 author: metadata.author ? metadata.author : "No author",
                                 date: metadata.date ? metadata.date : "No date",
+                                tags: metadata.tags ? metadata.tags : "No tags",
                                 content: content ? content : "No content",
                             }
                             postlist.push(post)
-                            
+
+                            if (metadata.tags) {
+                                allTags = [...allTags, ...metadata.tags];
+                            }
                             resolve();
                         });
                     } else {
@@ -124,6 +159,7 @@ const getPosts = () => {
         Promise.all(promises)
             .then(() => {
                 console.log(postlist.length + " are readable.")
+                updateTagsJson(allTags);
                 fs.writeFileSync(outputJson_1, JSON.stringify(postlist, null, 2), err => {
                     if (err) {
                         console.error('Failed to write note list:', err);

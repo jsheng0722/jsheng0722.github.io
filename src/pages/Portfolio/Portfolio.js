@@ -56,7 +56,7 @@ const About = ({ scrollToContact }) => {
                     </button>
                     <button 
                         className="bg-transparent border-2 border-blue-700 text-blue-700 font-semibold py-2 px-4 rounded hover:bg-blue-700 hover:text-white transition duration-300"
-                        onClick={() => {/* Add functionality here, such as scrolling to another section or handling a different action */}}
+                        onClick={() => window.open(`${process.env.PUBLIC_URL}/me/resume_Jih.pdf`, '_blank')}
                     >
                         Resume
                     </button>
@@ -98,6 +98,7 @@ const Education = () => {
                     destitle={edu.destitle}
                     description={edu.description}
                     imageUrl={edu.imageUrl}
+                    linkUrl={edu.linkUrl}
                     />
                 ))}
                 </div>
@@ -132,14 +133,15 @@ const Projects = () => {
                     imageUrl={project.imageUrl}
                     technology={project.technology}
                     period={project.period}
+                    path={project.path}
                     />
                 ))}
             </div>
-            <div className='flex justify-center items-center'>
+            {/* <div className='flex justify-center items-center'>
                 <button className="mt-6 px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300">
                     Show more
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };
@@ -196,12 +198,15 @@ const Contact = forwardRef((props, ref) => {
     const [name, setName] = useState('');
     const [message, setMessage] = useState('');
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Here, you would handle the form submission, such as sending data to a server or an API endpoint
-        console.log('Name:', name);
-        console.log('Message:', message);
+    const email = "sheng.jih@northeastern.edu";
+
+    const handleSendEmail = () => {
+        setName('');
+        setMessage('');
     };
+
+    // 构建 mailto 链接
+    const mailtoLink = `mailto:${email}?subject=Contact from ${name}&body=${message}`;
 
     return (
         <div className='flex flex-row justify-center items-center mt-8 mb-10'>
@@ -210,7 +215,7 @@ const Contact = forwardRef((props, ref) => {
             </div>
             <div ref={ref} className="flex-1 bg-blue-500 text-white p-10 ml-10 mr-10 rounded">
                 <h2 className="text-3xl font-semibold">Contact Me</h2>
-                <form className="mt-4" onSubmit={handleSubmit}>
+                <div className="mt-4">
                     <input 
                         type="text" 
                         placeholder="Your Name" 
@@ -224,8 +229,10 @@ const Contact = forwardRef((props, ref) => {
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                     />
-                    <button type="submit" className="bg-white text-blue-500 p-2 mt-2 rounded w-full">Send</button>
-                </form>
+                    <a href={mailtoLink} className="bg-white text-blue-500 p-2 mt-2 rounded w-full block text-center" onClick={handleSendEmail}>
+                        Send Email
+                    </a>
+                </div>
             </div>
         </div>
     );

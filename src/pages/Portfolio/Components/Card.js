@@ -1,10 +1,14 @@
 import React from 'react';
 
-const Card = ({ title, region, major, destitle, description, imageUrl }) => {
+const Card = ({ title, region, major, destitle, description, imageUrl, linkUrl }) => {
     return (
         <div className="flex sm:flex-row m-4 items-center justify-center flex-col">
-            <img className="w-auto h-[100px]" src={`${process.env.PUBLIC_URL + imageUrl}`} alt="Display" />
-            <div className="p-4">
+            <div className='flex-[3] w-[200px] h-auto'>
+                <a href={linkUrl} target="_blank" rel="noopener noreferrer" className="hover:opacity-75 transition-opacity duration-300">
+                    <img className="w-full h-auto" src={`${process.env.PUBLIC_URL + imageUrl}`} alt="Display" />
+                </a>
+            </div>
+            <div className="flex-[9] p-5">
                 <div className="text-x mb-2">
                     <div className='text-x text-right'><strong className='flex text-left'>{title}</strong>{region}</div>
                 </div>

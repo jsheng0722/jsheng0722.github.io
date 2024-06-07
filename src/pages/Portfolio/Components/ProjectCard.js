@@ -1,6 +1,11 @@
 import React from 'react';
 
-const ProjectCard = ({ title, description, listItems, imageUrl, technology, period }) => {
+const ProjectCard = ({ title, description, listItems, imageUrl, technology, period, path }) => {
+
+    const handleCardClick = () => {
+        window.location.href = path;
+    };
+
     return (
         <div className="w-full p-4">
             <div className="h-full p-6 rounded shadow-lg bg-gray-50 flex flex-row justify-between items-center">
@@ -16,6 +21,14 @@ const ProjectCard = ({ title, description, listItems, imageUrl, technology, peri
                         ))}
                     </ul>
                     <p className='text-sm mt-3 text-gray-700'><strong>Technology used: </strong>{technology}</p>
+                    <div className='flex flex-row text-sm mt-3 text-gray-700'>
+                        <strong>Link: </strong>
+                        <p className='text-sm ml-2 text-gray-700 hover:text-blue-500 cursor-pointer hover:underline' onClick={handleCardClick}>
+                            {path}
+                        </p>
+                    </div>
+                    
+
                     <div className="text-right">
                         <p>{period}</p>
                     </div>

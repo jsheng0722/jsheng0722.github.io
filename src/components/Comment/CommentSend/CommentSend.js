@@ -23,7 +23,7 @@ function CommentSend(props) {
   return (
     <div className="my-2.5 w-[90%]">  
       <div className="float-left relative m-1.5 ml-1">
-        <img className="w-12 h-12 rounded-full" src=`${process.env.PUBLIC_URL +'/images/avatar.png'}` alt="User Avatar" />
+        <img className="w-12 h-12 rounded-full" src={`${process.env.PUBLIC_URL +'/images/avatar.png'}`} alt="User Avatar" />
       </div>
       <div className="flex w-full relative ml-20 mr-20">
         <textarea
