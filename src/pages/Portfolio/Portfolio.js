@@ -201,6 +201,7 @@ const Contact = forwardRef((props, ref) => {
     const email = "sheng.jih@northeastern.edu";
 
     const handleSendEmail = () => {
+        window.location.href = mailtoLink;
         setName('');
         setMessage('');
     };
