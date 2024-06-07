@@ -1,27 +1,30 @@
 [
-    {
-      "title": "Task Management Website",
-      "description": "A responsive web application designed to simplify task management. Users can easily create, publish, and track tasks.",
-      "listItems": [
-        "Developed a responsive task management web application for users to create, publish, and track tasks.",
-        "Designed an intuitive web front-end using Angular, JavaScript, and CSS.",
-        "Created the REST server using Node JS with Express and MongoDB Atlas as database.", 
-        "Created CURD operations for adding/editing/deleting tasks."
-      ],
-      "imageUrl": "images/taskm.png",
-      "technology":"Angular JS, Node JS, Express, JavaScript, MongoDB",
-      "period":"Jan-May / 2023"
-    },
-    {
-      "title": "Library Management System",
-      "description": "Developed a distributed library management system to streamline book borrowing and returning processes. The frontend was crafted using React and JavaScript, offering a user-friendly interface. The backend, built with .NET Core and MySQL, ensures a robust and scalable data management solution.",
-      "listItems": [
-        "Developed a distributed library management system using .NET Core Framework and SQL Server database.",
-        "Leveraged RPC protocol for distributed system implementation and Swagger UI for API definitions.", 
-        "Wrote script for frontend with React and JavaScript."
-      ],
-      "imageUrl": "images/librarym.png",
-      "technology":".NET Core, MySQL, React, JavaScript",
-      "period":"Sep-Dec / 2021"
-    }
-  ]
+  {
+    "title": "Task Management Website",
+    "description": "A responsive web application designed to simplify task management. Users can easily create, publish, and track tasks.",
+    "listItems": [
+      "Developed a responsive task management web application for users to create, publish, and track tasks.",
+      "Designed an intuitive web front-end using Angular, JavaScript, and CSS.",
+      "Created the REST server using Node JS with Express and MongoDB Atlas as database.", 
+      "Created CURD operations for adding/editing/deleting tasks."
+    ],
+    "imageUrl": "images/taskm.png",
+    "technology":"Angular JS, Node JS, Express, JavaScript, MongoDB",
+    "period":"Jan-May / 2023",
+    "path":"https://github.com/jsheng0722/INFO6150"
+  },
+  {
+    "title": "Data Analysis Project in Python",
+    "description": "Engaged in a comprehensive data analysis project aimed at extracting meaningful insights from large datasets using Python and Jupyter Lab. This project involved the application of various data science techniques to clean, analyze, and visualize data effectively.",
+    "listItems": [
+      "Utilized Pandas to clean and structure raw data into a more manageable format, ensuring high-quality data for analysis.",
+      "Applied statistical analysis techniques to explore complex data sets and identify underlying patterns or anomalies.", 
+      "Created compelling visualizations using Matplotlib and Seaborn to represent the data analytically and provide actionable insights.",
+      "Developed models to predict trends and outcomes based on historical data, enhancing decision-making processes."
+    ],
+    "imageUrl": "images/ds.png",
+    "technology":"Python, Jupyter Lab, Pandas, NumPy, Matplotlib, Seaborn",
+    "period":"Jan-Apr / 2024",
+    "path":"https://github.com/jsheng0722/INFO6105"
+  }
+]

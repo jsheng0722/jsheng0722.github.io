@@ -5,7 +5,8 @@
       "major": "Bachelor of Science in Computer Science, Minor in Mathematics",
       "destitle": "Relevant Courses:",
       "description": "Computer Security, Software Design Project I/II, Neural Network Design & Appl, Design & Analysis Algorithms, Programming Language Design, Artificial Intelligence, Intro to Data Mining, Intro to Machine Learning.",
-      "imageUrl": "images/wsu.png"
+      "imageUrl": "images/wsu.png",
+      "linkUrl": "https://wsu.edu/"
     },
     {
       "title": "Northeastern University ",
@@ -13,6 +14,7 @@
       "major": "Master of Science in Computer Software Engineering",
       "destitle": "Relevant Courses:",
       "description": "Web Design/User Experience, Concepts of Object-Oriented Design, Data Mgt and Database Design, Program Structure & Algorithms.",
-      "imageUrl": "images/neu.png"
+      "imageUrl": "images/neu.png",
+      "linkUrl": "https://www.northeastern.edu/"
     }
   ]
