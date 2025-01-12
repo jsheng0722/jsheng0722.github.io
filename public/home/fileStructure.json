@@ -1,0 +1,43 @@
+[
+  {
+    "type": "folder",
+    "name": "b",
+    "path": "b",
+    "children": [
+      {
+        "type": "file",
+        "name": "d",
+        "path": "b\\d"
+      }
+    ]
+  },
+  {
+    "type": "file",
+    "name": "c",
+    "path": "c"
+  },
+  {
+    "type": "file",
+    "name": "contact.html",
+    "path": "contact.html"
+  },
+  {
+    "type": "folder",
+    "name": "shop",
+    "path": "shop",
+    "children": [
+      {
+        "type": "folder",
+        "name": "cloth",
+        "path": "shop\\cloth",
+        "children": [
+          {
+            "type": "file",
+            "name": "shirt.json",
+            "path": "shop\\cloth\\shirt.json"
+          }
+        ]
+      }
+    ]
+  }
+]

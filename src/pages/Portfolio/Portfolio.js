@@ -9,21 +9,72 @@ import TestimonialCard from './Components/TestimonialCard';
 // Welcome Section
 const Welcome = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+    const [content, setContent] = useState('');
+    const [contentDate, setContentDate] = useState('');
+    const [history, setHistory] = useState([]);
 
+    useEffect(() => {
+        fetch(`${process.env.PUBLIC_URL}/me/thought.json`)
+            .then(response => response.json())
+            .then(data => {
+                setContent(data.current.text);
+                setContentDate(data.current.date);
+                setHistory(data.history);
+            });
+    }, []);
     return (
         <div className="bg-purple-700 text-white text-center pt-10 pb-4">
             <h1 className="text-4xl font-bold">Welcome to My Portfolio</h1>
             <p className="text-xl mt-2">Discover my world of coding and design</p>
             {/* Toggleable paragraph */}
-            <div>
+            <div className="relative inline-block">
                 {isOpen && (
-                    <p className="text-sm mt-2 mx-3 ">
-                        In both the realms of time and space, we are but mere specks of dust, influencing the limited matter around us while being affected by our surroundings. Our fleeting lives are filled with experiences, both desired and undesired, and every choice we make is grounded in our own capabilities and knowledge. As we journey through life, we refine ourselves with experience, striving for greater recognition, following our hearts, and cultivating our inner selves.
+                    <div>
+                    <p className="relative text-sm my-2 mx-3">
+                        {content}
+                        <span 
+                            className="mt-2 cursor-pointer" 
+                            title={`Date: ${contentDate}`}
+                            style={{ position: 'absolute', right: 0, transform: 'translateY(-50%)' }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar" viewBox="0 0 16 16">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                            </svg>
+                        </span>
                     </p>
+                    <button 
+                            onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                            className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
+                            id="options-menu"
+                            aria-haspopup="true"
+                            aria-expanded="true"
+                            >
+                            {isHistoryOpen ? 'View Current' : 'View History'}
+                        </button>
+                    </div>
+                )}
+                {isHistoryOpen && (
+                    <div className="text-sm mt-2 mx-3">
+                        {history.slice(0, 5).map((entry, index) => (
+                            <p key={index} className="mb-2 relative">
+                                {entry.text}
+                                <span 
+                                    className="ml-2 cursor-pointer" 
+                                    title={`Date: ${entry.date}`}
+                                    style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)' }}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar" viewBox="0 0 16 16">
+                                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+                                    </svg>
+                                </span>
+                            </p>
+                        ))}
+                    </div>
                 )}
                 <button 
                     onClick={() => setIsOpen(!isOpen)}
-                    className="text-purple-200 hover:text-white mt-2"
+                    className=" text-purple-200 hover:text-white mt-2"
                 >
                     {isOpen ? (
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

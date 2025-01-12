@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Code Runner</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; }
+  #editor, #output { width: 49%; height: 300px; vertical-align: top; float: left; margin: 5px; }
+  #editor { background-color: #f4f4f4; border: 1px solid #ccc; }
+  #output { border: 1px solid #000; background-color: white; }
+  button { clear: both; display: block; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <textarea id="editor">// 请输入代码\nfunction greet() {\n  return <h1>Hello, Runoob!</h1>;\n}</textarea>
+  <div id="output"></div>
+  <button onclick="runCode()">试一下</button>
+
+  <script>
+    function runCode() {
+      const input = document.getElementById("editor").value;
+      const output = document.getElementById("output");
+      try {
+        const transformedCode = Babel.transform(input, { presets: ['react'] }).code;
+        output.innerHTML = '';
+        new Function(transformedCode)();
+        ReactDOM.render(greet(), output);
+      } catch (err) {
+        output.innerHTML = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

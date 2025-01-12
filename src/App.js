@@ -4,6 +4,7 @@ import HomePage from './pages/Home/Home';
 import NotePage from './pages/Note/Note';
 import NotFoundPage from './pages/NotFoundPage';
 import Portfolio from './pages/Portfolio/Portfolio';
+import Products from "./pages/Products/Products";
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
         <Route path="/home" element={<HomePage />} />
         <Route path="/notes" element={<NotePage />} />
         <Route path="/portfolio" element={<Portfolio />} />
-        {/* <Route path="/projects" component={Projects /} /> */}
+        <Route path="/products" element={<Products />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

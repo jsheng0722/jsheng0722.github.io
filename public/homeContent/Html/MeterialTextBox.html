@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Material Design Text Inputs</title>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        padding: 20px;
+        background: #f7f7f7;
+    }
+    .form-group {
+        position: relative;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus {
+        border-color: #0056b3;
+    }
+    .form-group label {
+        position: absolute;
+        top: 18px;
+        left: 15px;
+        font-size: 16px;
+        color: #999;
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+    .form-group input:focus + label,
+    .form-group input:not(:placeholder-shown) + label {
+        top: -5px;
+        left: 12px;
+        font-size: 12px;
+        color: #0056b3;
+        background: #f7f7f7;
+        padding: 0 5px;
+    }
+</style>
+</head>
+<body>
+    <form>
+        <div class="form-group">
+            <input type="text" id="name" placeholder=" " required>
+            <label for="name" class="ml-1">Name</label>
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email" class="ml-1">Email</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" placeholder=" " required>
+            <label for="password" class="ml-1">Password</label>
+        </div>
+        <div class="form-group">
+            <input type="tel" id="phone" placeholder=" " required>
+            <label for="phone" class="ml-1">Phone</label>
+        </div>
+        <button type="submit" style="font-size: 16px; padding: 10px 20px; color: white; background-color: #0056b3; border: none; border-radius: 4px; cursor: pointer; justify-content: center;">
+            Submit
+        </button>
+    </form>
+</body>
+</html>
