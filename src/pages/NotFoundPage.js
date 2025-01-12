@@ -1,8 +1,21 @@
+// import React, { useEffect  } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Layout/Header/Header';
 
 function NotFoundPage() {
+  // const navigate = useNavigate();
+
+  // // 自动跳转逻辑
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     navigate('/'); // 计时结束后跳转到主页
+  //   }, 3000); // 3秒倒计时
+
+  //   return () => clearTimeout(timer); // 清理定时器
+  // }, [navigate]);
+
   return (
     <div>
     <Header/>
