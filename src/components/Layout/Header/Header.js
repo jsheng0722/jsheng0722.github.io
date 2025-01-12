@@ -14,7 +14,7 @@ function Header() {
     <div className="flex w-[20%]">
       {/* Top bar for mobile */}
       <div className="flex bg-green-900 w-full md:hidden text-white items-center justify-center">
-          <LeftSideMenu avatar='/images/me_avatar.png' isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          <LeftSideMenu avatar='/images/avatar.png' isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
       </div>
     </div>
     <div className="flex w-full items-center justify-center">
