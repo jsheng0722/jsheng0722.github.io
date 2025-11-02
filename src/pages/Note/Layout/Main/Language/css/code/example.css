@@ -1,0 +1,6 @@
+/* Example CSS snippet */
+.container {
+  display: flex;
+  gap: 12px;
+}
+

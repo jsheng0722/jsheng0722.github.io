@@ -1,0 +1,36 @@
+{
+  "structure": {
+    "intro": {
+      "start": 0,
+      "end": 15,
+      "label": "前奏"
+    },
+    "verse1": {
+      "start": 15,
+      "end": 45,
+      "label": "第一段"
+    },
+    "chorus": {
+      "start": 45,
+      "end": 75,
+      "label": "副歌"
+    },
+    "verse2": {
+      "start": 75,
+      "end": 105,
+      "label": "第二段"
+    },
+    "chorus2": {
+      "start": 105,
+      "end": 135,
+      "label": "副歌"
+    },
+    "outro": {
+      "start": 135,
+      "end": 150,
+      "label": "尾奏"
+    }
+  },
+  "highlights": [],
+  "notes": "请根据实际歌曲调整时间戳"
+}

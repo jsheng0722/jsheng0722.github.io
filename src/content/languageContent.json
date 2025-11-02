@@ -1,0 +1,62 @@
+[
+  {
+    "type": "folder",
+    "name": "Css",
+    "path": "css",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "css\\index.html"
+      }
+    ]
+  },
+  {
+    "type": "folder",
+    "name": "Html",
+    "path": "html",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "html\\index.html"
+      }
+    ]
+  },
+  {
+    "type": "folder",
+    "name": "Java",
+    "path": "java",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "java\\index.html"
+      }
+    ]
+  },
+  {
+    "type": "folder",
+    "name": "Javascript",
+    "path": "javascript",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "javascript\\index.html"
+      }
+    ]
+  },
+  {
+    "type": "folder",
+    "name": "Python",
+    "path": "python",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "python\\index.html"
+      }
+    ]
+  }
+]

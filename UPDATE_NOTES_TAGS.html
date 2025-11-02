@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更新笔记标签 - LeetCode → 算法</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .step {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .button:hover {
+            background: #2563eb;
+        }
+        .button.danger {
+            background: #ef4444;
+        }
+        .button.danger:hover {
+            background: #dc2626;
+        }
+        .status {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 更新笔记标签</h1>
+            <p>将 "LeetCode" 标签更新为 "算法"</p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ 重要提示：</strong>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>此操作会修改你的笔记数据</li>
+                <li>操作前会自动创建备份</li>
+                <li>请确保在正确的网站页面运行此脚本</li>
+                <li>建议先备份重要数据</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <h3>方法1：自动更新（推荐）</h3>
+            <p>点击按钮自动更新所有LeetCode标签为算法标签</p>
+            <button id="autoUpdateBtn" class="button">🔄 自动更新标签</button>
+            <button id="restoreBtn" class="button danger">🔄 恢复备份</button>
+            <div id="autoStatus" class="status" style="display: none;"></div>
+        </div>
+
+        <div class="step">
+            <h3>方法2：手动复制代码</h3>
+            <p>复制以下代码到浏览器控制台中运行：</p>
+            <div class="code-block" id="manualCode">// 更新笔记标签的代码
+const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+const backupKey = 'notes_backup_' + new Date().toISOString().replace(/[:.]/g, '-');
+
+// 创建备份
+localStorage.setItem(backupKey, JSON.stringify(notes));
+
+// 更新标签
+let updatedCount = 0;
+const updatedNotes = notes.map(note => {
+  if (note.category === 'LeetCode') {
+    updatedCount++;
+    console.log(`更新笔记: "${note.title}" 标签: LeetCode → 算法`);
+    return { ...note, category: '算法' };
+  }
+  return note;
+});
+
+// 保存更新后的笔记
+localStorage.setItem('notes', JSON.stringify(updatedNotes));
+
+console.log(`✅ 成功更新 ${updatedCount} 个笔记的标签`);
+console.log(`📦 备份键名: ${backupKey}`);
+            </div>
+            <button id="copyBtn" class="button">📋 复制代码</button>
+        </div>
+
+        <div class="step">
+            <h3>方法3：查看当前笔记</h3>
+            <p>查看当前存储的笔记数据和标签信息</p>
+            <button id="viewNotesBtn" class="button">👀 查看笔记数据</button>
+            <div id="notesInfo" class="code-block" style="display: none;"></div>
+        </div>
+
+        <div class="step">
+            <h3>📊 操作说明</h3>
+            <ol style="text-align: left; max-width: 600px; margin: 0 auto;">
+                <li><strong>自动更新</strong>：点击"自动更新标签"按钮，系统会自动处理</li>
+                <li><strong>手动更新</strong>：复制代码到控制台运行，适合高级用户</li>
+                <li><strong>查看数据</strong>：查看当前笔记数据，确认需要更新的内容</li>
+                <li><strong>恢复备份</strong>：如果更新出错，可以恢复之前的备份</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // 自动更新功能
+        document.getElementById('autoUpdateBtn').addEventListener('click', function() {
+            const statusDiv = document.getElementById('autoStatus');
+            
+            try {
+                // 检查是否在正确的页面
+                if (typeof localStorage === 'undefined') {
+                    statusDiv.textContent = '❌ 请在笔记网站页面运行此脚本';
+                    statusDiv.className = 'status error';
+                    statusDiv.style.display = 'block';
+                    return;
+                }
+
+                // 获取笔记数据
+                const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                
+                if (notes.length === 0) {
+                    statusDiv.textContent = 'ℹ️ 没有找到笔记数据';
+                    statusDiv.className = 'status info';
+                    statusDiv.style.display = 'block';
+                    return;
+                }
+
+                // 创建备份
+                const backupKey = 'notes_backup_' + new Date().toISOString().replace(/[:.]/g, '-');
+                localStorage.setItem(backupKey, JSON.stringify(notes));
+
+                // 更新标签
+                let updatedCount = 0;
+                const updatedNotes = notes.map(note => {
+                    if (note.category === 'LeetCode') {
+                        updatedCount++;
+                        return { ...note, category: '算法' };
+                    }
+                    return note;
+                });
+
+                // 保存更新后的笔记
+                localStorage.setItem('notes', JSON.stringify(updatedNotes));
+
+                if (updatedCount > 0) {
+                    statusDiv.innerHTML = `✅ 成功更新 ${updatedCount} 个笔记的标签<br>📦 备份键名: ${backupKey}<br>🎉 请刷新页面查看更新后的笔记`;
+                    statusDiv.className = 'status success';
+                } else {
+                    statusDiv.textContent = 'ℹ️ 没有找到需要更新的LeetCode标签笔记';
+                    statusDiv.className = 'status info';
+                }
+                statusDiv.style.display = 'block';
+
+            } catch (error) {
+                statusDiv.textContent = '❌ 更新失败: ' + error.message;
+                statusDiv.className = 'status error';
+                statusDiv.style.display = 'block';
+            }
+        });
+
+        // 恢复备份功能
+        document.getElementById('restoreBtn').addEventListener('click', function() {
+            const statusDiv = document.getElementById('autoStatus');
+            
+            try {
+                // 查找最新的备份
+                let backupKey = null;
+                for (let i = localStorage.length - 1; i >= 0; i--) {
+                    const key = localStorage.key(i);
+                    if (key && key.startsWith('notes_backup_')) {
+                        backupKey = key;
+                        break;
+                    }
+                }
+
+                if (!backupKey) {
+                    statusDiv.textContent = '❌ 没有找到备份数据';
+                    statusDiv.className = 'status error';
+                    statusDiv.style.display = 'block';
+                    return;
+                }
+
+                // 恢复备份
+                const backupData = localStorage.getItem(backupKey);
+                localStorage.setItem('notes', backupData);
+
+                statusDiv.innerHTML = `✅ 已恢复备份数据<br>📦 备份键名: ${backupKey}<br>🔄 请刷新页面查看恢复的笔记`;
+                statusDiv.className = 'status success';
+                statusDiv.style.display = 'block';
+
+            } catch (error) {
+                statusDiv.textContent = '❌ 恢复失败: ' + error.message;
+                statusDiv.className = 'status error';
+                statusDiv.style.display = 'block';
+            }
+        });
+
+        // 复制代码功能
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const codeBlock = document.getElementById('manualCode');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ 已复制';
+                btn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '#3b82f6';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制代码');
+            });
+        });
+
+        // 查看笔记数据功能
+        document.getElementById('viewNotesBtn').addEventListener('click', function() {
+            const infoDiv = document.getElementById('notesInfo');
+            
+            try {
+                const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+                
+                if (notes.length === 0) {
+                    infoDiv.textContent = '没有找到笔记数据';
+                    infoDiv.style.display = 'block';
+                    return;
+                }
+
+                // 统计标签信息
+                const categoryStats = {};
+                notes.forEach(note => {
+                    categoryStats[note.category] = (categoryStats[note.category] || 0) + 1;
+                });
+
+                let info = `📊 笔记统计信息:\n`;
+                info += `总笔记数: ${notes.length}\n\n`;
+                info += `📝 标签统计:\n`;
+                Object.entries(categoryStats).forEach(([category, count]) => {
+                    info += `${category}: ${count} 个\n`;
+                });
+
+                info += `\n📋 所有笔记列表:\n`;
+                notes.forEach((note, index) => {
+                    info += `${index + 1}. ${note.title} (${note.category})\n`;
+                });
+
+                infoDiv.textContent = info;
+                infoDiv.style.display = 'block';
+
+            } catch (error) {
+                infoDiv.textContent = '❌ 读取失败: ' + error.message;
+                infoDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

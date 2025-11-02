@@ -1,6 +1,6 @@
 {
   "name": "react-basic",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^10.9.1",
@@ -24,6 +24,8 @@
     "react-router-dom": "^6.23.0",
     "react-scripts": "^5.0.1",
     "react-simple-code-editor": "^0.14.1",
+    "react-syntax-highlighter": "^15.6.6",
+    "reactflow": "^11.11.4",
     "tailwindcss": "^3.4.3",
     "util": "^0.12.5",
     "uuid": "^9.0.0",
@@ -39,6 +41,12 @@
     "dev": "nodemon src/server.js",
     "generate-file-structure": "node src/generateFileStructure.js",
     "generate-home-content": "node src/generateHomeContent.js",
+    "generate-language-content": "node src/generateLanguageContent.js",
+    "generate-music-metadata": "node src/generateMusicMetadata.js",
+    "export-notes": "node src/exportNotesFromLocalStorage.js",
+    "add-music": "node add-music.js",
+    "generate-lyrics": "node src/autoLyricsGenerator.js",
+    "setup-music": "node src/smartMusicManager.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -61,6 +69,7 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.6.0",
     "nodemon": "^3.1.0",

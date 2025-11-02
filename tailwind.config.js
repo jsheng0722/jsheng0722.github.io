@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class', // enable class-based dark mode
   content: ["./src/**/*.{html,js}",],
   theme: {
     extend: {
@@ -18,6 +19,7 @@ module.exports = {
   plugins: [
     require('tailwindcss'),
     require('autoprefixer'),
+    require('@tailwindcss/typography'),
   ],
 }
 

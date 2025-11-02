@@ -26,5 +26,19 @@
     "technology":"Python, Jupyter Lab, Pandas, NumPy, Matplotlib, Seaborn",
     "period":"Jan-Apr / 2024",
     "path":"https://github.com/jsheng0722/INFO6105"
+  },
+  {
+    "title": "Game Design",
+    "description": "Designed and developed core elements of a third-person survival game, focusing on essential gameplay features and foundational components. The project involved creating character animations, implementing materials, designing UI interfaces, and crafting immersive maps.",
+    "listItems": [
+      "Developed and implemented realistic character animations, enhancing gameplay immersion and player experience.",
+      "Created and applied materials to game objects, ensuring visual consistency and aesthetic appeal.",
+      "Designed and implemented user-friendly UI interfaces to improve player interaction and navigation.",
+      "Built and textured game maps, establishing the foundational environment for the survival game."
+    ],
+    "imageUrl": "images/gd.png",
+    "technology": "Unreal Engine 5",
+    "period": "Sep-Dec / 2024",
+    "path": "https://github.com/jsheng0722/CSYE7270"
   }
 ]

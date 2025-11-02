@@ -1,0 +1,97 @@
+[
+  {
+    "id": 1,
+    "title": "个人作品集网站",
+    "description": "基于React构建的现代化个人作品集网站，集成了笔记管理、项目展示、多语言支持和主题切换等功能。",
+    "image": "/images/portfolio-preview.jpg",
+    "category": "Web开发",
+    "technologies": ["React", "Tailwind CSS", "Node.js", "Express"],
+    "price": "免费开源",
+    "status": "已完成",
+    "features": [
+      "响应式设计",
+      "多语言支持",
+      "主题切换",
+      "笔记系统",
+      "评论功能"
+    ],
+    "demoUrl": "https://jsheng0722.github.io",
+    "githubUrl": "https://github.com/jsheng0722"
+  },
+  {
+    "id": 2,
+    "title": "任务管理系统",
+    "description": "使用Angular、Node.js和MongoDB开发的全栈任务管理Web应用，支持任务的创建、发布和跟踪。",
+    "image": "/images/taskm.png",
+    "category": "Web开发",
+    "technologies": ["Angular JS", "Node.js", "Express", "JavaScript", "MongoDB"],
+    "price": "免费开源",
+    "status": "已完成",
+    "features": [
+      "任务创建和管理",
+      "CRUD操作",
+      "响应式前端设计",
+      "REST API服务",
+      "MongoDB数据存储"
+    ],
+    "demoUrl": null,
+    "githubUrl": "https://github.com/jsheng0722/INFO6150"
+  },
+  {
+    "id": 3,
+    "title": "Python数据分析项目",
+    "description": "使用Python进行综合数据分析的项目，应用数据科学技术从大型数据集中提取有意义的洞察。",
+    "image": "/images/ds.png",
+    "category": "数据分析",
+    "technologies": ["Python", "Jupyter Lab", "Pandas", "NumPy", "Matplotlib", "Seaborn"],
+    "price": "免费开源",
+    "status": "已完成",
+    "features": [
+      "数据清洗和结构化",
+      "统计分析技术",
+      "数据可视化",
+      "趋势预测模型",
+      "决策支持系统"
+    ],
+    "demoUrl": null,
+    "githubUrl": "https://github.com/jsheng0722/INFO6105"
+  },
+  {
+    "id": 4,
+    "title": "CPTS课程项目集合",
+    "description": "包含多个计算机科学课程的编程项目，涵盖不同编程语言和技术栈的学习实践。",
+    "image": null,
+    "category": "学术项目",
+    "technologies": ["C++", "Java", "Python", "Haskell", "C#", "HTML"],
+    "price": "免费开源",
+    "status": "已完成",
+    "features": [
+      "多语言编程实践",
+      "算法和数据结构",
+      "软件工程原理",
+      "Web开发基础",
+      "函数式编程"
+    ],
+    "demoUrl": null,
+    "githubUrl": "https://github.com/jsheng0722"
+  },
+  {
+    "id": 5,
+    "title": "全栈开发服务",
+    "description": "提供完整的全栈Web应用开发服务，包括前端React/Vue开发、后端API设计、数据库设计等。",
+    "image": null,
+    "category": "开发服务",
+    "technologies": ["React", "Vue.js", "Node.js", "Python", "MongoDB", "PostgreSQL"],
+    "price": "面议",
+    "status": "提供服务",
+    "features": [
+      "前端开发",
+      "后端API设计",
+      "数据库设计",
+      "部署运维",
+      "性能优化"
+    ],
+    "demoUrl": null,
+    "githubUrl": null
+  }
+]
