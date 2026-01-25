@@ -3,7 +3,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FaCopy, FaCheck, FaMagic } from 'react-icons/fa';
 import { detectLanguageFromCode, normalizeLanguage } from './AlgorithmVisualizer/languageDetector';
-import FloatingCodeVisualizer from './UI/FloatingCodeVisualizer/FloatingCodeVisualizer';
+import { FloatingCodeVisualizer } from './UI';
 
 function CodeBlock({ language, children, isAlgorithmNote = false }) {
   const [copied, setCopied] = useState(false);
