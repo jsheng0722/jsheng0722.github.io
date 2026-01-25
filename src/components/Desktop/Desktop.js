@@ -1,12 +1,11 @@
 import React from 'react';
-import { FaHome, FaBook, FaFolder, FaMusic, FaFileAlt, FaCode, FaImage, FaDesktop, FaEdit, FaVideo, FaShoppingCart } from 'react-icons/fa';
+import { FaHome, FaFolder, FaMusic, FaFileAlt, FaCode, FaImage, FaDesktop, FaEdit, FaVideo, FaShoppingCart } from 'react-icons/fa';
 import DesktopShortcut from './DesktopShortcut';
 
 function Desktop() {
   const shortcuts = [
     { icon: FaHome, label: '首页', path: '/home', color: 'text-blue-500' },
     { icon: FaDesktop, label: '桌面', path: '/desktop', color: 'text-gray-500' },
-    { icon: FaBook, label: '学习资料', path: '/classic', color: 'text-green-500' },
     { icon: FaEdit, label: '动态', path: '/blog', color: 'text-indigo-500' },
     { icon: FaVideo, label: '视频', path: '/video', color: 'text-red-500' },
     { icon: FaShoppingCart, label: '收藏', path: '/shop', color: 'text-orange-500' },

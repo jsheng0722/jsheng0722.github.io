@@ -17,6 +17,7 @@ import BlogHome from './pages/Blog/BlogHome';
 import VideoPlayer from './pages/Video/VideoPlayer';
 import ShopHome from './pages/Shop/ShopHome';
 import AddProduct from './pages/Shop/AddProduct';
+import VisualizationPage from './pages/Visualization/VisualizationPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
 
@@ -43,6 +44,7 @@ function App() {
             <Route path="/video" element={<VideoPlayer />} />
             <Route path="/shop" element={<ShopHome />} />
             <Route path="/shop/add" element={<AddProduct />} />
+            <Route path="/visualization" element={<VisualizationPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

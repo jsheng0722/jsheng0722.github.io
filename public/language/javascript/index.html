@@ -4,11 +4,52 @@
     <title>JavaScript 教程</title>
 </head>
 <body>
-    <h1>JavaScript 基础教程</h1>
-    <p>这里是 JavaScript 相关的内容...</p>
+    <h1>JavaScript 基础速览</h1>
+    <p>JavaScript 是现代 Web 开发中最重要的脚本语言之一，下列内容演示了变量、函数参数、条件判断与循环等核心概念。</p>
 
-    <h2>引用代码示例</h2>
-    <p>下面引用 code/example.js 的内容：</p>
+    <h2>变量（Variables）</h2>
+    <p>使用 <code>let</code> 和 <code>const</code> 声明变量，推荐优先使用块级作用域。</p>
+    <pre><code class="language-javascript">const siteName = 'Tech Docs';
+let visitCount = 0;
+
+visitCount += 1;
+console.log(`欢迎来到 ${siteName}，第 ${visitCount} 次访问。`);</code></pre>
+
+    <h2>函数与参数（Functions &amp; Parameters）</h2>
+    <p>函数是复用逻辑的基本单位，可以为参数提供默认值，也可以使用对象解构来传入配置。</p>
+    <pre><code class="language-javascript">function greet(name = '访客', { language = 'zh-CN' } = {}) {
+  const message = language === 'en-US' ? `Hello, ${name}!` : `你好，${name}!`;
+  return message;
+}
+
+console.log(greet('Jihui'));
+console.log(greet('Amy', { language: 'en-US' }));</code></pre>
+
+    <h2>条件判断（Control Flow）</h2>
+    <pre><code class="language-javascript">function classifyScore(score) {
+  if (score &gt;= 90) return '优秀';
+  if (score &gt;= 75) return '良好';
+  if (score &gt;= 60) return '及格';
+  return '需要加强';
+}
+
+console.log(classifyScore(82));</code></pre>
+
+    <h2>循环与迭代（Loops &amp; Iteration）</h2>
+    <p>除了传统循环语句，还可以使用数组迭代方法处理集合。</p>
+    <pre><code class="language-javascript">const frameworks = ['React', 'Vue', 'Svelte'];
+
+for (let i = 0; i &lt; frameworks.length; i += 1) {
+  console.log(`[for] ${frameworks[i]}`);
+}
+
+frameworks.forEach(item =&gt; console.log(`[forEach] ${item}`));
+
+const uppercased = frameworks.map(item =&gt; item.toUpperCase());
+console.log(uppercased);</code></pre>
+
+    <h2>引用示例文件</h2>
+    <p>下面引用 <code>code/example.js</code> 中的完整示例，结合上述概念查看实际项目中的使用方式：</p>
     <code-include src="code/example.js" lang="javascript"></code-include>
 </body>
 </html>

@@ -18,6 +18,10 @@ export { default as Badge } from './Badge/Badge';
 export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as Loading } from './Loading/Loading';
 export { default as EmptyState } from './EmptyState/EmptyState';
+export { default as Navigation } from './Navigation/Navigation';
+export { default as FileList } from './FileList/FileList';
+export { default as ConfirmDialog } from './Dialog/ConfirmDialog';
+export { default as FloatingCodeVisualizer } from './FloatingCodeVisualizer/FloatingCodeVisualizer';
 
 // 导出组件类型定义
 export * from './types';

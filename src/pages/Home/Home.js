@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Prism from 'prismjs';
-import Navigation from './Navigation';
-import Sidebar from './Sidebar';
+import { Navigation, FileList } from '../../components/UI';
 import directoryData from '../../content/languageContent.json';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
@@ -151,10 +150,36 @@ function Home() {
         <>
         <Header />
         <div className="flex flex-col items-center w-full dark:bg-gray-950 dark:text-gray-100 min-h-screen">
-            <Navigation directories={directoryData} onNavClick={handleNavigationClick} />
+            <Navigation 
+                items={directoryData}
+                onItemClick={handleNavigationClick}
+            />
             <div className='flex flex-row w-4/5 justify-between bg-gray-100 dark:bg-gray-900 p-4 shadow-lg flex-grow'>
                 <div className='flex-[3]'>
-                    <Sidebar content={sidebarContent} onFileClick={handleFileClick} />
+                    <div className="w-full h-full bg-white dark:bg-gray-800 p-4 overflow-auto shadow-lg">
+                        <h2 className="font-semibold text-lg mb-4 border-b pb-2 dark:text-gray-100">
+                            {sidebarContent ? sidebarContent.name : 'Empty'}
+                        </h2>
+                        <FileList
+                            items={sidebarContent?.children || []}
+                            onFileClick={handleFileClick}
+                            emptyStateText="No content selected"
+                            renderFile={(file, onClick) => {
+                                if (file.type === 'file' && file.path.endsWith('.html')) {
+                                    return (
+                                        <li
+                                            key={file.path}
+                                            onClick={() => onClick(file)}
+                                            className="cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700 p-2 rounded transition-colors duration-200 ease-in-out"
+                                        >
+                                            {file.name.replace('.html', '')}
+                                        </li>
+                                    );
+                                }
+                                return null;
+                            }}
+                        />
+                    </div>
                 </div>
                 <div className='flex-[9] mx-5 bg-white dark:bg-gray-800 p-4 shadow overflow-auto min-h-96'>
                     {/* Here you might display the file content */}

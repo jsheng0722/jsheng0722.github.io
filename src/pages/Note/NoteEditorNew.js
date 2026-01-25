@@ -7,7 +7,6 @@ import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
 import FloatingActionButton from '../../components/FloatingActionButton';
-import FloatingToolbar from '../../components/FloatingToolbar';
 import { useNotes } from '../../hooks/useDataManager';
 
 function NoteEditorNew() {

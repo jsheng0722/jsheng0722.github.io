@@ -1,8 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import { FaFolder, FaFile, FaFileAlt, FaMusic, FaImage, FaCode, FaVideo, FaSync } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaFolder, FaFile, FaFileAlt, FaMusic, FaImage, FaCode, FaVideo, FaSync, FaExternalLinkAlt } from 'react-icons/fa';
 import { Button, Card, Dialog, Badge } from '../UI';
 
 function FileManager() {
+  const navigate = useNavigate();
   const [currentPath, setCurrentPath] = useState('/');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [sortBy, setSortBy] = useState('name'); // 'name', 'size', 'date', 'type'
@@ -51,14 +53,7 @@ function FileManager() {
           icon: FaFileAlt,
           color: 'text-blue-500',
           category: '笔记',
-          metadata: {
-            category: note.category,
-            tags: note.tags || [],
-            author: note.author,
-            date: note.date,
-            excerpt: note.excerpt,
-            content: note.content
-          },
+          metadata: note, // 保存完整的笔记对象，包括 id
           lastModified: new Date(note.updatedAt || note.createdAt || Date.now()).toLocaleDateString()
         };
       });
@@ -312,6 +307,47 @@ function FileManager() {
     }
   };
 
+  // 处理打开文件
+  const handleOpenFile = () => {
+    if (!selectedFile) return;
+
+    const { category, metadata } = selectedFile;
+
+    if (category === '笔记' && metadata) {
+      // 导航到笔记查看页面
+      if (metadata.id) {
+        navigate(`/notes/view/${metadata.id}`, { state: { note: metadata } });
+      } else {
+        // 如果没有 id，尝试从 localStorage 中找到对应的笔记
+        const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
+        const note = userNotes.find(n => n.title === selectedFile.name);
+        if (note && note.id) {
+          navigate(`/notes/view/${note.id}`, { state: { note } });
+        } else {
+          alert('无法找到对应的笔记');
+        }
+      }
+      setSelectedFile(null);
+    } else if (category === '视频' && metadata && metadata.url) {
+      // 在新标签页打开视频链接
+      window.open(metadata.url, '_blank', 'noopener,noreferrer');
+    } else if (category === '商品' && metadata) {
+      // 导航到商品页面（如果有对应的路由）
+      navigate('/products');
+      setSelectedFile(null);
+    } else if (category === '音乐' && metadata) {
+      // 导航到音乐页面
+      navigate('/music');
+      setSelectedFile(null);
+    } else if (category === '动态' && metadata) {
+      // 导航到动态页面
+      navigate('/blog');
+      setSelectedFile(null);
+    } else {
+      alert('该文件类型暂不支持直接打开');
+    }
+  };
+
 
   const getCurrentItems = () => {
     const current = fileSystem[currentPath];
@@ -465,6 +501,18 @@ function FileManager() {
       >
         {selectedFile && (
           <div className="space-y-4">
+            {/* 操作按钮 */}
+            <div className="flex justify-end gap-2 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <Button
+                onClick={handleOpenFile}
+                variant="primary"
+                icon={<FaExternalLinkAlt />}
+                iconPosition="left"
+              >
+                {selectedFile.category === '视频' ? '打开视频链接' : '打开文件'}
+              </Button>
+            </div>
+
             {/* 基本信息 */}
             <div>
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">基本信息</h3>

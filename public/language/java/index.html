@@ -4,11 +4,59 @@
     <title>Java 教程</title>
 </head>
 <body>
-    <h1>Java 基础教程</h1>
-    <p>这里是 Java 相关的内容...</p>
+    <h1>Java 基础速览</h1>
+    <p>Java 是强类型、面向对象的编程语言，以下示例涵盖变量、方法参数、条件判断与循环等入门要点。</p>
 
-    <h2>引用代码示例</h2>
-    <p>下面引用 code/Example.java 的内容：</p>
+    <h2>变量与数据类型（Variables &amp; Types）</h2>
+    <pre><code class="language-java">int visits = 0;
+double price = 19.99;
+String siteName = "Tech Docs";
+
+visits += 1;
+System.out.println("欢迎来到 " + siteName + "，第 " + visits + " 次访问。");</code></pre>
+
+    <h2>方法与参数（Methods &amp; Parameters）</h2>
+    <pre><code class="language-java">public class Greeter {
+    public static String greet(String name, String language) {
+        if ("en".equals(language)) {
+            return "Hello, " + name + "!";
+        }
+        return "你好，" + name + "!";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(greet("Jihui", "zh"));
+        System.out.println(greet("Amy", "en"));
+    }
+}</code></pre>
+
+    <h2>条件判断（Control Flow）</h2>
+    <pre><code class="language-java">public static String classifyScore(int score) {
+    if (score &gt;= 90) {
+        return "优秀";
+    } else if (score &gt;= 75) {
+        return "良好";
+    } else if (score &gt;= 60) {
+        return "及格";
+    }
+    return "需要加强";
+}</code></pre>
+
+    <h2>循环（Loops）</h2>
+    <pre><code class="language-java">List&lt;String&gt; frameworks = Arrays.asList("Spring", "Micronaut", "Quarkus");
+
+for (int i = 0; i &lt; frameworks.size(); i++) {
+    System.out.println("[for] " + frameworks.get(i));
+}
+
+for (String framework : frameworks) {
+    System.out.println("[enhanced for] " + framework);
+}
+
+frameworks.forEach(item -&gt; System.out.println("[lambda] " + item));</code></pre>
+
+    <h2>引用示例文件</h2>
+    <p>下面引用 <code>code/Example.java</code>，可查看完整的 Java 示例代码：</p>
     <code-include src="code/Example.java" lang="java"></code-include>
 </body>
 </html>

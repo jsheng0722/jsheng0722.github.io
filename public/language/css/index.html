@@ -4,11 +4,71 @@
     <title>CSS 教程</title>
 </head>
 <body>
-    <h1>CSS 基础教程</h1>
-    <p>这里是 CSS 相关的内容...</p>
+    <h1>CSS 基础速览</h1>
+    <p>层叠样式表（CSS）用于描述页面的外观，下列示例涵盖常见的选择器、CSS 变量、布局技巧与动画。</p>
 
-    <h2>引用代码示例</h2>
-    <p>下面引用 code/example.css 的内容：</p>
+    <h2>选择器（Selectors）</h2>
+    <pre><code class="language-css">/* 元素、类与属性选择器 */
+body {
+  font-family: 'Inter', system-ui;
+}
+
+.hero-title {
+  color: #1f2937;
+  letter-spacing: 0.05em;
+}
+
+button[data-variant="primary"] {
+  background: #2563eb;
+  color: #fff;
+}</code></pre>
+
+    <h2>CSS 变量（Custom Properties）</h2>
+    <pre><code class="language-css">:root {
+  --brand-primary: #6366f1;
+  --brand-dark: #312e81;
+}
+
+.card {
+  border: 1px solid var(--brand-primary);
+  transition: border-color 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--brand-dark);
+}</code></pre>
+
+    <h2>布局（Layout）</h2>
+    <pre><code class="language-css">.grid-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}</code></pre>
+
+    <h2>动画（Animations）</h2>
+    <pre><code class="language-css">@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.pulse-badge {
+  animation: pulse 2s infinite;
+}</code></pre>
+
+    <h2>引用示例文件</h2>
+    <p>下面引用 <code>code/example.css</code> 展示一个完整的样式片段：</p>
     <code-include src="code/example.css" lang="css"></code-include>
 </body>
 </html>

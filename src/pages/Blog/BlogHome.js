@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaSearch, FaCalendar, FaEye, FaHeart, FaComment, FaThumbsUp, FaShare, FaImage, FaVideo, FaCode, FaBook } from 'react-icons/fa';
+import { FaEdit, FaSearch, FaCalendar, FaEye, FaHeart, FaComment, FaThumbsUp, FaShare, FaImage, FaVideo, FaCode, FaBook, FaTrash } from 'react-icons/fa';
+import { ConfirmDialog } from '../../components/UI';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 
@@ -10,6 +11,9 @@ function BlogHome() {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [selectedTag, setSelectedTag] = useState('全部');
   const [showPublishForm, setShowPublishForm] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
@@ -29,11 +33,17 @@ function BlogHome() {
       try {
         const response = await fetch('/data/blog-posts.json');
         const data = await response.json();
-        // 只显示已发布的动态
-        const publishedPosts = data.filter(post => post.status === 'published');
+        // 只显示已发布的动态，标记为远程动态
+        const publishedPosts = data.filter(post => post.status === 'published').map(post => ({
+          ...post,
+          isLocal: false
+        }));
         
-        // 加载本地存储的动态
-        const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+        // 加载本地存储的动态，标记为本地动态
+        const localPosts = (JSON.parse(localStorage.getItem('blogPosts') || '[]')).map(post => ({
+          ...post,
+          isLocal: true
+        }));
         
         // 合并数据，本地动态在前
         const allPosts = [...localPosts, ...publishedPosts].sort((a, b) => 
@@ -45,7 +55,10 @@ function BlogHome() {
       } catch (error) {
         console.error('加载动态数据失败:', error);
         // 如果加载失败，只加载本地数据
-        const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+        const localPosts = (JSON.parse(localStorage.getItem('blogPosts') || '[]')).map(post => ({
+          ...post,
+          isLocal: true
+        }));
         setPosts(localPosts);
         setFilteredPosts(localPosts);
       }
@@ -96,7 +109,8 @@ function BlogHome() {
       cover: '/images/blog/default.jpg',
       type: 'article',
       images: [],
-      status: 'published'
+      status: 'published',
+      isLocal: true
     };
 
     // 保存到localStorage
@@ -144,6 +158,116 @@ function BlogHome() {
       ...prev,
       tags: prev.tags.filter(tag => tag !== tagToRemove)
     }));
+  };
+
+  // 开始编辑动态
+  const handleEditPost = (post) => {
+    if (!post.isLocal) {
+      alert('只能编辑自己发布的动态');
+      return;
+    }
+    setEditingPost(post);
+    setNewPost({
+      title: post.title,
+      content: post.content,
+      category: post.category,
+      tags: post.tags || [],
+      mood: post.mood || '😊',
+      location: post.location || '',
+      weather: post.weather || '☀️'
+    });
+    setShowPublishForm(true);
+  };
+
+  // 保存编辑
+  const handleUpdatePost = () => {
+    if (!newPost.title.trim() || !newPost.content.trim()) {
+      alert('请填写标题和内容');
+      return;
+    }
+
+    const now = new Date();
+    const updatedPost = {
+      ...editingPost,
+      ...newPost,
+      readTime: Math.ceil(newPost.content.length / 200) + '分钟',
+      date: now.toISOString().split('T')[0],
+      time: now.toTimeString().split(' ')[0].slice(0, 5),
+      isLocal: true
+    };
+
+    // 更新localStorage
+    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const updatedPosts = localPosts.map(post => 
+      post.id === updatedPost.id ? updatedPost : post
+    );
+    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
+
+    // 更新状态
+    setPosts(prev => prev.map(post => 
+      post.id === updatedPost.id ? updatedPost : post
+    ));
+    setFilteredPosts(prev => prev.map(post => 
+      post.id === updatedPost.id ? updatedPost : post
+    ));
+
+    // 重置表单
+    setNewPost({
+      title: '',
+      content: '',
+      category: '生活',
+      tags: [],
+      mood: '😊',
+      location: '',
+      weather: '☀️'
+    });
+    setEditingPost(null);
+    setShowPublishForm(false);
+
+    alert('动态更新成功！');
+  };
+
+  // 删除动态
+  const handleDeletePost = (post) => {
+    if (!post.isLocal) {
+      alert('只能删除自己发布的动态');
+      return;
+    }
+    setPostToDelete(post);
+    setShowDeleteDialog(true);
+  };
+
+  // 确认删除
+  const confirmDelete = () => {
+    if (!postToDelete) return;
+
+    // 从localStorage删除
+    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
+    const updatedPosts = localPosts.filter(post => post.id !== postToDelete.id);
+    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
+
+    // 更新状态
+    setPosts(prev => prev.filter(post => post.id !== postToDelete.id));
+    setFilteredPosts(prev => prev.filter(post => post.id !== postToDelete.id));
+
+    setShowDeleteDialog(false);
+    setPostToDelete(null);
+    alert('动态已删除');
+  };
+
+  // 取消编辑
+  const cancelEdit = () => {
+    setEditingPost(null);
+    setNewPost({
+      title: '',
+      content: '',
+      category: '生活',
+      tags: [],
+      mood: '😊',
+      location: '',
+      weather: '☀️'
+    });
+    setShowPublishForm(false);
   };
 
 
@@ -244,13 +368,15 @@ function BlogHome() {
           </div>
         </div>
 
-        {/* 发布动态表单 */}
+        {/* 发布/编辑动态表单 */}
         {showPublishForm && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">发布新动态</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {editingPost ? '编辑动态' : '发布新动态'}
+              </h2>
               <button
-                onClick={() => setShowPublishForm(false)}
+                onClick={cancelEdit}
                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
                 ✕
@@ -409,16 +535,16 @@ function BlogHome() {
               {/* 操作按钮 */}
               <div className="flex justify-end space-x-3 pt-4">
                 <button
-                  onClick={() => setShowPublishForm(false)}
+                  onClick={cancelEdit}
                   className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   取消
                 </button>
                 <button
-                  onClick={handlePublishPost}
+                  onClick={editingPost ? handleUpdatePost : handlePublishPost}
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  发布动态
+                  {editingPost ? '更新动态' : '发布动态'}
                 </button>
               </div>
             </div>
@@ -467,6 +593,25 @@ function BlogHome() {
                       {getTypeIcon(post.type)}
                     </div>
                   </div>
+                  {/* 编辑和删除按钮（仅本地动态显示） */}
+                  {post.isLocal && (
+                    <div className="flex items-center space-x-2 mt-2">
+                      <button
+                        onClick={() => handleEditPost(post)}
+                        className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors flex items-center gap-1"
+                      >
+                        <FaEdit className="w-3 h-3" />
+                        编辑
+                      </button>
+                      <button
+                        onClick={() => handleDeletePost(post)}
+                        className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors flex items-center gap-1"
+                      >
+                        <FaTrash className="w-3 h-3" />
+                        删除
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* 心情和标题 */}
@@ -560,6 +705,21 @@ function BlogHome() {
           </div>
         )}
       </main>
+
+      {/* 删除确认对话框 */}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          setShowDeleteDialog(false);
+          setPostToDelete(null);
+        }}
+        title="确认删除"
+        message={`确定要删除动态"${postToDelete?.title}"吗？此操作不可撤销。`}
+        confirmText="删除"
+        cancelText="取消"
+        type="danger"
+      />
 
       <Footer />
     </div>

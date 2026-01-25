@@ -5,6 +5,7 @@ import FixedMusicPlayer from '../../components/MusicPlayer/FixedMusicPlayer';
 import OptimizedWeather from '../../components/Weather/OptimizedWeather';
 import CompactCalendar from '../../components/Calendar/CompactCalendar';
 import Showcase from '../../components/Showcase/Showcase';
+import WelcomeBanner from '../../components/WelcomeBanner/WelcomeBanner';
 import { FaCloud, FaCalendarAlt, FaWindowRestore, FaChevronRight } from 'react-icons/fa';
 
 function NewHome() {
@@ -144,12 +145,12 @@ function NewHome() {
                 );
               })}
 
-              {/* 当没有展开任何面板时的提示 */}
+              {/* 当没有展开任何面板时显示欢迎广告 */}
               {!Object.values(expandedPanels).some(v => v) && (
-                <div className="text-center py-12">
-                  <p className="text-gray-500 dark:text-gray-400 text-lg">
-                    点击左侧按钮展开相应功能
-                  </p>
+                <div className="bg-white dark:bg-gray-800 rounded-r-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out border-l-4 border-l-pink-500">
+                  <div className="p-6">
+                    <WelcomeBanner />
+                  </div>
                 </div>
               )}
             </div>

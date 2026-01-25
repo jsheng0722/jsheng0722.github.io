@@ -6,6 +6,7 @@ import { FaArrowLeft, FaEdit, FaHeart, FaPencilAlt, FaCode, FaBook, FaCalendar, 
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramViewer from '../../components/DiagramEditor/DiagramViewer';
+import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 import { Button, Card, Badge, Dialog, Input } from '../../components/UI';
 
 function NoteView() {
@@ -282,8 +283,12 @@ function NoteView() {
                 components={{
                   code({node, inline, className, children, ...props}) {
                     const match = /language-(\w+)/.exec(className || '');
+                    const isAlgorithmNote = note.category === '算法' || note.category === 'LeetCode';
                     return !inline && match ? (
-                      <CodeBlock language={match[1]}>
+                      <CodeBlock 
+                        language={match[1]}
+                        isAlgorithmNote={isAlgorithmNote}
+                      >
                         {String(children).replace(/\n$/, '')}
                       </CodeBlock>
                     ) : (
@@ -291,6 +296,36 @@ function NoteView() {
                         {children}
                       </code>
                     );
+                  },
+                  // 处理链接，如果是 staying.fun 链接，渲染为可视化组件
+                  a({node, href, children, ...props}) {
+                    // 检查是否是 staying.fun 链接
+                    if (href && href.includes('staying.fun')) {
+                      return (
+                        <StayingFunVisualization 
+                          url={href} 
+                          title={typeof children === 'string' ? children : '算法可视化'}
+                        />
+                      );
+                    }
+                    // 普通链接正常渲染
+                    return (
+                      <a href={href} {...props} target="_blank" rel="noopener noreferrer">
+                        {children}
+                      </a>
+                    );
+                  },
+                  // 处理图片，如果是 staying.fun 链接，也渲染为可视化组件
+                  img({node, src, alt, ...props}) {
+                    if (src && src.includes('staying.fun')) {
+                      return (
+                        <StayingFunVisualization 
+                          url={src} 
+                          title={alt || '算法可视化'}
+                        />
+                      );
+                    }
+                    return <img src={src} alt={alt} {...props} />;
                   }
                 }}
               >

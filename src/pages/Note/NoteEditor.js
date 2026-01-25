@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
-import { FaSave, FaTimes, FaHeart, FaPencilAlt, FaCode, FaTags, FaPlus, FaProjectDiagram, FaTextHeight, FaSearchPlus, FaSearchMinus } from 'react-icons/fa';
+import { FaSave, FaTimes, FaHeart, FaPencilAlt, FaCode, FaTags, FaPlus, FaProjectDiagram, FaTextHeight, FaSearchPlus, FaSearchMinus, FaTable, FaListUl, FaQuoteRight } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
+import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 // import FloatingActionButton from '../../components/FloatingActionButton'; // 暂时未使用
-import FloatingToolbar from '../../components/FloatingToolbar';
+import { FloatingToolbar } from '../../components/UI';
 
 function NoteEditor() {
   const navigate = useNavigate();
@@ -170,6 +171,7 @@ function NoteEditor() {
       content: prev.content + quoteTemplate
     }));
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -484,8 +486,12 @@ function NoteEditor() {
                       components={{
                         code({node, inline, className, children, ...props}) {
                           const match = /language-(\w+)/.exec(className || '');
+                          const isAlgorithmNote = note.category === '算法';
                           return !inline && match ? (
-                            <CodeBlock language={match[1]}>
+                            <CodeBlock 
+                              language={match[1]}
+                              isAlgorithmNote={isAlgorithmNote}
+                            >
                               {String(children).replace(/\n$/, '')}
                             </CodeBlock>
                           ) : (
@@ -493,6 +499,34 @@ function NoteEditor() {
                               {children}
                             </code>
                           );
+                        },
+                        // 处理链接，如果是 staying.fun 链接，渲染为可视化组件
+                        a({node, href, children, ...props}) {
+                          if (href && href.includes('staying.fun')) {
+                            return (
+                              <StayingFunVisualization 
+                                url={href} 
+                                title={typeof children === 'string' ? children : '算法可视化'}
+                              />
+                            );
+                          }
+                          return (
+                            <a href={href} {...props} target="_blank" rel="noopener noreferrer">
+                              {children}
+                            </a>
+                          );
+                        },
+                        // 处理图片，如果是 staying.fun 链接，也渲染为可视化组件
+                        img({node, src, alt, ...props}) {
+                          if (src && src.includes('staying.fun')) {
+                            return (
+                              <StayingFunVisualization 
+                                url={src} 
+                                title={alt || '算法可视化'}
+                              />
+                            );
+                          }
+                          return <img src={src} alt={alt} {...props} />;
                         }
                       }}
                     >
@@ -539,7 +573,7 @@ function NoteEditor() {
                     <textarea
                       value={note.content}
                       onChange={(e) => setNote(prev => ({ ...prev, content: e.target.value }))}
-                      placeholder="在这里写下您的想法...&#10;&#10;支持Markdown格式：&#10;# 一级标题&#10;## 二级标题&#10;**粗体** *斜体*&#10;- 列表项&#10;```代码块```"
+                      placeholder="在这里写下您的想法...&#10;&#10;支持Markdown格式：&#10;# 一级标题&#10;## 二级标题&#10;**粗体** *斜体*&#10;- 列表项&#10;```代码块```&#10;&#10;算法笔记中，代码块上会显示可视化按钮，可以添加 staying.fun 可视化"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
                       rows="20"
                     />
@@ -552,6 +586,11 @@ function NoteEditor() {
                     <p>• **粗体**   *斜体*   ~~删除线~~</p>
                     <p>• [链接](URL)   ![图片](URL)</p>
                     <p>• ```代码块```   `行内代码`</p>
+                    {note.category === '算法' && (
+                      <p className="mt-2 text-green-600 dark:text-green-400">
+                        • 🎯 算法可视化：将鼠标悬停在代码块上，点击"可视化"按钮可添加 staying.fun 可视化
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -596,13 +635,64 @@ function NoteEditor() {
 
       {/* 浮动工具栏 */}
       <FloatingToolbar 
-        onAddDiagram={() => setShowDiagramEditor(true)}
-        onInsertCode={insertCodeBlock}
-        onInsertTable={insertTable}
-        onInsertList={insertList}
-        onInsertQuote={insertQuote}
-        hasDiagram={!!diagramData}
+        tools={[
+          {
+            id: 'diagram',
+            icon: <FaProjectDiagram className="w-5 h-5" />,
+            label: diagramData ? '编辑图表' : '添加图表',
+            onClick: () => setShowDiagramEditor(true),
+            color: diagramData ? 'from-purple-500 to-purple-700' : 'from-blue-500 to-blue-700',
+            badge: !!diagramData
+          },
+          {
+            id: 'code',
+            icon: <FaCode className="w-5 h-5" />,
+            label: '插入代码块',
+            onClick: insertCodeBlock,
+            color: 'from-gray-600 to-gray-800'
+          },
+          {
+            id: 'table',
+            icon: <FaTable className="w-5 h-5" />,
+            label: '插入表格',
+            onClick: insertTable,
+            color: 'from-green-500 to-green-700'
+          },
+          {
+            id: 'list',
+            icon: <FaListUl className="w-5 h-5" />,
+            label: '插入列表',
+            onClick: insertList,
+            color: 'from-orange-500 to-orange-700'
+          },
+          {
+            id: 'quote',
+            icon: <FaQuoteRight className="w-5 h-5" />,
+            label: '插入引用',
+            onClick: insertQuote,
+            color: 'from-indigo-500 to-indigo-700'
+          }
+        ]}
         position="right"
+        showSettings={true}
+        settingsContent={
+          <div>
+            <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">工具栏位置</h4>
+            <div className="space-y-2">
+              {['left', 'right', 'bottom'].map(pos => (
+                <button
+                  key={pos}
+                  onClick={() => {}}
+                  className="w-full px-3 py-2 text-sm rounded transition-colors bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                >
+                  {pos === 'left' && '左侧'}
+                  {pos === 'right' && '右侧'}
+                  {pos === 'bottom' && '底部'}
+                </button>
+              ))}
+            </div>
+          </div>
+        }
       />
 
       <Footer />

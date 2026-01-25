@@ -39,14 +39,8 @@ function Header() {
               { label: '文件管理', path: '/files' }
             ]
           },
-          // 学习分组
-          {
-            label: '学习',
-            children: [
-              { label: t('Study'), path: '/classic' },
-              { label: t('Portfolio'), path: '/portfolio' }
-            ]
-          },
+          // 作品集
+          { label: t('Portfolio'), path: '/portfolio' },
           // 产品
           { label: t('Products'), path: '/products' }
         ]} />

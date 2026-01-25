@@ -4,11 +4,56 @@
     <title>Python 教程</title>
 </head>
 <body>
-    <h1>Python 基础教程</h1>
-    <p>这里是 Python 相关的内容...</p>
+    <h1>Python 基础速览</h1>
+    <p>Python 语法简洁且表达力强，下列示例展示变量、函数参数、条件判断与循环等常见模式。</p>
 
-    <h2>引用代码示例</h2>
-    <p>下面引用 code/example.py 的内容：</p>
+    <h2>变量（Variables）</h2>
+    <pre><code class="language-python">site_name = 'Tech Docs'
+visit_count = 0
+
+visit_count += 1
+print(f'欢迎来到 {site_name}，这是你的第 {visit_count} 次访问。')</code></pre>
+
+    <h2>函数与参数（Functions &amp; Parameters）</h2>
+    <p>Python 支持默认参数、关键字参数与可变参数，灵活性极高。</p>
+    <pre><code class="language-python">def greet(name='访客', *, language='zh-CN'):
+    messages = {
+        'zh-CN': f'你好，{name}! 🌟',
+        'en-US': f'Hello, {name}!'
+    }
+    return messages.get(language, messages['zh-CN'])
+
+print(greet('Jihui'))
+print(greet('Amy', language='en-US'))</code></pre>
+
+    <h2>条件判断（Control Flow）</h2>
+    <pre><code class="language-python">def classify_score(score: int) -&gt; str:
+    if score &gt;= 90:
+        return '优秀'
+    elif score &gt;= 75:
+        return '良好'
+    elif score &gt;= 60:
+        return '及格'
+    return '需要加强'
+
+print(classify_score(82))</code></pre>
+
+    <h2>循环与推导式（Loops &amp; Comprehensions）</h2>
+    <pre><code class="language-python">frameworks = ['Django', 'FastAPI', 'Flask']
+
+for item in frameworks:
+    print(f'[for] {item}')
+
+index = 0
+while index &lt; len(frameworks):
+    print(f'[while] {frameworks[index]}')
+    index += 1
+
+uppercased = [item.upper() for item in frameworks]
+print(uppercased)</code></pre>
+
+    <h2>引用示例文件</h2>
+    <p>下面引用 <code>code/example.py</code> 的示例，结合上文概念了解在脚本中如何组织代码：</p>
     <code-include src="code/example.py" lang="python"></code-include>
 </body>
 </html>

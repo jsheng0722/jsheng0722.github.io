@@ -4,11 +4,63 @@
     <title>HTML 教程</title>
 </head>
 <body>
-    <h1>HTML 基础教程</h1>
-    <p>这里是 HTML 相关的内容...</p>
+    <h1>HTML 基础速览</h1>
+    <p>HTML（超文本标记语言）用于描述文档结构，是前端开发的基石，以下示例涵盖常见的结构化写法。</p>
 
-    <h2>引用代码示例</h2>
-    <p>下面引用 code/example.html 的内容（将会以代码形式展示原始 HTML）：</p>
+    <h2>页面结构</h2>
+    <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;技术文档中心&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;header&gt;...&lt;/header&gt;
+    &lt;main&gt;页面主体内容&lt;/main&gt;
+    &lt;footer&gt;版权信息&lt;/footer&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+    <h2>语义化标签（Semantic Elements）</h2>
+    <pre><code class="language-html">&lt;article&gt;
+  &lt;h2&gt;学习 JavaScript&lt;/h2&gt;
+  &lt;p&gt;记录变量、函数与循环的知识点。&lt;/p&gt;
+  &lt;section&gt;
+    &lt;h3&gt;变量&lt;/h3&gt;
+    &lt;p&gt;使用 let / const 声明。&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/article&gt;</code></pre>
+
+    <h2>表单（Forms）</h2>
+    <pre><code class="language-html">&lt;form action="/subscribe" method="post"&gt;
+  &lt;label&gt;电子邮箱&lt;
+    &lt;input type="email" name="email" required /&gt;
+  &lt;/label&gt;
+  &lt;button type="submit"&gt;订阅&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+    <h2>表格（Tables）</h2>
+    <pre><code class="language-html">&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;语言&lt;/th&gt;
+      &lt;th&gt;特点&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;HTML&lt;/td&gt;
+      &lt;td&gt;定义结构与语义&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CSS&lt;/td&gt;
+      &lt;td&gt;控制样式与布局&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+    <h2>引用示例文件</h2>
+    <p>下面引用 <code>code/example.html</code>，可查看一个完整的页面结构示例：</p>
     <code-include src="code/example.html" lang="markup"></code-include>
 </body>
 </html>

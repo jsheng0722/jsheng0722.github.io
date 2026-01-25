@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CommentList from './CommentList/CommentList';
 import TabsOrder from '../TabsOrder/TabsOrder';
 import CommentSend from './CommentSend/CommentSend';
-import ConfirmationDialog from '../Dialog/ConfirmationDialog';
+import { ConfirmDialog } from '../UI';
 import { v4 as uuid } from 'uuid';
 
 // related data
@@ -109,12 +109,15 @@ function Comment () {
     <CommentList list={list} setList={setList} deleteComment={showConfirmationDialog} />
 
     {/* Confirmation dialog */}
-    <ConfirmationDialog
-      show={showConfirmation}
+    <ConfirmDialog
+      isOpen={showConfirmation}
       onConfirm={handleDeleteConfirmation}
       onCancel={handleCancelConfirmation}
       title='Confirm Deletion'
       message='Are you sure you want to delete this item?'
+      confirmText='Delete'
+      cancelText='Cancel'
+      type='danger'
     />
   </div>
 

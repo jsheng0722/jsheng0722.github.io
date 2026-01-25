@@ -3,14 +3,29 @@
  * 将所有灵感记录到一个txt文件中
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaPlus, FaSave, FaDownload, FaTrash, FaEdit } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { Button, Card, Collapsible, Textarea, EmptyState } from '../../components/UI';
 
+const STORAGE_KEY = 'musicInspirations';
+
 function SimpleTextRecorder() {
-  const [inspirations, setInspirations] = useState([]);
+  // 从localStorage加载灵感数据
+  const loadInspirations = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.error('加载灵感数据失败:', error);
+    }
+    return [];
+  };
+
+  const [inspirations, setInspirations] = useState(loadInspirations);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState(-1);
   
@@ -18,6 +33,15 @@ function SimpleTextRecorder() {
     content: '',
     timestamp: ''
   });
+
+  // 当灵感数据变化时，保存到localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(inspirations));
+    } catch (error) {
+      console.error('保存灵感数据失败:', error);
+    }
+  }, [inspirations]);
 
   // 添加或编辑灵感
   const saveInspiration = () => {
@@ -28,6 +52,7 @@ function SimpleTextRecorder() {
 
     const now = new Date();
     const inspiration = {
+      id: editingIndex >= 0 ? inspirations[editingIndex].id : Date.now(), // 使用ID而不是索引
       content: formData.content.trim(),
       timestamp: now.toLocaleString('zh-CN'),
       date: now.toISOString().split('T')[0],
@@ -36,8 +61,9 @@ function SimpleTextRecorder() {
 
     if (editingIndex >= 0) {
       // 编辑现有灵感
-      const updatedInspirations = [...inspirations];
-      updatedInspirations[editingIndex] = inspiration;
+      const updatedInspirations = inspirations.map((item, index) => 
+        index === editingIndex ? inspiration : item
+      );
       setInspirations(updatedInspirations);
     } else {
       // 添加新灵感
@@ -66,6 +92,7 @@ function SimpleTextRecorder() {
     if (window.confirm('确定要删除这个灵感吗？')) {
       const updatedInspirations = inspirations.filter((_, i) => i !== index);
       setInspirations(updatedInspirations);
+      // localStorage会在useEffect中自动更新
     }
   };
 
@@ -227,7 +254,7 @@ function SimpleTextRecorder() {
             />
           ) : (
             inspirations.map((inspiration, index) => (
-              <Card key={index} hover>
+              <Card key={inspiration.id || index} hover>
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -256,7 +283,7 @@ function SimpleTextRecorder() {
                 </div>
 
                 <div className="prose dark:prose-invert max-w-none">
-                  <pre className="whitespace-pre-wrap text-gray-700 dark:text-gray-300 font-mono text-sm leading-relaxed">
+                  <pre className="whitespace-pre-wrap text-white-900 dark:text-white font-mono text-sm leading-relaxed">
                     {inspiration.content}
                   </pre>
                 </div>
@@ -274,7 +301,7 @@ function SimpleTextRecorder() {
               variant="card"
             >
               <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                <pre className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                <pre className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">
                   {generateTxtContent()}
                 </pre>
               </div>
