@@ -510,7 +510,11 @@ function ArchitectureMindMap() {
 
   // 动态加载架构数据
   useEffect(() => {
-    fetch('/data/architecture.json')
+    // 获取正确的 base path（支持 GitHub Pages）
+    const basePath = process.env.PUBLIC_URL || '';
+    const dataPath = `${basePath}/data/architecture.json`;
+    
+    fetch(dataPath)
       .then(response => {
         if (!response.ok) {
           throw new Error('无法加载架构数据');

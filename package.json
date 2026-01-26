@@ -34,6 +34,7 @@
     "eject": "react-scripts eject",
     "check-build": "node scripts/check-build.js",
     "check-deployment": "node scripts/check-deployment.js",
+    "fix-deployment": "node scripts/diagnose-deployment.js",
     "analyze-cleanup": "node scripts/analyze-and-cleanup.js",
     "execute-cleanup": "node scripts/execute-cleanup.js",
     "generate-architecture": "node scripts/generate-architecture.js",
