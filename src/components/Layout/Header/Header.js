@@ -25,7 +25,7 @@ function Header() {
       <div className="w-[60%]">
         <Navbar navItems={[
           // 主要入口
-          { label: t('Home'), path: '/home' },
+          { label: t('Home'), path: '/' },
           { label: '桌面', path: '/desktop' },
           // 内容管理分组
           {

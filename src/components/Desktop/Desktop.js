@@ -4,7 +4,7 @@ import DesktopShortcut from './DesktopShortcut';
 
 function Desktop() {
   const shortcuts = [
-    { icon: FaHome, label: '首页', path: '/home', color: 'text-blue-500' },
+    { icon: FaHome, label: '首页', path: '/', color: 'text-blue-500' },
     { icon: FaDesktop, label: '桌面', path: '/desktop', color: 'text-gray-500' },
     { icon: FaEdit, label: '动态', path: '/blog', color: 'text-indigo-500' },
     { icon: FaVideo, label: '视频', path: '/video', color: 'text-red-500' },
