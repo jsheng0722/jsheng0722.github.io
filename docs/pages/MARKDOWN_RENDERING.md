@@ -140,10 +140,12 @@ public class Hello {
 
 ### JavaScript
 ````markdown
+{% raw %}
 ```javascript
 const greet = (name) => {
   return `Hello, ${name}!`;
 };
+{% endraw %}
 
 console.log(greet('World'));
 ```

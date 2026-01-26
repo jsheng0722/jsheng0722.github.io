@@ -154,7 +154,7 @@
 const fetchWeather = async (city) => {
   const API_KEY = 'your-api-key';
   const response = await fetch(
-    `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&lang=zh_cn&units=metric`
+    {% raw %}`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&lang=zh_cn&units=metric`{% endraw %}
   );
   const data = await response.json();
   return data;

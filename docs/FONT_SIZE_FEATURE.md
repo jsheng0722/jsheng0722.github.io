@@ -126,10 +126,12 @@ const sizeMap = {
 ```
 
 ### 动态className
+{% raw %}
 ```jsx
 <div className={`prose ${getFontSizeClass()} dark:prose-invert ...`}>
   {/* 笔记内容 */}
 </div>
+{% endraw %}
 ```
 
 ## 📱 响应式设计

@@ -66,15 +66,19 @@ function Weather() {
       const API_URL = process.env.REACT_APP_WEATHER_API_URL;
 
       // 当前天气
+      {% raw %}
       const currentResponse = await fetch(
         `${API_URL}/weather?q=${location}&appid=${API_KEY}&lang=zh_cn&units=metric`
       );
+      {% endraw %}
       const currentData = await currentResponse.json();
 
       // 天气预报
+      {% raw %}
       const forecastResponse = await fetch(
         `${API_URL}/forecast?q=${location}&appid=${API_KEY}&lang=zh_cn&units=metric`
       );
+      {% endraw %}
       const forecastData = await forecastResponse.json();
 
       // 转换数据格式
@@ -208,7 +212,7 @@ const CACHE_KEY = 'weather_cache';
 const CACHE_DURATION = 30 * 60 * 1000; // 30分钟
 
 const getCachedWeather = (location) => {
-  const cached = localStorage.getItem(`${CACHE_KEY}_${location}`);
+  {% raw %}const cached = localStorage.getItem(`${CACHE_KEY}_${location}`);{% endraw %}
   if (cached) {
     const { data, timestamp } = JSON.parse(cached);
     if (Date.now() - timestamp < CACHE_DURATION) {
@@ -219,7 +223,7 @@ const getCachedWeather = (location) => {
 };
 
 const setCachedWeather = (location, data) => {
-  localStorage.setItem(`${CACHE_KEY}_${location}`, JSON.stringify({
+  {% raw %}localStorage.setItem(`${CACHE_KEY}_${location}`, JSON.stringify({{% endraw %}
     data,
     timestamp: Date.now()
   }));

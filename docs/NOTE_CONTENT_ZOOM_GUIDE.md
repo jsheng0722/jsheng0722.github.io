@@ -101,6 +101,7 @@ const resetContentZoom = () => {
 ```
 
 ### 样式应用
+{% raw %}
 ```javascript
 style={{
   transform: `scale(${contentZoom / 100})`,
@@ -109,6 +110,7 @@ style={{
   transition: 'transform 0.2s ease-in-out'
 }}
 ```
+{% endraw %}
 
 ---
 
