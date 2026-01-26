@@ -48,6 +48,7 @@
     "generate-lyrics": "node src/autoLyricsGenerator.js",
     "setup-music": "node src/smartMusicManager.js",
     "check-build": "node scripts/check-build.js",
+    "check-deployment": "node scripts/check-deployment.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
