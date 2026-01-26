@@ -1,0 +1,1254 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "component": "HomePage",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/home",
+      "component": "HomePage",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/classic",
+      "component": "ClassicHome",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/notes",
+      "component": "NoteHome",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/notes/editor",
+      "component": "NoteEditor",
+      "icon": "FaStickyNote"
+    },
+    {
+      "path": "/notes/view/:id",
+      "component": "NoteView",
+      "icon": "FaStickyNote"
+    },
+    {
+      "path": "/notes/old",
+      "component": "NotePage",
+      "icon": "FaStickyNote"
+    },
+    {
+      "path": "/portfolio",
+      "component": "Portfolio",
+      "icon": "FaImage"
+    },
+    {
+      "path": "/products",
+      "component": "Products",
+      "icon": "FaImage"
+    },
+    {
+      "path": "/music",
+      "component": "Music",
+      "icon": "FaMusic"
+    },
+    {
+      "path": "/music/simple-recorder",
+      "component": "SimpleTextRecorder",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/files",
+      "component": "FileManagerPage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/desktop",
+      "component": "DesktopPage",
+      "icon": "FaDesktop"
+    },
+    {
+      "path": "/blog",
+      "component": "BlogHome",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/video",
+      "component": "VideoPlayer",
+      "icon": "FaVideo"
+    },
+    {
+      "path": "/shop",
+      "component": "ShopHome",
+      "icon": "FaHome"
+    },
+    {
+      "path": "/shop/add",
+      "component": "AddProduct",
+      "icon": "FaImage"
+    },
+    {
+      "path": "/visualization",
+      "component": "VisualizationPage",
+      "icon": "FaChartLine"
+    },
+    {
+      "path": "/architecture",
+      "component": "ArchitecturePage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "*",
+      "component": "NotFoundPage",
+      "icon": "FaFileAlt"
+    }
+  ],
+  "components": [
+    {
+      "name": "Algorithm",
+      "type": "folder",
+      "path": "components\\Algorithm",
+      "children": []
+    },
+    {
+      "name": "AlgorithmVisualizer",
+      "type": "folder",
+      "path": "components\\AlgorithmVisualizer",
+      "children": [
+        {
+          "name": "AlgorithmVisualizer.js",
+          "type": "file",
+          "path": "components\\AlgorithmVisualizer\\AlgorithmVisualizer.js"
+        },
+        {
+          "name": "codeExecutor.js",
+          "type": "file",
+          "path": "components\\AlgorithmVisualizer\\codeExecutor.js"
+        },
+        {
+          "name": "codeParser.js",
+          "type": "file",
+          "path": "components\\AlgorithmVisualizer\\codeParser.js"
+        },
+        {
+          "name": "languageDetector.js",
+          "type": "file",
+          "path": "components\\AlgorithmVisualizer\\languageDetector.js"
+        },
+        {
+          "name": "parameterExtractor.js",
+          "type": "file",
+          "path": "components\\AlgorithmVisualizer\\parameterExtractor.js"
+        },
+        {
+          "name": "visualizers",
+          "type": "folder",
+          "path": "components\\AlgorithmVisualizer\\visualizers",
+          "children": [
+            {
+              "name": "ArrayVisualizer.js",
+              "type": "file",
+              "path": "components\\AlgorithmVisualizer\\visualizers\\ArrayVisualizer.js"
+            },
+            {
+              "name": "FunctionBlock.js",
+              "type": "file",
+              "path": "components\\AlgorithmVisualizer\\visualizers\\FunctionBlock.js"
+            },
+            {
+              "name": "LinkedListVisualizer.js",
+              "type": "file",
+              "path": "components\\AlgorithmVisualizer\\visualizers\\LinkedListVisualizer.js"
+            },
+            {
+              "name": "SortVisualizer.js",
+              "type": "file",
+              "path": "components\\AlgorithmVisualizer\\visualizers\\SortVisualizer.js"
+            },
+            {
+              "name": "TreeVisualizer.js",
+              "type": "file",
+              "path": "components\\AlgorithmVisualizer\\visualizers\\TreeVisualizer.js"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Calendar",
+      "type": "folder",
+      "path": "components\\Calendar",
+      "children": [
+        {
+          "name": "AdvancedCalendar.js",
+          "type": "file",
+          "path": "components\\Calendar\\AdvancedCalendar.js"
+        },
+        {
+          "name": "Calendar.js",
+          "type": "file",
+          "path": "components\\Calendar\\Calendar.js"
+        },
+        {
+          "name": "CompactCalendar.js",
+          "type": "file",
+          "path": "components\\Calendar\\CompactCalendar.js"
+        }
+      ]
+    },
+    {
+      "name": "CodeBlock.js",
+      "type": "file",
+      "path": "components\\CodeBlock.js"
+    },
+    {
+      "name": "Comment",
+      "type": "folder",
+      "path": "components\\Comment",
+      "children": [
+        {
+          "name": "Comment.js",
+          "type": "file",
+          "path": "components\\Comment\\Comment.js"
+        },
+        {
+          "name": "CommentList",
+          "type": "folder",
+          "path": "components\\Comment\\CommentList",
+          "children": [
+            {
+              "name": "CommentList.js",
+              "type": "file",
+              "path": "components\\Comment\\CommentList\\CommentList.js"
+            }
+          ]
+        },
+        {
+          "name": "CommentSend",
+          "type": "folder",
+          "path": "components\\Comment\\CommentSend",
+          "children": [
+            {
+              "name": "CommentSend.js",
+              "type": "file",
+              "path": "components\\Comment\\CommentSend\\CommentSend.js"
+            }
+          ]
+        },
+        {
+          "name": "Comment_1.js",
+          "type": "file",
+          "path": "components\\Comment\\Comment_1.js"
+        }
+      ]
+    },
+    {
+      "name": "Desktop",
+      "type": "folder",
+      "path": "components\\Desktop",
+      "children": [
+        {
+          "name": "Desktop.js",
+          "type": "file",
+          "path": "components\\Desktop\\Desktop.js"
+        },
+        {
+          "name": "DesktopShortcut.js",
+          "type": "file",
+          "path": "components\\Desktop\\DesktopShortcut.js"
+        }
+      ]
+    },
+    {
+      "name": "DiagramEditor",
+      "type": "folder",
+      "path": "components\\DiagramEditor",
+      "children": [
+        {
+          "name": "DiagramEditor.js",
+          "type": "file",
+          "path": "components\\DiagramEditor\\DiagramEditor.js"
+        },
+        {
+          "name": "DiagramViewer.js",
+          "type": "file",
+          "path": "components\\DiagramEditor\\DiagramViewer.js"
+        },
+        {
+          "name": "EditableNodes.js",
+          "type": "file",
+          "path": "components\\DiagramEditor\\EditableNodes.js"
+        }
+      ]
+    },
+    {
+      "name": "Dialog",
+      "type": "folder",
+      "path": "components\\Dialog",
+      "children": [
+        {
+          "name": "ConfirmationDialog.js",
+          "type": "file",
+          "path": "components\\Dialog\\ConfirmationDialog.js"
+        }
+      ]
+    },
+    {
+      "name": "FileManager",
+      "type": "folder",
+      "path": "components\\FileManager",
+      "children": [
+        {
+          "name": "FileManager.js",
+          "type": "file",
+          "path": "components\\FileManager\\FileManager.js"
+        }
+      ]
+    },
+    {
+      "name": "FloatingActionButton.js",
+      "type": "file",
+      "path": "components\\FloatingActionButton.js"
+    },
+    {
+      "name": "FloatingToolbar.js",
+      "type": "file",
+      "path": "components\\FloatingToolbar.js"
+    },
+    {
+      "name": "Layout",
+      "type": "folder",
+      "path": "components\\Layout",
+      "children": [
+        {
+          "name": "Footer",
+          "type": "folder",
+          "path": "components\\Layout\\Footer",
+          "children": [
+            {
+              "name": "Footer.js",
+              "type": "file",
+              "path": "components\\Layout\\Footer\\Footer.js"
+            }
+          ]
+        },
+        {
+          "name": "Header",
+          "type": "folder",
+          "path": "components\\Layout\\Header",
+          "children": [
+            {
+              "name": "Header.js",
+              "type": "file",
+              "path": "components\\Layout\\Header\\Header.js"
+            }
+          ]
+        },
+        {
+          "name": "Layout.js",
+          "type": "file",
+          "path": "components\\Layout\\Layout.js"
+        },
+        {
+          "name": "Main",
+          "type": "folder",
+          "path": "components\\Layout\\Main",
+          "children": [
+            {
+              "name": "Main.js",
+              "type": "file",
+              "path": "components\\Layout\\Main\\Main.js"
+            }
+          ]
+        },
+        {
+          "name": "Navbar",
+          "type": "folder",
+          "path": "components\\Layout\\Navbar",
+          "children": [
+            {
+              "name": "Navbar.js",
+              "type": "file",
+              "path": "components\\Layout\\Navbar\\Navbar.js"
+            }
+          ]
+        },
+        {
+          "name": "Searchbar",
+          "type": "folder",
+          "path": "components\\Layout\\Searchbar",
+          "children": [
+            {
+              "name": "MenuSearchbar.js",
+              "type": "file",
+              "path": "components\\Layout\\Searchbar\\MenuSearchbar.js"
+            },
+            {
+              "name": "Searchbar.js",
+              "type": "file",
+              "path": "components\\Layout\\Searchbar\\Searchbar.js"
+            }
+          ]
+        },
+        {
+          "name": "Sidebar",
+          "type": "folder",
+          "path": "components\\Layout\\Sidebar",
+          "children": [
+            {
+              "name": "CollapsibleSidebar.js",
+              "type": "file",
+              "path": "components\\Layout\\Sidebar\\CollapsibleSidebar.js"
+            },
+            {
+              "name": "Sidebar.js",
+              "type": "file",
+              "path": "components\\Layout\\Sidebar\\Sidebar.js"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "MusicPlayer",
+      "type": "folder",
+      "path": "components\\MusicPlayer",
+      "children": [
+        {
+          "name": "AudioDebugger.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\AudioDebugger.js"
+        },
+        {
+          "name": "DraggableMusicPlayer.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\DraggableMusicPlayer.js"
+        },
+        {
+          "name": "DynamicMusicManager.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\DynamicMusicManager.js"
+        },
+        {
+          "name": "FixedMusicPlayer.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\FixedMusicPlayer.js"
+        },
+        {
+          "name": "LyricsDisplay.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\LyricsDisplay.js"
+        },
+        {
+          "name": "LyricsRecognizer.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\LyricsRecognizer.js"
+        },
+        {
+          "name": "MusicIcon.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\MusicIcon.js"
+        },
+        {
+          "name": "UnifiedMusicPlayer.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\UnifiedMusicPlayer.js"
+        }
+      ]
+    },
+    {
+      "name": "Showcase",
+      "type": "folder",
+      "path": "components\\Showcase",
+      "children": [
+        {
+          "name": "Showcase.js",
+          "type": "file",
+          "path": "components\\Showcase\\Showcase.js"
+        }
+      ]
+    },
+    {
+      "name": "StayingFunVisualization",
+      "type": "folder",
+      "path": "components\\StayingFunVisualization",
+      "children": [
+        {
+          "name": "StayingFunVisualization.js",
+          "type": "file",
+          "path": "components\\StayingFunVisualization\\StayingFunVisualization.js"
+        }
+      ]
+    },
+    {
+      "name": "TabsOrder",
+      "type": "folder",
+      "path": "components\\TabsOrder",
+      "children": [
+        {
+          "name": "TabsOrder.js",
+          "type": "file",
+          "path": "components\\TabsOrder\\TabsOrder.js"
+        }
+      ]
+    },
+    {
+      "name": "UI",
+      "type": "folder",
+      "path": "components\\UI",
+      "children": [
+        {
+          "name": "Badge",
+          "type": "folder",
+          "path": "components\\UI\\Badge",
+          "children": [
+            {
+              "name": "Badge.js",
+              "type": "file",
+              "path": "components\\UI\\Badge\\Badge.js"
+            }
+          ]
+        },
+        {
+          "name": "Button",
+          "type": "folder",
+          "path": "components\\UI\\Button",
+          "children": [
+            {
+              "name": "Button.js",
+              "type": "file",
+              "path": "components\\UI\\Button\\Button.js"
+            }
+          ]
+        },
+        {
+          "name": "Card",
+          "type": "folder",
+          "path": "components\\UI\\Card",
+          "children": [
+            {
+              "name": "Card.js",
+              "type": "file",
+              "path": "components\\UI\\Card\\Card.js"
+            }
+          ]
+        },
+        {
+          "name": "Collapsible",
+          "type": "folder",
+          "path": "components\\UI\\Collapsible",
+          "children": [
+            {
+              "name": "Collapsible.js",
+              "type": "file",
+              "path": "components\\UI\\Collapsible\\Collapsible.js"
+            }
+          ]
+        },
+        {
+          "name": "Dialog",
+          "type": "folder",
+          "path": "components\\UI\\Dialog",
+          "children": [
+            {
+              "name": "ConfirmDialog.js",
+              "type": "file",
+              "path": "components\\UI\\Dialog\\ConfirmDialog.js"
+            },
+            {
+              "name": "Dialog.js",
+              "type": "file",
+              "path": "components\\UI\\Dialog\\Dialog.js"
+            }
+          ]
+        },
+        {
+          "name": "EmptyState",
+          "type": "folder",
+          "path": "components\\UI\\EmptyState",
+          "children": [
+            {
+              "name": "EmptyState.js",
+              "type": "file",
+              "path": "components\\UI\\EmptyState\\EmptyState.js"
+            }
+          ]
+        },
+        {
+          "name": "FileList",
+          "type": "folder",
+          "path": "components\\UI\\FileList",
+          "children": [
+            {
+              "name": "FileList.js",
+              "type": "file",
+              "path": "components\\UI\\FileList\\FileList.js"
+            }
+          ]
+        },
+        {
+          "name": "FloatingButton",
+          "type": "folder",
+          "path": "components\\UI\\FloatingButton",
+          "children": [
+            {
+              "name": "FloatingButton.js",
+              "type": "file",
+              "path": "components\\UI\\FloatingButton\\FloatingButton.js"
+            }
+          ]
+        },
+        {
+          "name": "FloatingCodeVisualizer",
+          "type": "folder",
+          "path": "components\\UI\\FloatingCodeVisualizer",
+          "children": [
+            {
+              "name": "FloatingCodeVisualizer.js",
+              "type": "file",
+              "path": "components\\UI\\FloatingCodeVisualizer\\FloatingCodeVisualizer.js"
+            }
+          ]
+        },
+        {
+          "name": "FloatingToolbar",
+          "type": "folder",
+          "path": "components\\UI\\FloatingToolbar",
+          "children": [
+            {
+              "name": "FloatingToolbar.js",
+              "type": "file",
+              "path": "components\\UI\\FloatingToolbar\\FloatingToolbar.js"
+            }
+          ]
+        },
+        {
+          "name": "Form",
+          "type": "folder",
+          "path": "components\\UI\\Form",
+          "children": [
+            {
+              "name": "Form.js",
+              "type": "file",
+              "path": "components\\UI\\Form\\Form.js"
+            }
+          ]
+        },
+        {
+          "name": "index.js",
+          "type": "file",
+          "path": "components\\UI\\index.js"
+        },
+        {
+          "name": "Input",
+          "type": "folder",
+          "path": "components\\UI\\Input",
+          "children": [
+            {
+              "name": "Input.js",
+              "type": "file",
+              "path": "components\\UI\\Input\\Input.js"
+            }
+          ]
+        },
+        {
+          "name": "Loading",
+          "type": "folder",
+          "path": "components\\UI\\Loading",
+          "children": [
+            {
+              "name": "Loading.js",
+              "type": "file",
+              "path": "components\\UI\\Loading\\Loading.js"
+            }
+          ]
+        },
+        {
+          "name": "Modal",
+          "type": "folder",
+          "path": "components\\UI\\Modal",
+          "children": [
+            {
+              "name": "Modal.js",
+              "type": "file",
+              "path": "components\\UI\\Modal\\Modal.js"
+            }
+          ]
+        },
+        {
+          "name": "Navigation",
+          "type": "folder",
+          "path": "components\\UI\\Navigation",
+          "children": [
+            {
+              "name": "Navigation.js",
+              "type": "file",
+              "path": "components\\UI\\Navigation\\Navigation.js"
+            }
+          ]
+        },
+        {
+          "name": "Textarea",
+          "type": "folder",
+          "path": "components\\UI\\Textarea",
+          "children": [
+            {
+              "name": "Textarea.js",
+              "type": "file",
+              "path": "components\\UI\\Textarea\\Textarea.js"
+            }
+          ]
+        },
+        {
+          "name": "Tooltip",
+          "type": "folder",
+          "path": "components\\UI\\Tooltip",
+          "children": [
+            {
+              "name": "Tooltip.js",
+              "type": "file",
+              "path": "components\\UI\\Tooltip\\Tooltip.js"
+            }
+          ]
+        },
+        {
+          "name": "types.js",
+          "type": "file",
+          "path": "components\\UI\\types.js"
+        }
+      ]
+    },
+    {
+      "name": "UserRelated",
+      "type": "folder",
+      "path": "components\\UserRelated",
+      "children": [
+        {
+          "name": "Profile",
+          "type": "folder",
+          "path": "components\\UserRelated\\Profile",
+          "children": [
+            {
+              "name": "UserAvatarDropDown.js",
+              "type": "file",
+              "path": "components\\UserRelated\\Profile\\UserAvatarDropDown.js"
+            },
+            {
+              "name": "UserProfile.js",
+              "type": "file",
+              "path": "components\\UserRelated\\Profile\\UserProfile.js"
+            }
+          ]
+        },
+        {
+          "name": "SideMenu",
+          "type": "folder",
+          "path": "components\\UserRelated\\SideMenu",
+          "children": [
+            {
+              "name": "LeftSideMenu.js",
+              "type": "file",
+              "path": "components\\UserRelated\\SideMenu\\LeftSideMenu.js"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Visualizations",
+      "type": "folder",
+      "path": "components\\Visualizations",
+      "children": [
+        {
+          "name": "ConnectionSystem.js",
+          "type": "file",
+          "path": "components\\Visualizations\\ConnectionSystem.js"
+        },
+        {
+          "name": "tools",
+          "type": "folder",
+          "path": "components\\Visualizations\\tools",
+          "children": [
+            {
+              "name": "ListTool.js",
+              "type": "file",
+              "path": "components\\Visualizations\\tools\\ListTool.js"
+            },
+            {
+              "name": "LoopTool.js",
+              "type": "file",
+              "path": "components\\Visualizations\\tools\\LoopTool.js"
+            },
+            {
+              "name": "OperationNode.js",
+              "type": "file",
+              "path": "components\\Visualizations\\tools\\OperationNode.js"
+            },
+            {
+              "name": "VariableTool.js",
+              "type": "file",
+              "path": "components\\Visualizations\\tools\\VariableTool.js"
+            }
+          ]
+        },
+        {
+          "name": "VisualizationFloatingMenu.js",
+          "type": "file",
+          "path": "components\\Visualizations\\VisualizationFloatingMenu.js"
+        },
+        {
+          "name": "VisualizationModal.js",
+          "type": "file",
+          "path": "components\\Visualizations\\VisualizationModal.js"
+        },
+        {
+          "name": "VisualizationToolbar.js",
+          "type": "file",
+          "path": "components\\Visualizations\\VisualizationToolbar.js"
+        },
+        {
+          "name": "VisualizationToolkit.js",
+          "type": "file",
+          "path": "components\\Visualizations\\VisualizationToolkit.js"
+        }
+      ]
+    },
+    {
+      "name": "Weather",
+      "type": "folder",
+      "path": "components\\Weather",
+      "children": [
+        {
+          "name": "OptimizedWeather.js",
+          "type": "file",
+          "path": "components\\Weather\\OptimizedWeather.js"
+        },
+        {
+          "name": "Weather.js",
+          "type": "file",
+          "path": "components\\Weather\\Weather.js"
+        }
+      ]
+    },
+    {
+      "name": "WelcomeBanner",
+      "type": "folder",
+      "path": "components\\WelcomeBanner",
+      "children": [
+        {
+          "name": "WelcomeBanner.js",
+          "type": "file",
+          "path": "components\\WelcomeBanner\\WelcomeBanner.js"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "Architecture",
+      "type": "folder",
+      "path": "pages\\Architecture",
+      "children": [
+        {
+          "name": "ArchitectureMindMap.js",
+          "type": "file",
+          "path": "pages\\Architecture\\ArchitectureMindMap.js"
+        },
+        {
+          "name": "ArchitecturePage.js",
+          "type": "file",
+          "path": "pages\\Architecture\\ArchitecturePage.js"
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "type": "folder",
+      "path": "pages\\Blog",
+      "children": [
+        {
+          "name": "BlogHome.js",
+          "type": "file",
+          "path": "pages\\Blog\\BlogHome.js"
+        }
+      ]
+    },
+    {
+      "name": "Desktop",
+      "type": "folder",
+      "path": "pages\\Desktop",
+      "children": [
+        {
+          "name": "DesktopPage.js",
+          "type": "file",
+          "path": "pages\\Desktop\\DesktopPage.js"
+        }
+      ]
+    },
+    {
+      "name": "FileManager",
+      "type": "folder",
+      "path": "pages\\FileManager",
+      "children": [
+        {
+          "name": "FileManagerPage.js",
+          "type": "file",
+          "path": "pages\\FileManager\\FileManagerPage.js"
+        }
+      ]
+    },
+    {
+      "name": "Finance",
+      "type": "folder",
+      "path": "pages\\Finance",
+      "children": []
+    },
+    {
+      "name": "Folder",
+      "type": "folder",
+      "path": "pages\\Folder",
+      "children": [
+        {
+          "name": "FileViewer.js",
+          "type": "file",
+          "path": "pages\\Folder\\FileViewer.js"
+        },
+        {
+          "name": "Folder.js",
+          "type": "file",
+          "path": "pages\\Folder\\Folder.js"
+        },
+        {
+          "name": "Sidebar.js",
+          "type": "file",
+          "path": "pages\\Folder\\Sidebar.js"
+        }
+      ]
+    },
+    {
+      "name": "Home",
+      "type": "folder",
+      "path": "pages\\Home",
+      "children": [
+        {
+          "name": "ClassicHome.js",
+          "type": "file",
+          "path": "pages\\Home\\ClassicHome.js"
+        },
+        {
+          "name": "Home.js",
+          "type": "file",
+          "path": "pages\\Home\\Home.js"
+        },
+        {
+          "name": "MarkdownEditor.js",
+          "type": "file",
+          "path": "pages\\Home\\MarkdownEditor.js"
+        },
+        {
+          "name": "Navigation.js",
+          "type": "file",
+          "path": "pages\\Home\\Navigation.js"
+        },
+        {
+          "name": "NewHome.js",
+          "type": "file",
+          "path": "pages\\Home\\NewHome.js"
+        },
+        {
+          "name": "Sidebar.js",
+          "type": "file",
+          "path": "pages\\Home\\Sidebar.js"
+        }
+      ]
+    },
+    {
+      "name": "Music",
+      "type": "folder",
+      "path": "pages\\Music",
+      "children": [
+        {
+          "name": "Music.js",
+          "type": "file",
+          "path": "pages\\Music\\Music.js"
+        },
+        {
+          "name": "OptimizedMusic.js",
+          "type": "file",
+          "path": "pages\\Music\\OptimizedMusic.js"
+        },
+        {
+          "name": "SimpleTextRecorder.js",
+          "type": "file",
+          "path": "pages\\Music\\SimpleTextRecorder.js"
+        }
+      ]
+    },
+    {
+      "name": "Note",
+      "type": "folder",
+      "path": "pages\\Note",
+      "children": [
+        {
+          "name": "IconComponent.js",
+          "type": "file",
+          "path": "pages\\Note\\IconComponent.js"
+        },
+        {
+          "name": "Layout",
+          "type": "folder",
+          "path": "pages\\Note\\Layout",
+          "children": [
+            {
+              "name": "Main",
+              "type": "folder",
+              "path": "pages\\Note\\Layout\\Main",
+              "children": [
+                {
+                  "name": "Language",
+                  "type": "folder",
+                  "path": "pages\\Note\\Layout\\Main\\Language",
+                  "children": [
+                    {
+                      "name": "css",
+                      "type": "folder",
+                      "path": "pages\\Note\\Layout\\Main\\Language\\css",
+                      "children": []
+                    },
+                    {
+                      "name": "html",
+                      "type": "folder",
+                      "path": "pages\\Note\\Layout\\Main\\Language\\html",
+                      "children": []
+                    },
+                    {
+                      "name": "java",
+                      "type": "folder",
+                      "path": "pages\\Note\\Layout\\Main\\Language\\java",
+                      "children": []
+                    },
+                    {
+                      "name": "javascript",
+                      "type": "folder",
+                      "path": "pages\\Note\\Layout\\Main\\Language\\javascript",
+                      "children": []
+                    },
+                    {
+                      "name": "python",
+                      "type": "folder",
+                      "path": "pages\\Note\\Layout\\Main\\Language\\python",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "name": "NoteMain.js",
+                  "type": "file",
+                  "path": "pages\\Note\\Layout\\Main\\NoteMain.js"
+                },
+                {
+                  "name": "NoteMain_1.js",
+                  "type": "file",
+                  "path": "pages\\Note\\Layout\\Main\\NoteMain_1.js"
+                }
+              ]
+            },
+            {
+              "name": "Sidebar",
+              "type": "folder",
+              "path": "pages\\Note\\Layout\\Sidebar",
+              "children": [
+                {
+                  "name": "FileNavigator.js",
+                  "type": "file",
+                  "path": "pages\\Note\\Layout\\Sidebar\\FileNavigator.js"
+                },
+                {
+                  "name": "NoteSidebar.js",
+                  "type": "file",
+                  "path": "pages\\Note\\Layout\\Sidebar\\NoteSidebar.js"
+                },
+                {
+                  "name": "NoteSidebar_1.js",
+                  "type": "file",
+                  "path": "pages\\Note\\Layout\\Sidebar\\NoteSidebar_1.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ModalProvider.js",
+          "type": "file",
+          "path": "pages\\Note\\ModalProvider.js"
+        },
+        {
+          "name": "Note.js",
+          "type": "file",
+          "path": "pages\\Note\\Note.js"
+        },
+        {
+          "name": "NoteEditor.js",
+          "type": "file",
+          "path": "pages\\Note\\NoteEditor.js"
+        },
+        {
+          "name": "NoteEditorNew.js",
+          "type": "file",
+          "path": "pages\\Note\\NoteEditorNew.js"
+        },
+        {
+          "name": "NoteHome.js",
+          "type": "file",
+          "path": "pages\\Note\\NoteHome.js"
+        },
+        {
+          "name": "NoteView.js",
+          "type": "file",
+          "path": "pages\\Note\\NoteView.js"
+        }
+      ]
+    },
+    {
+      "name": "NotFoundPage.js",
+      "type": "file",
+      "path": "pages\\NotFoundPage.js"
+    },
+    {
+      "name": "Portfolio",
+      "type": "folder",
+      "path": "pages\\Portfolio",
+      "children": [
+        {
+          "name": "Components",
+          "type": "folder",
+          "path": "pages\\Portfolio\\Components",
+          "children": [
+            {
+              "name": "Card.js",
+              "type": "file",
+              "path": "pages\\Portfolio\\Components\\Card.js"
+            },
+            {
+              "name": "ProjectCard.js",
+              "type": "file",
+              "path": "pages\\Portfolio\\Components\\ProjectCard.js"
+            },
+            {
+              "name": "SkillCategory .js",
+              "type": "file",
+              "path": "pages\\Portfolio\\Components\\SkillCategory .js"
+            },
+            {
+              "name": "TestimonialCard.js",
+              "type": "file",
+              "path": "pages\\Portfolio\\Components\\TestimonialCard.js"
+            }
+          ]
+        },
+        {
+          "name": "Portfolio.js",
+          "type": "file",
+          "path": "pages\\Portfolio\\Portfolio.js"
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "type": "folder",
+      "path": "pages\\Products",
+      "children": [
+        {
+          "name": "FileViewer.js",
+          "type": "file",
+          "path": "pages\\Products\\FileViewer.js"
+        },
+        {
+          "name": "ProductCard.js",
+          "type": "file",
+          "path": "pages\\Products\\ProductCard.js"
+        },
+        {
+          "name": "ProductFilter.js",
+          "type": "file",
+          "path": "pages\\Products\\ProductFilter.js"
+        },
+        {
+          "name": "Products.js",
+          "type": "file",
+          "path": "pages\\Products\\Products.js"
+        }
+      ]
+    },
+    {
+      "name": "Shop",
+      "type": "folder",
+      "path": "pages\\Shop",
+      "children": [
+        {
+          "name": "AddProduct.js",
+          "type": "file",
+          "path": "pages\\Shop\\AddProduct.js"
+        },
+        {
+          "name": "ShopHome.js",
+          "type": "file",
+          "path": "pages\\Shop\\ShopHome.js"
+        }
+      ]
+    },
+    {
+      "name": "Video",
+      "type": "folder",
+      "path": "pages\\Video",
+      "children": [
+        {
+          "name": "VideoPlayer.js",
+          "type": "file",
+          "path": "pages\\Video\\VideoPlayer.js"
+        }
+      ]
+    },
+    {
+      "name": "Visualization",
+      "type": "folder",
+      "path": "pages\\Visualization",
+      "children": [
+        {
+          "name": "VisualizationPage.js",
+          "type": "file",
+          "path": "pages\\Visualization\\VisualizationPage.js"
+        }
+      ]
+    }
+  ],
+  "contexts": [
+    {
+      "name": "I18nContext.js",
+      "type": "file",
+      "path": "context\\I18nContext.js"
+    },
+    {
+      "name": "ThemeContext.js",
+      "type": "file",
+      "path": "context\\ThemeContext.js"
+    }
+  ],
+  "utils": [
+    {
+      "name": "algorithm",
+      "type": "folder",
+      "path": "utils\\algorithm",
+      "children": []
+    },
+    {
+      "name": "lrcParser.js",
+      "type": "file",
+      "path": "utils\\lrcParser.js"
+    },
+    {
+      "name": "WeatherAPI.js",
+      "type": "file",
+      "path": "utils\\WeatherAPI.js"
+    }
+  ],
+  "generatedAt": "2026-01-26T05:13:52.878Z"
+}

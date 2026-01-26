@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import VisualizationToolkit from '../Visualizations/VisualizationToolkit';
 import { Card } from '../UI';
@@ -10,8 +10,6 @@ import { Card } from '../UI';
  * 未来将支持从代码自动生成工具配置
  */
 function AlgorithmVisualizer({ code, language = 'javascript' }) {
-  const [showInfo, setShowInfo] = useState(false);
-
   return (
     <div className="w-full">
       {/* 信息提示 */}

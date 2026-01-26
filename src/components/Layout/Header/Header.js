@@ -42,7 +42,14 @@ function Header() {
           // 作品集
           { label: t('Portfolio'), path: '/portfolio' },
           // 产品
-          { label: t('Products'), path: '/products' }
+          { label: t('Products'), path: '/products' },
+          // 工具
+          {
+            label: '工具',
+            children: [
+              { label: '项目架构', path: '/architecture' }
+            ]
+          }
         ]} />
       </div>
       <div className="hidden md:flex w-[40%] ml-5 items-center justify-end space-x-2">

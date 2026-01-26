@@ -1,61 +1,76 @@
 [
   {
-    "type": "folder",
-    "name": "Css",
-    "path": "css",
+    "name": "CSS",
     "children": [
       {
         "type": "file",
         "name": "index.html",
-        "path": "css\\index.html"
+        "path": "css/index.html"
+      },
+      {
+        "type": "file",
+        "name": "example.css",
+        "path": "css/code/example.css"
       }
     ]
   },
   {
-    "type": "folder",
-    "name": "Html",
-    "path": "html",
+    "name": "HTML",
     "children": [
       {
         "type": "file",
         "name": "index.html",
-        "path": "html\\index.html"
+        "path": "html/index.html"
+      },
+      {
+        "type": "file",
+        "name": "example.html",
+        "path": "html/code/example.html"
       }
     ]
   },
   {
-    "type": "folder",
-    "name": "Java",
-    "path": "java",
+    "name": "JavaScript",
     "children": [
       {
         "type": "file",
         "name": "index.html",
-        "path": "java\\index.html"
-      }
-    ]
-  },
-  {
-    "type": "folder",
-    "name": "Javascript",
-    "path": "javascript",
-    "children": [
+        "path": "javascript/index.html"
+      },
       {
         "type": "file",
-        "name": "index.html",
-        "path": "javascript\\index.html"
+        "name": "example.js",
+        "path": "javascript/code/example.js"
       }
     ]
   },
   {
-    "type": "folder",
     "name": "Python",
-    "path": "python",
     "children": [
       {
         "type": "file",
         "name": "index.html",
-        "path": "python\\index.html"
+        "path": "python/index.html"
+      },
+      {
+        "type": "file",
+        "name": "example.py",
+        "path": "python/code/example.py"
+      }
+    ]
+  },
+  {
+    "name": "Java",
+    "children": [
+      {
+        "type": "file",
+        "name": "index.html",
+        "path": "java/index.html"
+      },
+      {
+        "type": "file",
+        "name": "Example.java",
+        "path": "java/code/Example.java"
       }
     ]
   }
