@@ -3,45 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My React App</title>
-    <script type="text/javascript">
+    <title>Redirecting...</title>
+    <script>
       // GitHub Pages SPA 路由重定向
-      // 当用户直接访问 /architecture 等路由时，GitHub Pages 会返回 404.html
-      // 我们需要重定向到 index.html，让 React Router 处理路由
+      // 当用户直接访问子路由时，GitHub Pages 会返回 404.html
+      // 重定向到 index.html，让 React Router 处理路由
       var path = window.location.pathname;
       var search = window.location.search;
       var hash = window.location.hash;
       
-      // 如果路径不是根路径，重定向到 index.html
+      // 重定向到 index.html，保留路径
+      var redirectPath = '/index.html';
       if (path !== '/' && path !== '/index.html') {
-        window.location.replace('/index.html' + path + search + hash);
+        redirectPath = '/index.html' + path + search + hash;
       }
+      window.location.replace(redirectPath);
     </script>
 </head>
 <body>
-    <div id="root"></div>
-    <script>
-      // 如果重定向失败，尝试加载 index.html 的内容
-      if (window.location.pathname !== '/index.html') {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', '/index.html', true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              document.open();
-              document.write(xhr.responseText);
-              document.close();
-            } else {
-              // 如果无法加载，显示错误信息
-              document.body.innerHTML = '<h1>404 - Page Not Found</h1><p>Redirecting...</p>';
-              setTimeout(function() {
-                window.location.href = '/';
-              }, 2000);
-            }
-          }
-        };
-        xhr.send();
-      }
-    </script>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h1>Redirecting...</h1>
+        <p>If you are not redirected automatically, <a href="/">click here</a>.</p>
+    </div>
 </body>
 </html>
