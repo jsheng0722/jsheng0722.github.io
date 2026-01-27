@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Layout/Header/Header';
-import Footer from '../../components/Layout/Footer/Footer';
-import { FaBook, FaPencilAlt, FaCode, FaHeart, FaSearch, FaPlus, FaCalendar, FaUser, FaClock } from 'react-icons/fa';
-import { Button, Card, Input, Badge, EmptyState } from '../../components/UI';
+import { FaBook, FaPencilAlt, FaCode, FaHeart, FaPlus, FaCalendar, FaUser, FaClock } from 'react-icons/fa';
+import { Button, Card, Badge, EmptyState, SearchBox } from '../../components/UI';
+import PageLayout from '../../components/Layout/PageLayout';
 
 function NoteHome() {
   const navigate = useNavigate();
@@ -79,49 +78,41 @@ function NoteHome() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Header />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 页面标题 */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-            我的笔记本
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            记录生活点滴 · 总结技术心得 · 整理算法题解
-          </p>
+    <PageLayout className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* 页面标题 */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+          我的笔记本
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          记录生活点滴 · 总结技术心得 · 整理算法题解
+        </p>
+      </div>
+
+      {/* 操作栏 */}
+      <Card className="mb-6">
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          {/* 搜索框 */}
+          <SearchBox
+            placeholder="搜索笔记标题、内容或标签..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+
+          {/* 写笔记按钮 */}
+          <Button
+            onClick={handleCreateNote}
+            icon={<FaPlus />}
+            iconPosition="left"
+            className="whitespace-nowrap"
+          >
+            写笔记
+          </Button>
         </div>
+      </Card>
 
-        {/* 操作栏 */}
-        <Card className="mb-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            {/* 搜索框 */}
-            <div className="flex-1 w-full">
-              <Input
-                type="text"
-                placeholder="搜索笔记标题、内容或标签..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                icon={<FaSearch />}
-                iconPosition="left"
-              />
-            </div>
-
-            {/* 写笔记按钮 */}
-            <Button
-              onClick={handleCreateNote}
-              icon={<FaPlus />}
-              iconPosition="left"
-              className="whitespace-nowrap"
-            >
-              写笔记
-            </Button>
-          </div>
-        </Card>
-
-        {/* 分类标签 */}
-        <div className="flex flex-wrap gap-3 mb-6">
+      {/* 分类标签 */}
+      <div className="flex flex-wrap gap-3 mb-6">
           {categories.map(category => (
             <Button
               key={category.id}
@@ -144,11 +135,11 @@ function NoteHome() {
                 {getCategoryStats(category.name)}
               </Badge>
             </Button>
-          ))}
-        </div>
+        ))}
+      </div>
 
-        {/* 统计卡片 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      {/* 统计卡片 */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg">
             <div className="flex items-center justify-between mb-2">
               <FaBook className="w-8 h-8 opacity-80" />
@@ -307,11 +298,8 @@ function NoteHome() {
               </Card>
             ))
           )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+      </div>
+    </PageLayout>
   );
 }
 

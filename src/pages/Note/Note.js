@@ -1,8 +1,8 @@
     import React, { useEffect, useState } from 'react';
     import Header from "../../components/Layout/Header/Header";
     import Footer from '../../components/Layout/Footer/Footer';
-    import NoteSidebar from './Layout/Sidebar/NoteSidebar_1';
-    import NoteMain from './Layout/Main/NoteMain_1';
+    import NoteSidebar from './Layout/Sidebar/NoteSidebar';
+    import NoteMain from './Layout/Main/NoteMain';
     import { ModalProvider } from './ModalProvider';
 
     function Note() {

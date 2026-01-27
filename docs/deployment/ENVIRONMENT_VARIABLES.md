@@ -101,6 +101,7 @@ REACT_APP_WEATHER_API_URL=https://api.openweathermap.org/data/2.5
 ### 问题 1: 环境变量未生效
 
 **原因**: 环境变量可能未正确配置
+
 **解决**:
 1. 检查环境变量名称是否正确（必须以 `REACT_APP_` 开头）
 2. 确认在 CI/CD 平台中已正确配置
@@ -109,6 +110,7 @@ REACT_APP_WEATHER_API_URL=https://api.openweathermap.org/data/2.5
 ### 问题 2: API 调用失败
 
 **原因**: API 密钥可能无效或已过期
+
 **解决**:
 1. 检查 API 密钥是否正确
 2. 确认 API 服务是否正常
@@ -117,6 +119,7 @@ REACT_APP_WEATHER_API_URL=https://api.openweathermap.org/data/2.5
 ### 问题 3: 本地正常但部署后失败
 
 **原因**: 环境变量未在 CI/CD 中配置
+
 **解决**:
 1. 按照上述步骤配置 GitHub Secrets 或 Vercel 环境变量
 2. 重新触发部署

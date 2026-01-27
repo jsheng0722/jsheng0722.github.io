@@ -232,11 +232,6 @@
               "path": "components\\Comment\\CommentSend\\CommentSend.js"
             }
           ]
-        },
-        {
-          "name": "Comment_1.js",
-          "type": "file",
-          "path": "components\\Comment\\Comment_1.js"
         }
       ]
     },
@@ -370,6 +365,11 @@
               "path": "components\\Layout\\Navbar\\Navbar.js"
             }
           ]
+        },
+        {
+          "name": "PageLayout.js",
+          "type": "file",
+          "path": "components\\Layout\\PageLayout.js"
         },
         {
           "name": "Searchbar",
@@ -585,6 +585,18 @@
           ]
         },
         {
+          "name": "FileViewer",
+          "type": "folder",
+          "path": "components\\UI\\FileViewer",
+          "children": [
+            {
+              "name": "FileViewer.js",
+              "type": "file",
+              "path": "components\\UI\\FileViewer\\FileViewer.js"
+            }
+          ]
+        },
+        {
           "name": "FloatingButton",
           "type": "folder",
           "path": "components\\UI\\FloatingButton",
@@ -682,6 +694,18 @@
               "name": "Navigation.js",
               "type": "file",
               "path": "components\\UI\\Navigation\\Navigation.js"
+            }
+          ]
+        },
+        {
+          "name": "SearchBox",
+          "type": "folder",
+          "path": "components\\UI\\SearchBox",
+          "children": [
+            {
+              "name": "SearchBox.js",
+              "type": "file",
+              "path": "components\\UI\\SearchBox\\SearchBox.js"
             }
           ]
         },
@@ -971,11 +995,6 @@
           "path": "pages\\Music\\Music.js"
         },
         {
-          "name": "OptimizedMusic.js",
-          "type": "file",
-          "path": "pages\\Music\\OptimizedMusic.js"
-        },
-        {
           "name": "SimpleTextRecorder.js",
           "type": "file",
           "path": "pages\\Music\\SimpleTextRecorder.js"
@@ -1043,11 +1062,6 @@
                   "name": "NoteMain.js",
                   "type": "file",
                   "path": "pages\\Note\\Layout\\Main\\NoteMain.js"
-                },
-                {
-                  "name": "NoteMain_1.js",
-                  "type": "file",
-                  "path": "pages\\Note\\Layout\\Main\\NoteMain_1.js"
                 }
               ]
             },
@@ -1065,11 +1079,6 @@
                   "name": "NoteSidebar.js",
                   "type": "file",
                   "path": "pages\\Note\\Layout\\Sidebar\\NoteSidebar.js"
-                },
-                {
-                  "name": "NoteSidebar_1.js",
-                  "type": "file",
-                  "path": "pages\\Note\\Layout\\Sidebar\\NoteSidebar_1.js"
                 }
               ]
             }
@@ -1089,11 +1098,6 @@
           "name": "NoteEditor.js",
           "type": "file",
           "path": "pages\\Note\\NoteEditor.js"
-        },
-        {
-          "name": "NoteEditorNew.js",
-          "type": "file",
-          "path": "pages\\Note\\NoteEditorNew.js"
         },
         {
           "name": "NoteHome.js",
@@ -1250,5 +1254,5 @@
       "path": "utils\\WeatherAPI.js"
     }
   ],
-  "generatedAt": "2026-01-26T21:54:34.511Z"
+  "generatedAt": "2026-01-27T00:33:33.691Z"
 }

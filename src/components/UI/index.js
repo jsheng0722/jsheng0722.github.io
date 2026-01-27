@@ -22,6 +22,8 @@ export { default as Navigation } from './Navigation/Navigation';
 export { default as FileList } from './FileList/FileList';
 export { default as ConfirmDialog } from './Dialog/ConfirmDialog';
 export { default as FloatingCodeVisualizer } from './FloatingCodeVisualizer/FloatingCodeVisualizer';
+export { default as SearchBox } from './SearchBox/SearchBox';
+export { default as FileViewer } from './FileViewer/FileViewer';
 
 // 导出组件类型定义
 export * from './types';

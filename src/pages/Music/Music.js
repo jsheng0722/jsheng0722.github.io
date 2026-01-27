@@ -1,16 +1,12 @@
 import React from 'react';
 import { FaMusic, FaFileAlt } from 'react-icons/fa';
-import Header from '../../components/Layout/Header/Header';
-import Footer from '../../components/Layout/Footer/Footer';
 import { Link } from 'react-router-dom';
 import { Card } from '../../components/UI';
+import PageLayout from '../../components/Layout/PageLayout';
 
 function Music() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Header />
-      
-      <main className="max-w-4xl mx-auto px-4 py-8">
+    <PageLayout className="max-w-4xl mx-auto px-4 py-8">
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-3">
@@ -96,10 +92,7 @@ function Music() {
             <p>• 无需复杂的分类和标签，专注于内容本身</p>
           </div>
         </div>
-      </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
 
