@@ -13,35 +13,32 @@
         var search = window.location.search;
         var hash = window.location.hash;
         
-        // 防止无限循环：检查路径是否已经包含 /index.html
+        // 防止无限循环：如果路径已经包含 /index.html，提取实际路径
         if (path.indexOf('/index.html') !== -1) {
-          // 如果路径已经是 /index.html 或 /index.html/...，提取实际路径
           var indexPos = path.indexOf('/index.html');
           var actualPath = path.substring(0, indexPos) + path.substring(indexPos + '/index.html'.length);
-          
-          // 如果实际路径为空，设置为根路径
           if (actualPath === '') {
             actualPath = '/';
           }
-          
-          // 如果实际路径不是根路径，重定向到 /index.html + 实际路径
-          if (actualPath !== '/') {
-            window.location.replace('/index.html' + actualPath + search + hash);
-          } else {
-            // 如果实际路径是根路径，直接重定向到 /index.html
+          // 恢复原始路径
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', actualPath + search + hash);
+          }
+          path = actualPath;
+        }
+        
+        // 如果路径是根路径，直接重定向到 /index.html
+        if (path === '/' || path === '/index.html') {
+          if (path !== '/index.html') {
             window.location.replace('/index.html' + search + hash);
           }
           return;
         }
         
-        // 如果路径是根路径，直接重定向到 /index.html
-        if (path === '/') {
-          window.location.replace('/index.html' + search + hash);
-          return;
-        }
-        
-        // 对于其他路径（子路由），重定向到 /index.html + 路径
-        window.location.replace('/index.html' + path + search + hash);
+        // 对于子路由，保存原始路径，然后重定向到 /index.html
+        // index.html 中的脚本会读取并恢复原始路径
+        sessionStorage.setItem('ghp_redirect', path + search + hash);
+        window.location.replace('/index.html');
       })();
     </script>
 </head>

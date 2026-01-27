@@ -9,6 +9,20 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>My React App</title>
+    <script>
+      // GitHub Pages SPA 路由修复
+      // 当从 404.html 重定向过来时，恢复原始 URL
+      (function() {
+        var redirectPath = sessionStorage.getItem('ghp_redirect');
+        if (redirectPath) {
+          sessionStorage.removeItem('ghp_redirect');
+          // 恢复原始路径（保持干净的 URL）
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, '', redirectPath);
+          }
+        }
+      })();
+    </script>
 </head>
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
