@@ -59,6 +59,9 @@
 - **[components/DIAGRAM_EDITOR_GUIDE.md](./components/DIAGRAM_EDITOR_GUIDE.md)** - 图形编辑器完整指南（合并了快速开始、拖拽等）
 - **[components/SHAPE_EDITOR_GUIDE.md](./components/SHAPE_EDITOR_GUIDE.md)** - 形状编辑器指南
 
+### 算法可视化
+- **[components/ALGORITHM_VISUALIZER.md](./components/ALGORITHM_VISUALIZER.md)** - 算法可视化工具使用指南 ⭐
+
 ### 其他组件
 - **[components/LYRICS_FEATURE.md](./components/LYRICS_FEATURE.md)** - 歌词功能说明
 - **[components/API_INTEGRATION_GUIDE.md](./components/API_INTEGRATION_GUIDE.md)** - API 集成指南
@@ -82,6 +85,7 @@
 - **音乐功能**: 查看 [music/QUICK_ADD_MUSIC.md](./music/QUICK_ADD_MUSIC.md)
 - **笔记功能**: 查看 [pages/FINAL_GUIDE.md](./pages/FINAL_GUIDE.md)
 - **图形编辑**: 查看 [components/DIAGRAM_EDITOR_GUIDE.md](./components/DIAGRAM_EDITOR_GUIDE.md)
+- **算法可视化**: 查看 [components/ALGORITHM_VISUALIZER.md](./components/ALGORITHM_VISUALIZER.md)
 
 ---
 

@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FaCopy, FaCheck, FaMagic } from 'react-icons/fa';
 import { detectLanguageFromCode, normalizeLanguage } from './AlgorithmVisualizer/languageDetector';
-import { FloatingCodeVisualizer } from './UI';
 
 function CodeBlock({ language, children, isAlgorithmNote = false }) {
   const [copied, setCopied] = useState(false);
-  const [showFloatingVisualizer, setShowFloatingVisualizer] = useState(false);
+  const navigate = useNavigate();
 
   // 自动检测代码语言
   const detectedLanguage = useMemo(() => {
@@ -24,8 +24,14 @@ function CodeBlock({ language, children, isAlgorithmNote = false }) {
     });
   };
 
-  const handleToggleVisualization = () => {
-    setShowFloatingVisualizer(!showFloatingVisualizer);
+  const handleOpenVisualization = () => {
+    const code = String(children).replace(/\n$/, '');
+    // 获取当前页面路径作为返回路径
+    const returnPath = window.location.pathname;
+    // 导航到可视化页面，并传递代码和返回路径
+    navigate('/visualization', { 
+      state: { code, returnPath } 
+    });
   };
 
   const code = String(children).replace(/\n$/, '');
@@ -41,9 +47,9 @@ function CodeBlock({ language, children, isAlgorithmNote = false }) {
               id="visualization-button"
               name="visualization-button"
               type="button"
-              onClick={handleToggleVisualization}
+              onClick={handleOpenVisualization}
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all flex items-center gap-1 text-sm shadow-md"
-              title="打开算法可视化"
+              title="打开算法可视化工具"
             >
               <FaMagic className="w-3 h-3" />
               <span>可视化</span>
@@ -86,16 +92,6 @@ function CodeBlock({ language, children, isAlgorithmNote = false }) {
           {code}
         </SyntaxHighlighter>
       </div>
-
-      {/* 悬浮可视化面板 */}
-      <FloatingCodeVisualizer
-        isOpen={showFloatingVisualizer}
-        onClose={handleToggleVisualization}
-        code={code}
-        language={detectedLanguage}
-        onCopy={handleCopy}
-        copied={copied}
-      />
     </>
   );
 }

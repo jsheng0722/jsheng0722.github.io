@@ -1,148 +1,52 @@
 # 可视化工具包 (Visualization Toolkit)
 
-## 📖 概述
+## 概述
 
-可视化工具包是一个交互式的可视化构建系统，允许用户通过拖拽工具来创建和配置算法可视化，而无需直接编写代码。
+解析 Python 风格代码中的 class/def 与顶层调用，在 ReactFlow 画布上展示：结构卡片、参数输入、数据流连线、按算法模式选择的动态可视化，以及**右侧调用树侧边栏**与**点击定位到指定调用**。
 
-## ✨ 主要特性
+## 功能概览
 
-### 1. 拖拽式工具创建
-- 从工具栏拖拽工具到画布
-- 或点击工具栏按钮在画布中心添加工具
-- 支持在画布上自由移动工具
+| 功能 | 说明 |
+|------|------|
+| 结构解析 | `codeParser` 解析 class/def、body 缩进、顶层 `print(fn(...))` 调用 |
+| 数据流 | 解析 `print(solution(...))` 等调用链，连线显示返回值 → 参数 |
+| 多组调用 | 多次 `print(solution(...))` 按「调用 1、调用 2…」分组展示步骤 |
+| 调用树侧边栏 | 右侧树形菜单列出所有顶层调用（如 print → solution），按先后顺序标号 |
+| 定位聚焦 | 点击侧边栏某项：画布视口对准对应定义或「调用 N」块，缩放上限 0.9 避免过大 |
 
-### 2. 工具类型
+## 算法模式与组件
 
-#### 📋 列表工具 (List Tool)
-- 支持多种数据类型：数字、字符串、元组、混合类型
-- 可以手动添加和删除元素
-- 在运行过程中高亮显示当前索引
-- 配置面板支持批量编辑
+根据方法体自动选择可视化组件：
 
-#### 🔄 循环工具 (Loop Tool)
-- 可设置起始值、结束值、步长
-- 实时显示当前循环索引
-- 进度条显示循环进度
-- 支持循环状态指示
+| 代码结构 | 模式 | 组件 |
+|----------|------|------|
+| 赋值中含 sorted/min/max/sum/len/float | `step_execution` | StepByStepViz |
+| 嵌套双循环（内层缩进大于外层） | `double_loop` | DoubleLoopViz |
+| 单循环 + if/elif/else | `loop_with_condition` | LoopWithConditionViz |
+| 单循环 | `single_loop` | SingleLoopViz |
+| 仅条件（if/elif/else，无循环） | `condition_only` | LoopWithConditionViz |
+| 其他 | `generic` | GenericFallback |
 
-#### 📦 变量工具 (Variable Tool)
-- 支持数字、字符串、布尔值类型
-- 显示变量名、类型和当前值
-- 类型颜色区分（数字-蓝色，字符串-绿色，布尔值-紫色）
+**通用约定**：上述组件均执行方法体（algorithmSteps 支持 if/elif/else 分支）并上报 return（onReturnValue + 显示 return 块），供「内层先算、再赋给外层」数据流使用。
 
-### 3. 步骤控制
-- **上一步**：回退到上一个步骤
-- **下一步**：前进到下一个步骤
-- **运行**：自动播放所有步骤
-- **暂停**：暂停自动播放
-- **重置**：回到初始状态
-- **速度控制**：调整播放速度（100ms - 2000ms）
+- **algorithmPatterns.js**：根据 `method.body`（含缩进）检测模式。
+- **VizComponents/**：通用组件目录，可扩展更多算法。
 
-### 4. 配置面板
-- 选中工具后，右侧显示配置面板
-- 可以实时修改工具配置
-- 配置更改立即生效
+## 文件职责
 
-## 🚀 使用方法
+| 文件 | 职责 |
+|------|------|
+| `codeParser.js` | 解析代码：`parseCodeStructure`、`parsePrintExpressions`；产出 structure（含 callSiteArgs、topLevelPrintCalls、callTree）、dataFlow |
+| `algorithmPatterns.js` | 检测算法模式 → step_execution / double_loop / loop_with_condition / single_loop / condition_only / generic |
+| `algorithmSteps.js` | 步骤执行：执行方法体、产出 loop_enter/assign/return 等步骤（供 StepByStepViz） |
+| `expressionEvaluator.js` | 表达式求值（range、min、max、sorted 等），供 algorithmSteps 使用 |
+| `VisualizationToolkit.js` | ReactFlow 画布、单节点、传入 data（structure、code、scrollToMethodKey、onCenterView）、右侧 CallTreeSidebar |
+| `CodeStructureNode.js` | 渲染 class/def 卡片、参数输入、数据流连线、print 输出；处理 scrollToMethodKey#runIndex 定位与 onCenterView |
+| `CallTreeSidebar.js` | 右侧调用树：树形展示顶层调用，点击传 scrollKey#callIndex 用于定位 |
+| `DynamicMethodVisualization.js` | 按 pattern 分发到 VizComponents（含 StepByStepViz 的 scrollToRunIndex、onCenterView） |
+| `VizComponents/` | StepByStepViz、SingleLoopViz、DoubleLoopViz、LoopWithConditionViz、GenericFallback；共享：formatValue、EmptyVizMessage、ListItemCard、parseParams |
 
-### 基本流程
+## 使用
 
-1. **添加工具**
-   - 从工具栏拖拽工具到画布
-   - 或点击工具栏按钮添加工具
-
-2. **配置工具**
-   - 点击工具选中它
-   - 在右侧配置面板中修改设置
-   - 例如：为列表添加元素，设置循环范围等
-
-3. **运行可视化**
-   - 点击"运行"按钮开始自动播放
-   - 或使用"上一步"/"下一步"手动控制
-   - 调整速度滑块控制播放速度
-
-4. **移动工具**
-   - 点击并拖拽工具在画布上移动
-   - 工具位置会自动保存
-
-5. **删除工具**
-   - 选中工具后，点击工具上的删除按钮
-
-## 📁 文件结构
-
-```
-src/components/Visualizations/
-├── VisualizationToolkit.js      # 主组件
-├── VisualizationToolbar.js      # 工具栏组件
-├── tools/
-│   ├── ListTool.js              # 列表工具
-│   ├── LoopTool.js              # 循环工具
-│   └── VariableTool.js          # 变量工具
-└── README.md                    # 说明文档
-```
-
-## 🎯 设计理念
-
-### 工具优先
-- 先完善工具功能，再考虑代码集成
-- 每个工具都是独立的、可配置的
-- 工具之间可以组合使用
-
-### 手动配置
-- 用户手动设置工具参数
-- 不依赖代码解析
-- 提供直观的配置界面
-
-### 步骤跟踪
-- 所有操作都生成步骤
-- 可以回放和单步执行
-- 支持暂停和继续
-
-## 🔮 未来扩展
-
-### 计划添加的工具
-- **树工具**：可视化树结构
-- **图工具**：可视化图结构
-- **栈/队列工具**：可视化栈和队列操作
-- **哈希表工具**：可视化哈希表
-
-### 计划添加的功能
-- 工具之间的连接和关联
-- 更复杂的动画效果
-- 导出可视化结果
-- 保存和加载可视化配置
-
-## 💡 使用示例
-
-### 示例1：列表遍历
-1. 添加一个列表工具
-2. 在配置面板中添加元素：[1, 3, 5, 7, 9]
-3. 添加一个循环工具
-4. 设置循环范围：0 到 4，步长为 1
-5. 点击运行，观察列表元素逐个高亮
-
-### 示例2：变量跟踪
-1. 添加一个变量工具
-2. 设置变量名为 "sum"，类型为 "number"，值为 0
-3. 在循环过程中，变量值会更新
-4. 观察变量值的变化
-
-## 🛠️ 技术实现
-
-- **React Hooks**：状态管理
-- **绝对定位**：工具在画布上的位置
-- **事件处理**：拖拽、点击、键盘事件
-- **步骤生成**：根据工具配置自动生成步骤序列
-- **状态同步**：工具状态与步骤状态同步
-
-## 📝 注意事项
-
-1. **工具位置**：工具使用绝对定位，在不同屏幕尺寸下可能需要调整
-2. **步骤生成**：需要至少有一个循环工具才能生成多个步骤
-3. **配置保存**：当前配置保存在组件状态中，刷新页面会丢失
-4. **性能**：大量工具可能影响性能，建议控制在合理数量
-
-## 🔗 相关组件
-
-- `src/components/AlgorithmVisualizer/` - 代码驱动的算法可视化（旧版本）
-- `src/components/UI/` - 通用UI组件库
+- **独立页面**：如 `/visualization`，左侧代码、右侧画布 + 调用树侧边栏。
+- **内嵌**：将 `VisualizationToolkitWithReactFlow` 作为子组件，传入 `initialCode`。
