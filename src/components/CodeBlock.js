@@ -5,7 +5,7 @@ import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FaCopy, FaCheck, FaMagic } from 'react-icons/fa';
 import { detectLanguageFromCode, normalizeLanguage } from './AlgorithmVisualizer/languageDetector';
 
-function CodeBlock({ language, children, isAlgorithmNote = false }) {
+function CodeBlock({ language, children, isAlgorithmNote = false, note = null }) {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
@@ -26,11 +26,15 @@ function CodeBlock({ language, children, isAlgorithmNote = false }) {
 
   const handleOpenVisualization = () => {
     const code = String(children).replace(/\n$/, '');
-    // 获取当前页面路径作为返回路径
     const returnPath = window.location.pathname;
-    // 导航到可视化页面，并传递代码和返回路径
+    if (note) {
+      try {
+        sessionStorage.setItem('visualizationReturnNote', JSON.stringify(note));
+        sessionStorage.setItem('visualizationReturnPath', returnPath);
+      } catch (_) {}
+    }
     navigate('/visualization', { 
-      state: { code, returnPath } 
+      state: { code, returnPath, note } 
     });
   };
 

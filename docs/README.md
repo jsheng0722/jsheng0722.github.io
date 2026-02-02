@@ -46,6 +46,7 @@
 
 ### 功能说明
 - **[pages/NOTE_FEATURES.md](./pages/NOTE_FEATURES.md)** - 笔记功能指南（合并了缩放相关文档）
+- **[pages/NOTE_TRACKING.md](./pages/NOTE_TRACKING.md)** - 笔记功能追踪（当前实现状态与维护参考）
 - **[pages/MARKDOWN_RENDERING.md](./pages/MARKDOWN_RENDERING.md)** - Markdown 渲染说明
 - **[pages/EDIT_DELETE_GUIDE.md](./pages/EDIT_DELETE_GUIDE.md)** - 编辑删除指南
 - **[pages/PERMANENT_SAVE_GUIDE.md](./pages/PERMANENT_SAVE_GUIDE.md)** - 永久保存指南

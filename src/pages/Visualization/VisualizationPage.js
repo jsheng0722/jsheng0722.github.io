@@ -34,7 +34,24 @@ function VisualizationPage() {
   };
 
   const handleBack = () => {
-    navigate(returnPath);
+    // 优先用 state，刷新后 state 会丢，用 sessionStorage 兜底
+    let note = location.state?.note;
+    let path = returnPath;
+
+    if (!note) {
+      try {
+        const storedNote = sessionStorage.getItem('visualizationReturnNote');
+        const storedPath = sessionStorage.getItem('visualizationReturnPath');
+        if (storedNote) note = JSON.parse(storedNote);
+        if (storedPath) path = storedPath;
+      } catch (_) {}
+    }
+    try {
+      sessionStorage.removeItem('visualizationReturnNote');
+      sessionStorage.removeItem('visualizationReturnPath');
+    } catch (_) {}
+
+    navigate(path, note ? { state: { note } } : {});
   };
 
   return (

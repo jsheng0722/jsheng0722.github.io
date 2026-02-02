@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { FaArrowLeft, FaEdit, FaHeart, FaPencilAlt, FaCode, FaBook, FaCalendar, FaUser, FaClock, FaTags, FaTrash, FaSearchPlus, FaSearchMinus, FaTextHeight } from 'react-icons/fa';
@@ -10,10 +10,26 @@ import StayingFunVisualization from '../../components/StayingFunVisualization/St
 import { Button, Card, Badge, Dialog, Input } from '../../components/UI';
 
 function NoteView() {
-  // const { id } = useParams(); // 暂时未使用
+  const { id: noteId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const note = location.state?.note;
+  const [note, setNote] = useState(() => {
+    const fromState = location.state?.note;
+    if (fromState != null) return fromState;
+    if (!noteId) return null;
+    try {
+      const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
+      const found = userNotes.find((n) => String(n.id) === String(noteId));
+      return found || null;
+    } catch (_) {
+      return null;
+    }
+  });
+
+  // 当通过 state 传入笔记时（例如从列表或可视化返回），同步到本地 state
+  useEffect(() => {
+    if (location.state?.note != null) setNote(location.state.note);
+  }, [location.state?.note]);
   
   // 内容缩放状态
   const [contentZoom, setContentZoom] = useState(100); // 默认100%
@@ -36,9 +52,17 @@ function NoteView() {
       alert('请输入正确的笔记标题以确认删除');
       return;
     }
+    const idStr = String(note.id);
+    // 从 userNotes 中移除（统一用字符串比较，避免类型不一致删不掉）
     const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-    const updatedNotes = userNotes.filter(n => n.id !== note.id);
+    const updatedNotes = userNotes.filter(n => String(n.id) !== idStr);
     localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
+    // 记录“已删除 id”，列表页会过滤掉（包括来自 JSON 的笔记）
+    try {
+      const deletedIds = JSON.parse(localStorage.getItem('notesDeletedIds') || '[]');
+      if (!deletedIds.includes(idStr)) deletedIds.push(idStr);
+      localStorage.setItem('notesDeletedIds', JSON.stringify(deletedIds));
+    } catch (_) {}
     setShowDeleteDialog(false);
     navigate('/notes');
   };
@@ -288,6 +312,7 @@ function NoteView() {
                       <CodeBlock 
                         language={match[1]}
                         isAlgorithmNote={isAlgorithmNote}
+                        note={note}
                       >
                         {String(children).replace(/\n$/, '')}
                       </CodeBlock>

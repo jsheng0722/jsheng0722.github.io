@@ -21,7 +21,7 @@ function PageLayout({
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       {showHeader && <Header />}
       
-      <main className={`flex-1 ${className}`}>
+      <main className={`flex-1 w-full ${className}`}>
         {children}
       </main>
       

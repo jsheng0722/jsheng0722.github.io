@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBook, FaPencilAlt, FaCode, FaHeart, FaPlus, FaCalendar, FaUser, FaClock } from 'react-icons/fa';
+import { FaBook, FaPencilAlt, FaCode, FaHeart, FaPlus, FaThLarge, FaList } from 'react-icons/fa';
 import { Button, Card, Badge, EmptyState, SearchBox } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
+import { NoteListItemCompact, NoteCard } from '../../components/Note';
+
+const LAYOUT_KEY = 'notesLayoutView';
 
 function NoteHome() {
   const navigate = useNavigate();
@@ -10,6 +13,20 @@ function NoteHome() {
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [searchTerm, setSearchTerm] = useState('');
+  const [layoutView, setLayoutView] = useState(() => {
+    try {
+      return localStorage.getItem(LAYOUT_KEY) || 'card';
+    } catch (_) {
+      return 'card';
+    }
+  });
+
+  const setLayoutAndPersist = (view) => {
+    setLayoutView(view);
+    try {
+      localStorage.setItem(LAYOUT_KEY, view);
+    } catch (_) {}
+  };
 
   const categories = [
     { id: 'all', name: '全部', icon: <FaBook />, color: 'bg-blue-600', hoverColor: 'hover:bg-blue-700' },
@@ -23,25 +40,30 @@ function NoteHome() {
   }, []);
 
   const loadNotes = () => {
-    // 从JSON文件加载笔记
+    const getDeletedIds = () => {
+      try {
+        return new Set(JSON.parse(localStorage.getItem('notesDeletedIds') || '[]'));
+      } catch (_) {
+        return new Set();
+      }
+    };
+    const deletedIds = getDeletedIds();
+
     fetch('/content/noteList_s.json')
       .then(response => response.json())
       .then(data => {
-        // 从localStorage加载用户创建的笔记
         const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-        
-        // 合并两个数组
-        const allNotes = [...data, ...userNotes];
-        
+        const merged = [...data, ...userNotes];
+        const allNotes = merged.filter(n => !deletedIds.has(String(n.id)));
         setNotes(allNotes);
         setFilteredNotes(allNotes);
       })
       .catch(error => {
         console.error('加载笔记失败:', error);
-        // 如果JSON加载失败，只加载localStorage中的笔记
         const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-        setNotes(userNotes);
-        setFilteredNotes(userNotes);
+        const allNotes = userNotes.filter(n => !deletedIds.has(String(n.id)));
+        setNotes(allNotes);
+        setFilteredNotes(allNotes);
       });
   };
 
@@ -78,7 +100,7 @@ function NoteHome() {
   };
 
   return (
-    <PageLayout className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <PageLayout className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
@@ -98,6 +120,34 @@ function NoteHome() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+
+          {/* 布局切换 */}
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-gray-100 dark:bg-gray-800">
+            <button
+              type="button"
+              onClick={() => setLayoutAndPersist('card')}
+              title="卡片视图"
+              className={`p-2 rounded-md transition-colors ${
+                layoutView === 'card'
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+            >
+              <FaThLarge className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setLayoutAndPersist('compact')}
+              title="紧凑视图"
+              className={`p-2 rounded-md transition-colors ${
+                layoutView === 'compact'
+                  ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              }`}
+            >
+              <FaList className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* 写笔记按钮 */}
           <Button
@@ -173,132 +223,47 @@ function NoteHome() {
           </Card>
         </div>
 
-        {/* 笔记网格 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredNotes.length === 0 ? (
-            <div className="col-span-full">
-              <EmptyState
-                icon="inbox"
-                title={searchTerm ? '未找到匹配的笔记' : '还没有笔记'}
-                description={searchTerm ? '尝试其他搜索关键词' : '点击"写笔记"按钮创建您的第一篇笔记'}
-                action={!searchTerm ? (
-                  <Button
-                    onClick={handleCreateNote}
-                    icon={<FaPlus />}
-                    iconPosition="left"
-                  >
-                    开始写笔记
-                  </Button>
-                ) : null}
-              />
-            </div>
-          ) : (
-            filteredNotes.map(note => (
-              <Card
+        {/* 笔记列表：卡片视图 / 紧凑视图 */}
+        {filteredNotes.length === 0 ? (
+          <div className="col-span-full">
+            <EmptyState
+              icon="inbox"
+              title={searchTerm ? '未找到匹配的笔记' : '还没有笔记'}
+              description={searchTerm ? '尝试其他搜索关键词' : '点击"写笔记"按钮创建您的第一篇笔记'}
+              action={!searchTerm ? (
+                <Button
+                  onClick={handleCreateNote}
+                  icon={<FaPlus />}
+                  iconPosition="left"
+                >
+                  开始写笔记
+                </Button>
+              ) : null}
+            />
+          </div>
+        ) : layoutView === 'compact' ? (
+          <Card className="overflow-hidden p-0">
+            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+              {filteredNotes.map(note => (
+                <NoteListItemCompact
+                  key={note.id}
+                  note={note}
+                  onClick={handleNoteClick}
+                />
+              ))}
+            </ul>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredNotes.map(note => (
+              <NoteCard
                 key={note.id}
-                onClick={() => handleNoteClick(note)}
-                hover
-                clickable
-              >
-                {/* 笔记卡片头部 */}
-                <div className={`h-2 rounded-t-xl ${
-                  note.category === '生活' ? 'bg-pink-500' :
-                  note.category === '随笔' ? 'bg-purple-500' :
-                  (note.category === '算法' || note.category === 'LeetCode') ? 'bg-green-500' :
-                  'bg-blue-500'
-                }`}></div>
-
-                <div className="p-6">
-                  {/* 分类标签 */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className={`p-2 rounded-lg ${
-                      note.category === '生活' ? 'bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400' :
-                      note.category === '随笔' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400' :
-                      (note.category === '算法' || note.category === 'LeetCode') ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' :
-                      'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'
-                    }`}>
-                      {note.category === '生活' ? <FaHeart className="w-4 h-4" /> :
-                       note.category === '随笔' ? <FaPencilAlt className="w-4 h-4" /> :
-                       (note.category === '算法' || note.category === 'LeetCode') ? <FaCode className="w-4 h-4" /> :
-                       <FaBook className="w-4 h-4" />}
-                    </span>
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                      {note.category || '未分类'}
-                    </span>
-                    {(note?.status === 'draft' || note?.isDraft === true || note?.draft === true) && (
-                      <Badge variant="warning" size="small">草稿</Badge>
-                    )}
-                  </div>
-
-                  {/* 标题 */}
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2">
-                    {note.title}
-                  </h3>
-
-                  {/* 摘要 */}
-                  {note.excerpt && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                      {note.excerpt}
-                    </p>
-                  )}
-
-                  {/* 元信息 */}
-                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-4">
-                    <div className="flex items-center gap-1">
-                      <FaUser className="w-3 h-3" />
-                      {note.author}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <FaCalendar className="w-3 h-3" />
-                      {note.date}
-                    </div>
-                    {note.readTime && (
-                      <div className="flex items-center gap-1">
-                        <FaClock className="w-3 h-3" />
-                        {note.readTime}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* 标签 */}
-                  {note.tags && note.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {note.tags.slice(0, 3).map(tag => (
-                        <Badge key={tag} variant="default" size="small">
-                          #{tag}
-                        </Badge>
-                      ))}
-                      {note.tags.length > 3 && (
-                        <Badge variant="default" size="small">
-                          +{note.tags.length - 3}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 算法特殊标识 */}
-                  {note.category === '算法' && note.difficulty && (
-                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-gray-600 dark:text-gray-400">难度</span>
-                        <Badge
-                          variant={
-                            note.difficulty === '简单' ? 'success' :
-                            note.difficulty === '中等' ? 'warning' :
-                            'danger'
-                          }
-                          size="small"
-                        >
-                          {note.difficulty}
-                        </Badge>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            ))
-          )}
-      </div>
+                note={note}
+                onClick={handleNoteClick}
+              />
+            ))}
+          </div>
+        )}
     </PageLayout>
   );
 }
