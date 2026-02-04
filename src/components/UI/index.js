@@ -23,6 +23,8 @@ export { default as FileList } from './FileList/FileList';
 export { default as ConfirmDialog } from './Dialog/ConfirmDialog';
 export { default as SearchBox } from './SearchBox/SearchBox';
 export { default as FileViewer } from './FileViewer/FileViewer';
+export { default as ColorPicker } from './ColorPicker/ColorPicker';
+export { default as IconToggleButton } from './IconToggleButton/IconToggleButton';
 
 // 导出组件类型定义
 export * from './types';

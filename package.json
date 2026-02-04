@@ -11,6 +11,8 @@
     "github-markdown-css": "^5.5.1",
     "markdown-it": "^14.1.0",
     "marked": "^12.0.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^5.4.624",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

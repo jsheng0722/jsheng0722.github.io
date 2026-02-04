@@ -25,7 +25,7 @@ async convertAndCleanup(type, data) {
   const fileName = this.generateFileName(type, data);
   const fileData = { type, data, generatedAt: new Date().toISOString() };
   
-  await this.saveToServer(fileName, fileData);
+  await this.saveData(type, { ...data, converted: fileData });
   this.removeFromLocalStorage(type, data.id);
   
   return { success: true, fileName };

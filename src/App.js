@@ -19,6 +19,8 @@ import ShopHome from './pages/Shop/ShopHome';
 import AddProduct from './pages/Shop/AddProduct';
 import VisualizationPage from './pages/Visualization/VisualizationPage';
 import ArchitecturePage from './pages/Architecture/ArchitecturePage';
+import PdfPage from './pages/Pdf/PdfPage';
+import PdfEditorPage from './pages/Pdf/PdfEditorPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
 
@@ -50,6 +52,8 @@ function App() {
             <Route path="/shop/add" element={<AddProduct />} />
             <Route path="/visualization" element={<VisualizationPage />} />
             <Route path="/architecture" element={<ArchitecturePage />} />
+            <Route path="/pdf" element={<PdfPage />} />
+            <Route path="/pdf/editor" element={<PdfEditorPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>
