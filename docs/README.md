@@ -23,6 +23,9 @@
 
 ## 🎨 功能指南
 
+### 工具
+- 记账（`/accounting`）：IndexedDB 本地记账，见 `src/pages/Accounting/AccountingPage.js`，使用通用组件 Pagination、StatCard、EmptyState、Loading。
+
 ### 通用功能
 - **[features/FLOATING_TOOLBAR.md](./features/FLOATING_TOOLBAR.md)** - 浮动工具栏使用指南
 - **[features/FONT_SIZE.md](./features/FONT_SIZE.md)** - 字体大小调整功能

@@ -306,6 +306,55 @@ import { EmptyState } from '../../components/UI';
 <EmptyState size="large" title="大空状态" />
 ```
 
+### 14. Pagination - 分页组件
+```jsx
+import { Pagination } from '../../components/UI';
+
+// 基础分页（总条数 > pageSize 时自动显示）
+<Pagination
+  total={totalItems}
+  pageSize={10}
+  currentPage={page}
+  onPageChange={setPage}
+  itemLabel="条"
+/>
+
+// 自定义文案
+<Pagination
+  total={50}
+  pageSize={10}
+  currentPage={2}
+  onPageChange={setPage}
+  prevLabel="上一页"
+  nextLabel="下一页"
+  itemLabel="条"
+  className="mt-3"
+/>
+```
+
+### 15. StatCard - 统计卡片组件
+```jsx
+import { StatCard } from '../../components/UI';
+import { FaArrowDown } from 'react-icons/fa';
+
+// 基础统计卡片（收入/支出/结余等）
+<StatCard
+  icon={<FaArrowDown />}
+  label="收入"
+  value="¥1,234.56"
+  borderVariant="emerald"
+  valueVariant="emerald"
+  size="compact"
+/>
+
+// 边框与数值颜色变体：emerald | red | blue | amber | gray
+<StatCard label="支出" value="¥500" borderVariant="red" valueVariant="red" />
+<StatCard label="结余" value="¥734" borderVariant="blue" valueVariant="blue" />
+
+// 尺寸：compact | medium | large
+<StatCard label="总计" value="¥2,000" size="medium" />
+```
+
 ## 🎨 主题支持
 
 所有组件都支持明暗主题切换：

@@ -228,13 +228,14 @@
 - **架构数据**: ✅ 已生成
 
 #### 组件状态
-- **UI组件库**: 19个组件
+- **UI组件库**: 21个组件
   - Button, Card, Input, Textarea, Badge
   - Modal, Dialog, ConfirmDialog, Collapsible, Tooltip
   - Navigation, FileList, Form
   - FloatingButton, FloatingToolbar, FloatingCodeVisualizer
   - Loading, EmptyState
   - SearchBox, FileViewer
+  - Pagination, StatCard
 - **布局组件**: PageLayout, Header, Footer
 - **已文档化**: ✅ 在 README.md 和 UI/README.md 中
 
@@ -245,13 +246,15 @@
 
 #### 组件应用状态
 - **PageLayout**: 
-  - ✅ 已应用: Music.js, NoteHome.js
-  - ⚠️ 待应用: 其他15个页面
+  - ✅ 已应用: Music.js, NoteHome.js, AccountingPage.js 等
+  - ⚠️ 待应用: 部分页面
 - **SearchBox**: 
   - ✅ 已应用: NoteHome.js
   - ⚠️ 待应用: BlogHome, VideoPlayer, ShopHome, Products
 - **FileViewer**: 
   - ⚠️ 待应用: Products, Folder
+- **Pagination / StatCard / EmptyState / Loading**: 
+  - ✅ 已应用: AccountingPage（记账页）
 
 ---
 
@@ -277,5 +280,5 @@
 
 ---
 
-**最后更新**: 2025-01-25  
-**状态**: ✅ 规则已制定
+**最后更新**: 2025-02  
+**状态**: ✅ 规则已制定（已新增 Pagination、StatCard，记账页应用通用组件）

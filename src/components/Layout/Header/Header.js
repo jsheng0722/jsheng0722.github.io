@@ -47,6 +47,7 @@ function Header() {
           {
             label: '工具',
             children: [
+              { label: '记账', path: '/accounting' },
               { label: '项目架构', path: '/architecture' },
               { label: 'PDF', path: '/pdf' }
             ]

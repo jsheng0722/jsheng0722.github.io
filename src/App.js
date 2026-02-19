@@ -21,8 +21,10 @@ import VisualizationPage from './pages/Visualization/VisualizationPage';
 import ArchitecturePage from './pages/Architecture/ArchitecturePage';
 import PdfPage from './pages/Pdf/PdfPage';
 import PdfEditorPage from './pages/Pdf/PdfEditorPage';
+import AccountingPage from './pages/Accounting/AccountingPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
+import GlobalMusicToolbar from './components/MusicPlayer/GlobalMusicToolbar';
 
 // GitHub Pages 需要 basename（对于根路径部署，basename 为空字符串）
 const basename = process.env.PUBLIC_URL || '';
@@ -32,6 +34,7 @@ function App() {
     <ThemeProvider>
       <I18nProvider>
         <Router basename={basename}>
+          <GlobalMusicToolbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
@@ -54,6 +57,7 @@ function App() {
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/pdf" element={<PdfPage />} />
             <Route path="/pdf/editor" element={<PdfEditorPage />} />
+            <Route path="/accounting" element={<AccountingPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

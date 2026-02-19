@@ -1,290 +1,255 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaMusic, FaStepBackward, FaStepForward, FaRandom, FaRedo, FaFileAlt } from 'react-icons/fa';
+import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaMusic, FaFileAlt, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import LyricsDisplay from './LyricsDisplay';
 
-function FixedMusicPlayer() {
+function FixedMusicPlayer({ onClose, position = 'bottom-left' }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const volumeRef = useRef(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [showLyrics, setShowLyrics] = useState(false);
 
-  // 从musicList.json加载当前播放的音乐
   useEffect(() => {
-    fetch('/music/musicList.json')
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setCurrentTrack(data[0]); // 默认加载第一首歌
-        }
+    fetch(`${process.env.PUBLIC_URL || ''}/music/musicList.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.length > 0) setCurrentTrack(data[0]);
       })
-      .catch(error => {
-        console.error('加载音乐列表失败:', error);
-        // 使用默认数据
+      .catch(() => {
         setCurrentTrack({
-          title: "Lo-Fi Chill Beats",
-          artist: "Chill Vibes",
-          cover: "https://via.placeholder.com/150/6366f1/ffffff?text=🎵",
-          file: "https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav"
+          title: 'Lo-Fi Chill Beats',
+          artist: 'Chill Vibes',
+          cover: 'https://via.placeholder.com/150/6366f1/ffffff?text=🎵',
+          file: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
         });
       });
   }, []);
-  
+
   const audioRef = useRef(null);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => {
-      if (audio.duration && !isNaN(audio.duration)) {
-        setDuration(audio.duration);
-      }
+      if (audio.duration && !isNaN(audio.duration)) setDuration(audio.duration);
     };
-    const handleEnded = () => setIsPlaying(false);
-
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('durationchange', updateDuration);
     audio.addEventListener('canplay', updateDuration);
-    audio.addEventListener('ended', handleEnded);
-
-    // 立即尝试获取时长
-    if (audio.duration && !isNaN(audio.duration)) {
-      setDuration(audio.duration);
-    }
-
+    audio.addEventListener('ended', () => setIsPlaying(false));
+    if (audio.duration && !isNaN(audio.duration)) setDuration(audio.duration);
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('durationchange', updateDuration);
       audio.removeEventListener('canplay', updateDuration);
-      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('ended', () => setIsPlaying(false));
     };
   }, [currentTrack]);
 
-  // 播放控制
   const togglePlay = () => {
     const audio = audioRef.current;
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
+    if (isPlaying) audio.pause();
+    else audio.play();
     setIsPlaying(!isPlaying);
   };
 
   const handleTimeChange = (e) => {
-    const audio = audioRef.current;
-    const newTime = parseFloat(e.target.value);
-    audio.currentTime = newTime;
-    setCurrentTime(newTime);
-  };
-
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-    setIsMuted(newVolume === 0);
-    if (audioRef.current) {
-      audioRef.current.volume = newVolume;
-    }
+    const t = parseFloat(e.target.value);
+    if (audioRef.current) audioRef.current.currentTime = t;
+    setCurrentTime(t);
   };
 
   const toggleMute = () => {
     const audio = audioRef.current;
     if (isMuted) {
-      audio.volume = volume;
+      if (audio) audio.volume = volumeRef.current;
       setIsMuted(false);
     } else {
-      audio.volume = 0;
+      if (audio) {
+        volumeRef.current = audio.volume;
+        audio.volume = 0;
+      }
       setIsMuted(true);
     }
   };
 
-  const formatTime = (time) => {
-    if (isNaN(time)) return '0:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const formatTime = (t) => {
+    if (isNaN(t)) return '0:00';
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
-  // 如果没有加载音乐，不显示播放器
-  if (!currentTrack) {
-    return null;
-  }
+  if (!currentTrack) return null;
+
+  const coverUrl = currentTrack.cover;
+  const hasCover = Boolean(coverUrl);
+
+  const isLeft = position === 'bottom-left';
 
   return (
     <>
-      <audio
-        ref={audioRef}
-        src={currentTrack.file}
-        preload="metadata"
-      />
-      
-      {/* 固定侧边栏音乐播放器 */}
-      <div className={`fixed right-0 top-1/2 transform -translate-y-1/2 z-40 transition-all duration-300 ${
-        isMinimized ? 'w-16' : 'w-80'
-      }`}>
-        <div className="bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 shadow-lg rounded-l-lg overflow-hidden">
+      <audio ref={audioRef} src={currentTrack.file} preload="metadata" />
+
+      <div
+        className={`fixed z-40 transition-all duration-300 ease-out ${
+          isLeft ? 'left-0 bottom-0 mb-4 ml-0' : 'right-0 top-1/2 -translate-y-1/2'
+        } ${isMinimized ? 'w-14' : 'w-56'}`}
+      >
+        <div className={`bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-xl overflow-hidden ${
+          isLeft
+            ? 'border-r border-gray-200/80 dark:border-gray-700/80 rounded-r-2xl ml-0 mb-0'
+            : 'border-l border-gray-200/80 dark:border-gray-700/80 rounded-l-2xl'
+        }`}>
           {isMinimized ? (
-            // 最小化状态 - 显示封面图片
-            <div className="p-2 flex flex-col items-center space-y-2">
+            <div className="p-2.5 flex flex-col items-center gap-2">
               <button
                 onClick={() => setIsMinimized(false)}
-                className="relative w-12 h-12 rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
-                title="展开音乐播放器"
+                className="w-11 h-11 rounded-xl overflow-hidden ring-2 ring-transparent hover:ring-blue-400/50 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+                title="Expand"
               >
-                {currentTrack?.cover ? (
+                {hasCover ? (
                   <img
-                    src={currentTrack.cover}
-                    alt={currentTrack.title || '音乐'}
+                    src={coverUrl}
+                    alt=""
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                     }}
                   />
                 ) : null}
-                <div className="w-full h-full bg-blue-600 flex items-center justify-center" style={{ display: currentTrack?.cover ? 'none' : 'flex' }}>
-                  <FaMusic className="w-6 h-6 text-white" />
+                <div
+                  className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white"
+                  style={{ display: hasCover ? 'none' : 'flex' }}
+                >
+                  <FaMusic className="w-5 h-5" />
                 </div>
               </button>
               <button
                 onClick={togglePlay}
-                className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center hover:from-blue-600 hover:to-indigo-700 shadow-lg transition-all active:scale-95"
               >
-                {isPlaying ? <FaPause className="w-3 h-3" /> : <FaPlay className="w-3 h-3" />}
+                {isPlaying ? <FaPause className="w-3.5 h-3.5" /> : <FaPlay className="w-3.5 h-3.5 ml-0.5" />}
               </button>
+              {onClose && (
+                <button
+                  onClick={onClose}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  title="Close"
+                >
+                  <FaTimes className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           ) : (
-            // 完整状态
-            <div className="p-4">
-              {/* 头部 */}
-              <div className="flex items-center justify-between mb-4">
-                <Link
-                  to="/music"
-                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
-                >
-                  <FaMusic className="w-5 h-5" />
-                  <span className="font-medium">音乐</span>
-                </Link>
-                <button
-                  onClick={() => setIsMinimized(true)}
-                  className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-                  title="最小化"
-                >
-                  ×
-                </button>
-              </div>
-
-              {/* 当前播放信息 */}
-              <div className="flex items-center space-x-3 mb-4">
-                <img
-                  src={currentTrack.cover}
-                  alt={currentTrack.title}
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {currentTrack.title}
-                  </h4>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {currentTrack.artist}
-                  </p>
+            <div className="p-3">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Music</span>
+                <div className="flex items-center gap-0.5">
+                  <button
+                    onClick={() => setShowLyrics(!showLyrics)}
+                    className={`p-1.5 rounded-lg transition-colors ${showLyrics ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'}`}
+                    title="Lyrics"
+                  >
+                    <FaFileAlt className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setIsMinimized(true)}
+                    className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    title="Collapse to left"
+                  >
+                    {isLeft ? <FaChevronLeft className="w-3.5 h-3.5" /> : <FaChevronRight className="w-3.5 h-3.5" />}
+                  </button>
+                  {onClose && (
+                    <button
+                      onClick={onClose}
+                      className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      title="Close"
+                    >
+                      <FaTimes className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {/* 进度条 */}
-              <div className="mb-4">
-                <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <div className="flex gap-3 mb-3">
+                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-gray-700">
+                  {hasCover ? (
+                    <img
+                      src={coverUrl}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div
+                    className="w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white"
+                    style={{ display: hasCover ? 'none' : 'flex' }}
+                  >
+                    <FaMusic className="w-6 h-6" />
+                  </div>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{currentTrack.title}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{currentTrack.artist}</p>
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <div className="flex justify-between text-[10px] text-gray-400 dark:text-gray-500 mb-0.5">
                   <span>{formatTime(currentTime)}</span>
                   <span>{formatTime(duration)}</span>
                 </div>
                 <input
                   type="range"
-                  min="0"
+                  min={0}
                   max={duration || 0}
                   value={currentTime}
                   onChange={handleTimeChange}
-                  className="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                  className="music-slider w-full h-1 rounded-full"
                 />
               </div>
 
-              {/* 控制按钮 */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-2">
-                  <button 
-                    onClick={() => setShowLyrics(!showLyrics)}
-                    className={`p-1 transition-colors ${
-                      showLyrics 
-                        ? 'text-blue-600 dark:text-blue-400' 
-                        : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                    }`}
-                    title="歌词"
-                  >
-                    <FaFileAlt className="w-4 h-4" />
-                  </button>
-                  <button className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                    <FaRandom className="w-4 h-4" />
-                  </button>
-                  <button className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                    <FaStepBackward className="w-4 h-4" />
-                  </button>
-                </div>
-
+              <div className="flex items-center gap-2">
                 <button
                   onClick={togglePlay}
-                  className="p-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white font-medium text-sm hover:from-blue-600 hover:to-indigo-700 shadow-md transition-all active:scale-[0.98]"
                 >
-                  {isPlaying ? <FaPause className="w-5 h-5" /> : <FaPlay className="w-5 h-5" />}
+                  {isPlaying ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
+                  <span>{isPlaying ? 'Pause' : 'Play'}</span>
                 </button>
-
-                <div className="flex items-center space-x-2">
-                  <button className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                    <FaStepForward className="w-4 h-4" />
-                  </button>
-                  <button className="p-1 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-                    <FaRedo className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-
-              {/* 音量控制 */}
-              <div className="flex items-center space-x-2">
-                <button onClick={toggleMute} className="p-1">
-                  {isMuted ? <FaVolumeMute className="w-4 h-4 text-gray-500" /> : <FaVolumeUp className="w-4 h-4 text-gray-500" />}
-                </button>
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.1"
-                  value={isMuted ? 0 : volume}
-                  onChange={handleVolumeChange}
-                  className="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
-                />
-              </div>
-
-              {/* 快速访问 */}
-              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <Link
-                  to="/music"
-                  className="block w-full text-center px-3 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                <button
+                  onClick={toggleMute}
+                  className="p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                  title={isMuted ? 'Unmute' : 'Mute'}
                 >
-                  打开音乐库
-                </Link>
+                  {isMuted ? <FaVolumeMute className="w-4 h-4" /> : <FaVolumeUp className="w-4 h-4" />}
+                </button>
               </div>
+
+              <Link
+                to="/music"
+                className="mt-3 flex items-center justify-center gap-1.5 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              >
+                Open music library
+                <FaChevronRight className="w-3 h-3 rotate-[-90deg]" />
+              </Link>
             </div>
           )}
         </div>
       </div>
 
-      {/* 歌词显示组件 */}
       <LyricsDisplay
         currentMusic={currentTrack}
         currentTime={currentTime}
@@ -292,22 +257,30 @@ function FixedMusicPlayer() {
         onClose={() => setShowLyrics(false)}
       />
 
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
+      <style>{`
+        .music-slider {
+          -webkit-appearance: none;
           appearance: none;
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
+          background: linear-gradient(to right, #e5e7eb 0%, #e5e7eb 100%);
         }
-        .slider::-moz-range-thumb {
-          width: 12px;
-          height: 12px;
+        .dark .music-slider { background: linear-gradient(to right, #374151 0%, #374151 100%); }
+        .music-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 10px;
+          height: 10px;
           border-radius: 50%;
-          background: #3b82f6;
+          background: linear-gradient(135deg, #3b82f6, #6366f1);
+          cursor: pointer;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .music-slider::-moz-range-thumb {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #3b82f6, #6366f1);
           cursor: pointer;
           border: none;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
       `}</style>
     </>

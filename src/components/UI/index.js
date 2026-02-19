@@ -25,6 +25,8 @@ export { default as SearchBox } from './SearchBox/SearchBox';
 export { default as FileViewer } from './FileViewer/FileViewer';
 export { default as ColorPicker } from './ColorPicker/ColorPicker';
 export { default as IconToggleButton } from './IconToggleButton/IconToggleButton';
+export { default as Pagination } from './Pagination/Pagination';
+export { default as StatCard } from './StatCard/StatCard';
 
 // 导出组件类型定义
 export * from './types';

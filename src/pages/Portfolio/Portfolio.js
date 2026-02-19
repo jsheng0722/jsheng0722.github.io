@@ -4,7 +4,8 @@ import Header from '../../components/Layout/Header/Header';
 import Card from './Components/Card';
 import ProjectCard from "./Components/ProjectCard";
 import SkillCategory from './Components/SkillCategory ';
-import TestimonialCard from './Components/TestimonialCard';
+import Giscus from '../../components/Giscus/Giscus';
+import { getDiscussionsUrl } from '../../config/giscus';
 
 // Welcome Section
 const Welcome = () => {
@@ -220,26 +221,33 @@ const Skills = () => {
     );
 };
 
-// Testimonials Section
-const Testimonials = () => {
-    const [testimonials, setTestimonials] = useState([]);
-
-    useEffect(() => {
-        fetch(`${process.env.PUBLIC_URL}/me/testimonial.json`)  // Adjust the path if your JSON file is located elsewhere
-            .then(response => response.json())
-            .then(data => setTestimonials(data))
-            .catch(error => console.error('Error loading testimonials data:', error));
-    }, []);
-
+const WhatPeopleSay = () => {
+    const commentsRef = useRef(null);
+    const scrollToComments = () => commentsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return (
-        <div className="bg-white p-10">
-            <h2 className="text-3xl font-semibold mb-5">What People Say About Me</h2>
-            <p className='text-sm mt-2 text-gray-400 w-[70%]'>Here are some evaluations of me. See me more fully through the eyes of others.</p>
-            <div className="flex flex-row justify-center items-center flex-wrap gap-8 pt-8 px-5">
-                {testimonials.map((testimonial, index) => (
-                    <TestimonialCard key={index} image={testimonial.image} name={testimonial.name} text={testimonial.text} />
-                ))}
+        <div id="comments" ref={commentsRef} className="bg-white dark:bg-gray-800 p-10 scroll-mt-4">
+            <h2 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2">What People Say About Me</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Sign in with GitHub to comment below, or comment on GitHub.
+            </p>
+            <div className="flex flex-wrap gap-3 mb-4">
+                <a
+                    href="#comments"
+                    onClick={(e) => { e.preventDefault(); scrollToComments(); }}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+                >
+                    Sign in with GitHub
+                </a>
+                <a
+                    href={getDiscussionsUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors"
+                >
+                    Comment on GitHub
+                </a>
             </div>
+            <Giscus lang="en" />
         </div>
     );
 };
@@ -306,7 +314,7 @@ function Portfolio () {
                 <Education />
                 <Projects />
                 <Skills />
-                <Testimonials />
+                <WhatPeopleSay />
                 <Contact ref={contactRef} />
             </div>
             <Footer />

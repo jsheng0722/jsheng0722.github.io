@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaHome, FaFolder, FaMusic, FaFileAlt, FaCode, FaImage, FaDesktop, FaEdit, FaVideo, FaShoppingCart } from 'react-icons/fa';
+import { FaHome, FaFolder, FaMusic, FaFileAlt, FaCode, FaImage, FaDesktop, FaEdit, FaVideo, FaShoppingCart, FaWallet } from 'react-icons/fa';
 import DesktopShortcut from './DesktopShortcut';
 
 function Desktop() {
@@ -13,7 +13,8 @@ function Desktop() {
     { icon: FaFileAlt, label: '笔记', path: '/notes', color: 'text-pink-500' },
     { icon: FaImage, label: '产品', path: '/products', color: 'text-amber-500' },
     { icon: FaMusic, label: '音乐', path: '/music', color: 'text-violet-500' },
-    { icon: FaFolder, label: '文件管理', path: '/files', color: 'text-yellow-500' }
+    { icon: FaFolder, label: '文件管理', path: '/files', color: 'text-yellow-500' },
+    { icon: FaWallet, label: '记账', path: '/accounting', color: 'text-emerald-500' }
   ];
 
   return (

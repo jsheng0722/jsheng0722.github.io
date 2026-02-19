@@ -122,6 +122,13 @@
 - 代码示例
 - 多语言支持
 
+### 8. 📒 记账（工具）
+- **记账页面** (`/accounting`)
+  - IndexedDB 前端存储，数据仅存本机
+  - 收入/支出分类、日历选日、按日/月查看
+  - 统计卡片（收入、支出、结余）、分页列表（每页 10 条）
+  - 使用通用组件：Pagination、StatCard、EmptyState、Loading
+
 ## 🛠️ 技术栈
 
 ### 前端核心
@@ -144,12 +151,13 @@
 ### 通用UI组件库
 - **位置**：`src/components/UI/`
 - **特点**：统一的样式与交互，支持明暗主题和响应式
-- **组件列表**（19个）：
+- **组件列表**（21个）：
   - 基础组件：`Button`、`Card`、`Input`、`Textarea`、`Badge`
   - 交互组件：`Modal`、`Dialog`、`ConfirmDialog`、`Collapsible`、`Tooltip`
   - 布局组件：`Navigation`、`FileList`、`Form`
   - 功能组件：`FloatingButton`、`FloatingToolbar`、`FloatingCodeVisualizer`、`SearchBox`、`FileViewer`
   - 状态组件：`Loading`、`EmptyState`
+  - 数据展示：`Pagination`、`StatCard`
 - **使用文档**：`src/components/UI/README.md`
 
 ### 布局组件
@@ -246,6 +254,9 @@ react-basic/
 ### 工具页面
 | 路由 | 页面组件 | 说明 |
 |------|----------|------|
+| `/accounting` | AccountingPage | 记账（IndexedDB 本地存储） |
+| `/pdf` | PdfPage | PDF 查看 |
+| `/pdf/editor` | PdfEditorPage | PDF 编辑 |
 | `/visualization` | VisualizationPage | 算法可视化 |
 | `/architecture` | ArchitecturePage | 项目架构可视化 |
 

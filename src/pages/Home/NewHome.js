@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
-import FixedMusicPlayer from '../../components/MusicPlayer/FixedMusicPlayer';
 import OptimizedWeather from '../../components/Weather/OptimizedWeather';
 import CompactCalendar from '../../components/Calendar/CompactCalendar';
 import Showcase from '../../components/Showcase/Showcase';
@@ -158,9 +157,6 @@ function NewHome() {
         </div>
       </main>
       <Footer />
-      
-      {/* 固定侧边栏音乐播放器 */}
-      <FixedMusicPlayer />
     </>
   );
 }
