@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
-import { FaSave, FaTimes, FaHeart, FaPencilAlt, FaCode, FaTags, FaPlus, FaProjectDiagram, FaTextHeight, FaSearchPlus, FaSearchMinus, FaTable, FaListUl, FaQuoteRight } from 'react-icons/fa';
+import { FaSave, FaTimes, FaHeart, FaPencilAlt, FaCode, FaGraduationCap, FaTags, FaPlus, FaProjectDiagram, FaTextHeight, FaSearchPlus, FaSearchMinus, FaTable, FaListUl, FaQuoteRight } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
@@ -16,19 +16,28 @@ function NoteEditor() {
   const editNote = location.state?.editNote; // 获取要编辑的笔记
   const isEditing = !!editNote;
 
-  const [note, setNote] = useState(editNote || {
-    title: '',
-    author: 'Jihui',
-    date: new Date().toISOString().split('T')[0],
-    category: '随笔',
-    tags: [],
-    content: '',
-    excerpt: '',
-    readTime: '1分钟',
-    difficulty: '',
-    problemNumber: '',
-    timeComplexity: '',
-    spaceComplexity: ''
+  const mapLegacyCategory = (cat) => {
+    if (cat === '生活') return '日常日记';
+    if (cat === '随笔') return '随笔写写';
+    return cat || '随笔写写';
+  };
+
+  const [note, setNote] = useState(() => {
+    if (editNote) return { ...editNote, category: mapLegacyCategory(editNote.category) };
+    return {
+      title: '',
+      author: 'Jihui',
+      date: new Date().toISOString().split('T')[0],
+      category: '随笔写写',
+      tags: [],
+      content: '',
+      excerpt: '',
+      readTime: '1分钟',
+      difficulty: '',
+      problemNumber: '',
+      timeComplexity: '',
+      spaceComplexity: ''
+    };
   });
   const [tagInput, setTagInput] = useState('');
   const [showPreview, setShowPreview] = useState(false);
@@ -38,8 +47,9 @@ function NoteEditor() {
   const [contentZoom, setContentZoom] = useState(100); // 内容缩放，默认100%
 
   const categories = [
-    { id: 'life', name: '生活', icon: <FaHeart />, color: 'pink' },
-    { id: 'essay', name: '随笔', icon: <FaPencilAlt />, color: 'purple' },
+    { id: 'study', name: '学习笔记', icon: <FaGraduationCap />, color: 'amber' },
+    { id: 'daily', name: '日常日记', icon: <FaHeart />, color: 'pink' },
+    { id: 'essay', name: '随笔写写', icon: <FaPencilAlt />, color: 'purple' },
     { id: '算法', name: '算法', icon: <FaCode />, color: 'green' }
   ];
 
@@ -465,8 +475,9 @@ function NoteEditor() {
                     <span>{note.date}</span>
                     <span>•</span>
                     <span className={`px-3 py-1 rounded-full font-medium ${
-                      note.category === '生活' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' :
-                      note.category === '随笔' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
+                      note.category === '学习笔记' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                      note.category === '日常日记' ? 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' :
+                      note.category === '随笔写写' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' :
                       note.category === '算法' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
                       'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                     }`}>

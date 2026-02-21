@@ -355,6 +355,32 @@ import { FaArrowDown } from 'react-icons/fa';
 <StatCard label="总计" value="¥2,000" size="medium" />
 ```
 
+### 16. DataExportImport - 数据导出/导入/打印
+用于将表格数据导出为 CSV（Excel 可打开）、从 CSV 导入、以及调用浏览器打印（可另存为 PDF）。
+
+```jsx
+import { DataExportImport } from '../../components/UI';
+
+// 需在父组件中提供 ref 指向可打印区域（内含表格）
+const printRef = useRef(null);
+
+<DataExportImport
+  data={rows}
+  columns={[{ key: 'type', label: '类型' }, { key: 'amount', label: '金额' }]}
+  filename="export.csv"
+  onImport={(parsedRows) => { /* 将 parsedRows 写入存储 */ }}
+  printTitle="记账 2025-02 当月"
+  printRef={printRef}
+  scopeLabel="2025-02 当月"
+/>
+```
+
+- **导出**：下载 CSV 文件（Excel 可直接打开）
+- **导入**：选择 CSV 文件后解析为 `rows`，由 `onImport(rows)` 处理
+- **打印**：对 `printRef.current` 调用打印，用户可在对话框中选择「另存为 PDF」
+
+工具函数见 `src/utils/dataExport.js`：`exportToCSV`、`importFromCSV`、`printTable`。
+
 ## 🎨 主题支持
 
 所有组件都支持明暗主题切换：

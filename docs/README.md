@@ -23,6 +23,9 @@
 
 ## 🎨 功能指南
 
+### 学习记录
+- **[features/LEARNING_RECORDS.md](./features/LEARNING_RECORDS.md)** - 学习记录功能说明（笔记、单词本、学习资料、记录类型与后续规划）
+
 ### 工具
 - 记账（`/accounting`）：IndexedDB 本地记账，见 `src/pages/Accounting/AccountingPage.js`，使用通用组件 Pagination、StatCard、EmptyState、Loading。
 

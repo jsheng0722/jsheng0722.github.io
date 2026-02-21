@@ -1,6 +1,6 @@
 import React from 'react';
 import { Badge } from '../UI';
-import { getCategoryIconClass, getCategoryIcon, getDifficultyVariant } from './noteCategoryUtils';
+import { getCategoryIconClass, getCategoryIcon, getDifficultyVariant, getDisplayCategory } from './noteCategoryUtils';
 
 /**
  * 笔记列表紧凑项 - 单行展示：左侧笔记名+分类，右侧作者与日期（窗口小时可换行）
@@ -24,7 +24,7 @@ function NoteListItemCompact({ note, onClick }) {
             {note.title}
           </span>
           <Badge variant="default" size="small" className="shrink-0 text-xs">
-            {note.category || '未分类'}
+            {getDisplayCategory(note.category)}
           </Badge>
           {isDraft && (
             <Badge variant="warning" size="small">草稿</Badge>

@@ -64,6 +64,18 @@ export function getEntriesByMonth(yearMonth) {
   });
 }
 
+export function getEntriesByYear(year) {
+  return getAllEntries().then((list) => {
+    return list.filter((e) => e.date && e.date.startsWith(String(year))).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  });
+}
+
+export function getEntriesByDate(dateStr) {
+  return getAllEntries().then((list) => {
+    return list.filter((e) => e.date === dateStr).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  });
+}
+
 export function deleteEntry(id) {
   return openDB().then((db) => {
     return new Promise((resolve, reject) => {

@@ -27,6 +27,7 @@ export { default as ColorPicker } from './ColorPicker/ColorPicker';
 export { default as IconToggleButton } from './IconToggleButton/IconToggleButton';
 export { default as Pagination } from './Pagination/Pagination';
 export { default as StatCard } from './StatCard/StatCard';
+export { default as DataExportImport } from './DataExportImport/DataExportImport';
 
 // 导出组件类型定义
 export * from './types';

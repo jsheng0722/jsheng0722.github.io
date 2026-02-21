@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaPlus, FaTrash, FaWallet, FaArrowDown, FaArrowUp, FaCalendarAlt, FaExpandAlt, FaCompressAlt } from 'react-icons/fa';
 import PageLayout from '../../components/Layout/PageLayout';
-import { Card, Pagination, StatCard, EmptyState, Loading } from '../../components/UI';
-import { addEntry, getEntriesByMonth, deleteEntry } from '../../utils/accountingDB';
+import { Card, Pagination, StatCard, EmptyState, Loading, DataExportImport } from '../../components/UI';
+import { addEntry, getEntriesByMonth, getEntriesByYear, deleteEntry } from '../../utils/accountingDB';
+
+const ACCOUNTING_COLUMNS = [
+  { key: 'type', label: '类型' },
+  { key: 'amount', label: '金额' },
+  { key: 'category', label: '分类' },
+  { key: 'date', label: '日期' },
+  { key: 'note', label: '备注' },
+];
 
 const INCOME_CATEGORIES = ['工资', '奖金', '兼职', '理财', '其他'];
 const EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '住房', '医疗', '教育', '其他'];
@@ -31,7 +39,10 @@ function AccountingPage() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarExpanded, setCalendarExpanded] = useState(false);
   const [entries, setEntries] = useState([]);
+  const [entriesYear, setEntriesYear] = useState([]);
+  const [exportScope, setExportScope] = useState('month');
   const [loading, setLoading] = useState(true);
+  const printRef = React.useRef(null);
   const [form, setForm] = useState({
     type: 'expense',
     amount: '',
@@ -39,6 +50,8 @@ function AccountingPage() {
     date: new Date().toISOString().slice(0, 10),
     note: '',
   });
+
+  const [calYear, calMonth] = yearMonth.split('-').map(Number);
 
   const loadEntries = useCallback(() => {
     setLoading(true);
@@ -51,6 +64,11 @@ function AccountingPage() {
   useEffect(() => {
     loadEntries();
   }, [loadEntries]);
+
+  useEffect(() => {
+    if (exportScope !== 'year') return;
+    getEntriesByYear(calYear).then(setEntriesYear).catch(console.error);
+  }, [exportScope, calYear]);
 
   const summary = React.useMemo(() => {
     let income = 0;
@@ -94,8 +112,45 @@ function AccountingPage() {
 
   const paginatedEntries = displayEntries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
+  const exportData = React.useMemo(() => {
+    if (exportScope === 'day') {
+      const d = selectedDate || form.date;
+      return d ? entries.filter((e) => e.date === d) : [];
+    }
+    if (exportScope === 'year') return entriesYear;
+    return entries;
+  }, [exportScope, selectedDate, form.date, entries, entriesYear]);
+
+  const exportDataForCSV = React.useMemo(
+    () => exportData.map((e) => ({ type: e.type === 'income' ? '收入' : '支出', amount: e.amount, category: e.category, date: e.date, note: e.note || '' })),
+    [exportData]
+  );
+
+  const exportScopeLabel = exportScope === 'day' ? (selectedDate || form.date) + ' 当天' : exportScope === 'month' ? yearMonth + ' 当月' : calYear + ' 当年';
+  const exportFilename = `记账-${exportScope === 'day' ? selectedDate || form.date : exportScope === 'month' ? yearMonth : calYear}.csv`;
+
+  const handleImport = (rows) => {
+    const typeMap = { 收入: 'income', 支出: 'expense', income: 'income', expense: 'expense' };
+    let added = 0;
+    const next = () => {
+      if (added >= rows.length) {
+        loadEntries();
+        if (exportScope === 'year') getEntriesByYear(calYear).then(setEntriesYear);
+        window.alert(`已导入 ${added} 条`);
+        return;
+      }
+      const row = rows[added];
+      const type = typeMap[row.类型 || row.type] || (row.类型 === '收入' ? 'income' : 'expense');
+      const amount = Number(String(row.金额 || row.amount).trim()) || 0;
+      const date = String(row.日期 || row.date || '').trim() || new Date().toISOString().slice(0, 10);
+      const category = String(row.分类 || row.category || '').trim() || (type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]);
+      const note = String(row.备注 || row.note || '').trim();
+      addEntry({ type, amount, category, date, note }).then(() => { added++; next(); }).catch(() => next());
+    };
+    next();
+  };
+
   const calendarDays = getCalendarDays(yearMonth);
-  const [calYear, calMonth] = yearMonth.split('-').map(Number);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -155,17 +210,74 @@ function AccountingPage() {
           </div>
 
           {/* Month selector */}
-          <div className="mb-4 flex items-center gap-4">
+          <div className="mb-4 flex items-center gap-4 flex-wrap">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">月份</label>
-<input
-          type="month"
-          value={yearMonth}
-          onChange={(e) => {
-            setYearMonth(e.target.value);
-            setSelectedDate(null);
-          }}
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2"
-        />
+            <input
+              type="month"
+              value={yearMonth}
+              onChange={(e) => {
+                setYearMonth(e.target.value);
+                setSelectedDate(null);
+              }}
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2"
+            />
+            <span className="text-sm text-gray-500 dark:text-gray-400">导出/打印范围：</span>
+            <div className="flex gap-2">
+              {['day', 'month', 'year'].map((scope) => (
+                <button
+                  key={scope}
+                  type="button"
+                  onClick={() => setExportScope(scope)}
+                  className={`px-3 py-1 rounded text-sm ${exportScope === scope ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}`}
+                >
+                  {scope === 'day' ? '当天' : scope === 'month' ? '当月' : '当年'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Export / Import / Print */}
+          <div className="mb-4">
+            <DataExportImport
+              data={exportDataForCSV}
+              columns={ACCOUNTING_COLUMNS}
+              filename={exportFilename}
+              onImport={handleImport}
+              printTitle={`记账 ${exportScopeLabel}`}
+              printRef={printRef}
+              scopeLabel={exportScopeLabel}
+            />
+          </div>
+
+          {/* Printable area (off-screen, used for print/PDF) */}
+          <div
+            ref={printRef}
+            className="absolute -left-[9999px] w-[800px] p-6 bg-white text-black"
+            aria-hidden="true"
+          >
+            <h2 className="text-lg font-bold mb-4">记账 {exportScopeLabel}</h2>
+            <table className="w-full border border-gray-300 text-sm">
+              <thead>
+                <tr>
+                  {ACCOUNTING_COLUMNS.map((c) => (
+                    <th key={c.key} className="border border-gray-300 p-2 text-left">
+                      {c.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {exportDataForCSV.map((row, i) => (
+                  <tr key={i}>
+                    {ACCOUNTING_COLUMNS.map((c) => (
+                      <td key={c.key} className="border border-gray-300 p-2">
+                        {row[c.key]}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           {/* Summary cards */}

@@ -22,6 +22,8 @@ import ArchitecturePage from './pages/Architecture/ArchitecturePage';
 import PdfPage from './pages/Pdf/PdfPage';
 import PdfEditorPage from './pages/Pdf/PdfEditorPage';
 import AccountingPage from './pages/Accounting/AccountingPage';
+import VocabularyPage from './pages/Vocabulary/VocabularyPage';
+import LearningMaterialsPage from './pages/LearningMaterials/LearningMaterialsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
 import GlobalMusicToolbar from './components/MusicPlayer/GlobalMusicToolbar';
@@ -58,6 +60,8 @@ function App() {
             <Route path="/pdf" element={<PdfPage />} />
             <Route path="/pdf/editor" element={<PdfEditorPage />} />
             <Route path="/accounting" element={<AccountingPage />} />
+            <Route path="/vocabulary" element={<VocabularyPage />} />
+            <Route path="/learning-materials" element={<LearningMaterialsPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

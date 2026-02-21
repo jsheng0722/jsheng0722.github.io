@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
-import { FaArrowLeft, FaEdit, FaHeart, FaPencilAlt, FaCode, FaBook, FaCalendar, FaUser, FaClock, FaTags, FaTrash, FaSearchPlus, FaSearchMinus, FaTextHeight } from 'react-icons/fa';
+import { FaArrowLeft, FaEdit, FaCalendar, FaUser, FaClock, FaTags, FaTrash, FaSearchPlus, FaSearchMinus, FaTextHeight } from 'react-icons/fa';
+import { getDisplayCategory, getCategoryIcon } from '../../components/Note/noteCategoryUtils';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramViewer from '../../components/DiagramEditor/DiagramViewer';
@@ -101,12 +102,8 @@ function NoteView() {
     );
   }
 
-  const getCategoryIcon = () => {
-    if (note.category === '生活') return <FaHeart className="w-5 h-5" />;
-    if (note.category === '随笔') return <FaPencilAlt className="w-5 h-5" />;
-    if (note.category === '算法' || note.category === 'LeetCode') return <FaCode className="w-5 h-5" />;
-    return <FaBook className="w-5 h-5" />;
-  };
+  const displayCategory = getDisplayCategory(note?.category);
+  const categoryIcon = getCategoryIcon(note?.category, 'w-5 h-5');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -184,8 +181,9 @@ function NoteView() {
         <Card>
           {/* 头部装饰条 */}
           <div className={`h-2 rounded-t-xl ${
-            note.category === '生活' ? 'bg-gradient-to-r from-pink-500 to-pink-600' :
-            note.category === '随笔' ? 'bg-gradient-to-r from-purple-500 to-purple-600' :
+            note.category === '学习笔记' ? 'bg-gradient-to-r from-amber-500 to-amber-600' :
+            note.category === '日常日记' || note.category === '生活' ? 'bg-gradient-to-r from-pink-500 to-pink-600' :
+            note.category === '随笔写写' || note.category === '随笔' ? 'bg-gradient-to-r from-purple-500 to-purple-600' :
             (note.category === '算法' || note.category === 'LeetCode') ? 'bg-gradient-to-r from-green-500 to-green-600' :
             'bg-gradient-to-r from-blue-500 to-blue-600'
           }`}></div>
@@ -195,16 +193,17 @@ function NoteView() {
             <div className="mb-6">
               <Badge
                 variant={
-                  note.category === '生活' ? 'warning' :
-                  note.category === '随笔' ? 'info' :
+                  note.category === '学习笔记' ? 'warning' :
+                  note.category === '日常日记' || note.category === '生活' ? 'warning' :
+                  note.category === '随笔写写' || note.category === '随笔' ? 'info' :
                   (note.category === '算法' || note.category === 'LeetCode') ? 'success' :
                   'primary'
                 }
                 size="medium"
                 className="inline-flex items-center gap-2 px-4 py-2"
               >
-                {getCategoryIcon()}
-                {note.category}
+                {categoryIcon}
+                {displayCategory}
               </Badge>
             </div>
 

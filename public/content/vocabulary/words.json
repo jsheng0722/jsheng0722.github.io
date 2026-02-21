@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1771574109046,
+    "word": "avalanche",
+    "phonetic": "/ˈævəlɑːnʃ/",
+    "phoneticAudio": "https://api.dictionaryapi.dev/media/pronunciations/en/avalanche-us.mp3",
+    "partOfSpeech": "n.",
+    "definition": "雪崩",
+    "example": "",
+    "source": "",
+    "isNew": true
+  },
+  {
+    "id": 1771574210186,
+    "word": "catastrophe",
+    "phonetic": "/kəˈtæstɹəfi/",
+    "phoneticAudio": "https://api.dictionaryapi.dev/media/pronunciations/en/catastrophe-us.mp3",
+    "partOfSpeech": "n.",
+    "definition": "大灾难",
+    "example": "",
+    "source": "",
+    "isNew": true
+  },
+  {
+    "id": 1771574418829,
+    "word": "gravity",
+    "phonetic": "/ˈɡɹævɪti/",
+    "phoneticAudio": "https://api.dictionaryapi.dev/media/pronunciations/en/gravity-us.mp3",
+    "partOfSpeech": "n.",
+    "definition": "重力",
+    "example": "",
+    "source": "",
+    "isNew": false,
+    "rootsAffixes": [
+      {
+        "word": "-ity",
+        "type": "词缀",
+        "meaning": "性质",
+        "example": "ability 能力"
+      }
+    ]
+  },
+  {
+    "id": 1771647548732,
+    "word": "gratify",
+    "phonetic": "/ˈɡrætɪfaɪ/",
+    "partOfSpeech": "v.",
+    "definition": "使高兴，使满足，满足（愿望、需要等）",
+    "example": "",
+    "source": "",
+    "isNew": true,
+    "rootsAffixes": [
+      {
+        "word": "-ify",
+        "type": "词缀",
+        "meaning": "使…化",
+        "example": "simplify 简化"
+      },
+      {
+        "word": "grat-",
+        "type": "词根",
+        "meaning": "愉悦的；讨人喜欢的",
+        "example": ""
+      }
+    ]
+  }
+]

@@ -34,9 +34,17 @@ function Header() {
               { label: '动态', path: '/blog' },
               { label: '视频', path: '/video' },
               { label: '收藏', path: '/shop' },
-              { label: t('Notes'), path: '/notes' },
               { label: t('Music'), path: '/music' },
               { label: '文件管理', path: '/files' }
+            ]
+          },
+          // 学习记录（笔记、单词本等）
+          {
+            label: '学习记录',
+            children: [
+              { label: t('Notes'), path: '/notes' },
+              { label: '单词本', path: '/vocabulary' },
+              { label: '学习资料', path: '/learning-materials' }
             ]
           },
           // 作品集

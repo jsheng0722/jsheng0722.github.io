@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Badge } from '../UI';
 import { FaCalendar, FaUser, FaClock } from 'react-icons/fa';
-import { getCategoryBarClass, getCategoryIconClass, getCategoryIcon, getDifficultyVariant } from './noteCategoryUtils';
+import { getCategoryBarClass, getCategoryIconClass, getCategoryIcon, getDifficultyVariant, getDisplayCategory } from './noteCategoryUtils';
 
 /**
  * 笔记卡片 - 卡片视图单条展示
@@ -19,7 +19,7 @@ function NoteCard({ note, onClick }) {
             {getCategoryIcon(note.category)}
           </span>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            {note.category || '未分类'}
+            {getDisplayCategory(note.category)}
           </span>
           {isDraft && <Badge variant="warning" size="small">草稿</Badge>}
         </div>

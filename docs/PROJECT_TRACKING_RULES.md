@@ -220,12 +220,12 @@
 
 ## 📊 追踪记录
 
-### 当前状态（2025-01-25）
+### 当前状态（2025-02）
 
 #### 路由状态
-- **总数**: 20个路由（包括404）
-- **已文档化**: ✅ 全部在 README.md 中
-- **架构数据**: ✅ 已生成
+- **总数**: 22+ 个路由（含 404；学习记录含 `/vocabulary`、`/learning-materials`）
+- **已文档化**: ✅ 全部在 README.md 的「页面路由」表格中
+- **架构数据**: ✅ 需运行 `npm run generate-architecture` 同步
 
 #### 组件状态
 - **UI组件库**: 21个组件
@@ -246,15 +246,19 @@
 
 #### 组件应用状态
 - **PageLayout**: 
-  - ✅ 已应用: Music.js, NoteHome.js, AccountingPage.js 等
+  - ✅ 已应用: Music.js, NoteHome.js, VocabularyPage.js, LearningMaterialsPage.js, AccountingPage.js 等
   - ⚠️ 待应用: 部分页面
 - **SearchBox**: 
-  - ✅ 已应用: NoteHome.js
+  - ✅ 已应用: NoteHome.js, VocabularyPage.js
   - ⚠️ 待应用: BlogHome, VideoPlayer, ShopHome, Products
 - **FileViewer**: 
   - ⚠️ 待应用: Products, Folder
 - **Pagination / StatCard / EmptyState / Loading**: 
   - ✅ 已应用: AccountingPage（记账页）
+
+#### 学习记录与文档
+- **单词本**（`/vocabulary`）：✅ 功能完整（含近义词、备注；已移除来源），已记录于 LEARNING_RECORDS.md、README 与路由表
+- **学习资料**（`/learning-materials`）：✅ 已实现并列入路由与文档
 
 ---
 
@@ -281,4 +285,4 @@
 ---
 
 **最后更新**: 2025-02  
-**状态**: ✅ 规则已制定（已新增 Pagination、StatCard，记账页应用通用组件）
+**状态**: ✅ 规则已制定；单词本（近义词/备注）、学习资料已文档化并与代码同步
