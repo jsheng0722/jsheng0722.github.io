@@ -26,6 +26,7 @@ import VocabularyPage from './pages/Vocabulary/VocabularyPage';
 import LearningMaterialsPage from './pages/LearningMaterials/LearningMaterialsPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
+import { SessionProvider } from './context/SessionContext';
 import GlobalMusicToolbar from './components/MusicPlayer/GlobalMusicToolbar';
 
 // GitHub Pages 需要 basename（对于根路径部署，basename 为空字符串）
@@ -35,6 +36,7 @@ function App() {
   return (
     <ThemeProvider>
       <I18nProvider>
+        <SessionProvider>
         <Router basename={basename}>
           <GlobalMusicToolbar />
           <Routes>
@@ -65,6 +67,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>
+        </SessionProvider>
       </I18nProvider>
     </ThemeProvider>
   );

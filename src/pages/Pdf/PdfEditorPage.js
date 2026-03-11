@@ -6,6 +6,7 @@ import PageLayout from '../../components/Layout/PageLayout';
 import { Button, ColorPicker, IconToggleButton } from '../../components/UI';
 import { FaArrowLeft, FaSearchMinus, FaSearchPlus, FaFont, FaSignature, FaCheck, FaTimes, FaSave, FaChevronLeft, FaChevronRight, FaHighlighter, FaThLarge } from 'react-icons/fa';
 import * as pdfStorage from './pdfStorage';
+import { useI18n } from '../../context/I18nContext';
 import {
   CANVAS_W,
   CANVAS_H,
@@ -48,6 +49,7 @@ if (typeof window !== 'undefined' && pdfjsLib.GlobalWorkerOptions) {
 function PdfEditorPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
   const fileId = location.state?.fileId;
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -169,7 +171,7 @@ function PdfEditorPage() {
         setCurrentPage(1);
       })
       .catch((err) => {
-        if (!cancelled) setCanvasError(err?.message || 'PDF 加载失败');
+        if (!cancelled) setCanvasError(err?.message || t('PdfLoadFail'));
       })
       .finally(() => {
         if (!cancelled) setCanvasLoading(false);
@@ -177,7 +179,7 @@ function PdfEditorPage() {
     return () => {
       cancelled = true;
     };
-  }, [file?.blob]);
+  }, [file?.blob, t]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -215,7 +217,7 @@ function PdfEditorPage() {
         setPdfRenderedAt((n) => n + 1);
       } catch (e) {
         if (e?.name !== 'RenderingCancelledException') {
-          setCanvasError(e?.message || '渲染失败');
+          setCanvasError(e?.message || t('PdfRenderFail'));
         }
       } finally {
         ctx.restore();
@@ -228,7 +230,7 @@ function PdfEditorPage() {
         renderTaskRef.current = null;
       }
     };
-  }, [pdfDoc, currentPage, numPages]);
+  }, [pdfDoc, currentPage, numPages, t]);
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -736,9 +738,9 @@ function PdfEditorPage() {
   if (!fileId) {
     return (
       <PageLayout className="w-full max-w-7xl mx-auto px-4 py-8">
-        <p className="text-gray-500 dark:text-gray-400 mb-4">请从 PDF 列表选择要编辑的文件</p>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">{t('PdfSelectFile')}</p>
         <Button onClick={() => navigate('/pdf')} icon={<FaArrowLeft />} iconPosition="left">
-          返回 PDF 列表
+          {t('PdfBackToList')}
         </Button>
       </PageLayout>
     );
@@ -747,7 +749,7 @@ function PdfEditorPage() {
   if (loading) {
     return (
       <PageLayout className="w-full max-w-7xl mx-auto px-4 py-8">
-        <p className="text-gray-500 dark:text-gray-400">加载中…</p>
+        <p className="text-gray-500 dark:text-gray-400">{t('PdfLoading')}</p>
       </PageLayout>
     );
   }
@@ -755,9 +757,9 @@ function PdfEditorPage() {
   if (!file) {
     return (
       <PageLayout className="w-full max-w-7xl mx-auto px-4 py-8">
-        <p className="text-gray-500 dark:text-gray-400 mb-4">未找到该 PDF</p>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">{t('PdfNotFound')}</p>
         <Button onClick={() => navigate('/pdf')} icon={<FaArrowLeft />} iconPosition="left">
-          返回 PDF 列表
+          {t('PdfBackToList')}
         </Button>
       </PageLayout>
     );
@@ -772,14 +774,14 @@ function PdfEditorPage() {
   return (
     <PageLayout className="flex flex-col w-full h-[calc(100vh-8rem)] max-w-7xl mx-auto px-4 py-4">
       <div className="sticky top-0 z-10 shrink-0 flex items-center gap-2 py-2 border-b border-gray-200 dark:border-gray-700 mb-4 flex-wrap bg-white dark:bg-gray-900 -mx-4 px-4 -mt-4 pt-4">
-        <Button variant="ghost" size="small" icon={<FaArrowLeft />} onClick={() => navigate('/pdf')} title="返回列表" />
+        <Button variant="ghost" size="small" icon={<FaArrowLeft />} onClick={() => navigate('/pdf')} title={t('PdfBackList')} />
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-[200px]" title={file.name}>
           {file.name}
         </span>
         <div className="flex items-center gap-1 ml-2">
-          <Button variant="ghost" size="small" icon={<FaSearchMinus />} onClick={zoomOut} title="缩小" />
+          <Button variant="ghost" size="small" icon={<FaSearchMinus />} onClick={zoomOut} title={t('PdfZoomOut')} />
           <span className="text-sm text-gray-500 dark:text-gray-400 min-w-[4rem] text-center">{Math.round(scale * 100)}%</span>
-          <Button variant="ghost" size="small" icon={<FaSearchPlus />} onClick={zoomIn} title="放大" />
+          <Button variant="ghost" size="small" icon={<FaSearchPlus />} onClick={zoomIn} title={t('PdfZoomIn')} />
         </div>
         {numPages > 1 && (
           <div className="flex items-center gap-0.5 ml-1">
@@ -789,7 +791,7 @@ function PdfEditorPage() {
               icon={<FaChevronLeft />}
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage <= 1}
-              title="上一页"
+              title={t('PdfPrevPage')}
             />
             <span className="text-sm text-gray-500 dark:text-gray-400 min-w-[4rem] text-center">
               {currentPage} / {numPages}
@@ -800,25 +802,25 @@ function PdfEditorPage() {
               icon={<FaChevronRight />}
               onClick={() => setCurrentPage((p) => Math.min(numPages, p + 1))}
               disabled={currentPage >= numPages}
-              title="下一页"
+              title={t('PdfNextPage')}
             />
           </div>
         )}
-        <Button variant="ghost" size="small" icon={<FaFont />} onClick={openTextBox} title="添加文字">
-          添加文字
+        <Button variant="ghost" size="small" icon={<FaFont />} onClick={openTextBox} title={t('PdfAddText')}>
+          {t('PdfAddText')}
         </Button>
         <span className="flex items-center gap-1">
           <IconToggleButton
             icon={<FaHighlighter />}
             active={brushMode === 'highlight'}
             onClick={(nextActive) => setBrushMode(nextActive ? 'highlight' : null)}
-            title="高亮"
+            title={t('PdfHighlight')}
           />
           {brushMode === 'highlight' && (
             <ColorPicker
               value={highlightColor}
               onChange={setHighlightColor}
-              title="高亮颜色"
+              title={t('PdfHighlightColor')}
               size={24}
             />
           )}
@@ -827,7 +829,7 @@ function PdfEditorPage() {
           icon={<FaThLarge />}
           active={brushMode === 'mosaic'}
           onClick={(nextActive) => setBrushMode(nextActive ? 'mosaic' : null)}
-          title="马赛克"
+          title={t('PdfMosaic')}
         />
         {hasEdits && (
           <Button
@@ -836,10 +838,10 @@ function PdfEditorPage() {
             icon={<FaSave />}
             onClick={handleSave}
             disabled={saving}
-            title="保存修改到本地（会刷新预览）"
+            title={t('PdfSaveLocal')}
             className="text-amber-600 dark:text-amber-400"
           >
-            保存修改
+            {t('PdfSaveChanges')}
           </Button>
         )}
       </div>
@@ -866,7 +868,7 @@ function PdfEditorPage() {
           >
             {canvasLoading && !pdfDoc && (
               <div className="absolute inset-0 flex items-center justify-center text-gray-500 dark:text-gray-400 text-sm">
-                加载 PDF…
+                {t('PdfLoadingPdf')}
               </div>
             )}
             {canvasError && (
@@ -942,7 +944,7 @@ function PdfEditorPage() {
                       e.stopPropagation();
                       if (textBoxContent === 'text') {
                         if (!textBoxValue.trim()) {
-                          alert('请先输入文字');
+                          alert(t('PdfEnterText'));
                           return;
                         }
                         setTextBoxContent('signature');
@@ -952,7 +954,7 @@ function PdfEditorPage() {
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
                     className="p-0.5 rounded hover:bg-amber-500/30 text-amber-700 dark:text-amber-400"
-                    title={textBoxContent === 'signature' ? '改回文字' : '转为签名字体'}
+                    title={textBoxContent === 'signature' ? t('PdfSwitchToText') : t('PdfSwitchToSignature')}
                   >
                     {textBoxContent === 'signature' ? (
                       <FaFont className="w-3 h-3" />
@@ -974,7 +976,7 @@ function PdfEditorPage() {
                     <textarea
                       value={textBoxValue}
                       onChange={(e) => setTextBoxValue(e.target.value)}
-                      placeholder="输入文字"
+                      placeholder={t('PdfInputText')}
                       className="w-full h-full resize-none border-0 bg-transparent text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-0 p-0"
                       style={{
                         fontSize: `${fontSizePxFromBox(textBoxSize.height)}px`,
@@ -1011,7 +1013,7 @@ function PdfEditorPage() {
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
                     className="p-0.5 rounded-full text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30"
-                    title="取消"
+                    title={t('PdfCancel')}
                   >
                     <FaTimes className="w-3 h-3" />
                   </button>
@@ -1024,7 +1026,7 @@ function PdfEditorPage() {
                     onMouseDown={(e) => e.stopPropagation()}
                     disabled={saving || !textBoxValue.trim()}
                     className="p-0.5 rounded-full text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30 disabled:opacity-50"
-                    title="确认"
+                    title={t('PdfConfirm')}
                   >
                     <FaCheck className="w-3 h-3" />
                   </button>
@@ -1033,7 +1035,7 @@ function PdfEditorPage() {
                   className="absolute bottom-0 right-0 z-20 w-5 h-5 cursor-se-resize pointer-events-auto flex items-end justify-end p-0.5"
                   onMouseDown={startResize}
                   onTouchStart={startResize}
-                  title="拖拽调整大小"
+                  title={t('PdfResizeHint')}
                 >
                   <span
                     className="w-full h-full border-b-2 border-r-2 border-amber-500/80 rounded-br"

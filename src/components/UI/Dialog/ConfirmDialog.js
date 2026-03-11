@@ -1,24 +1,30 @@
 /**
  * 通用确认对话框组件
- * 基于 Dialog 组件，专门用于确认操作
+ * 基于 Dialog 组件，专门用于确认操作；未传 title/message/confirmText/cancelText 时使用 i18n 默认
  */
 
 import React from 'react';
 import Dialog from './Dialog';
 import Button from '../Button/Button';
+import { useI18n } from '../../../context/I18nContext';
 
 function ConfirmDialog({
   isOpen = false,
   onConfirm,
   onCancel,
-  title = '确认操作',
-  message = '确定要执行此操作吗？',
-  confirmText = '确认',
-  cancelText = '取消',
+  title,
+  message,
+  confirmText,
+  cancelText,
   type = 'confirm', // 'confirm', 'danger', 'warning'
   size = 'small',
   ...props
 }) {
+  const { t } = useI18n();
+  const displayTitle = title ?? t('ConfirmDefaultTitle');
+  const displayMessage = message ?? t('ConfirmDefaultMessage');
+  const displayConfirm = confirmText ?? t('Confirm');
+  const displayCancel = cancelText ?? t('Cancel');
   const handleConfirm = () => {
     onConfirm?.();
   };
@@ -43,7 +49,7 @@ function ConfirmDialog({
     <Dialog
       isOpen={isOpen}
       onClose={handleCancel}
-      title={title}
+      title={displayTitle}
       type={type}
       size={size}
       showCloseButton={false}
@@ -51,7 +57,7 @@ function ConfirmDialog({
     >
       <div className="space-y-4">
         <p className="text-gray-700 dark:text-gray-300">
-          {message}
+          {displayMessage}
         </p>
         
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
@@ -60,14 +66,14 @@ function ConfirmDialog({
             size="medium"
             onClick={handleCancel}
           >
-            {cancelText}
+            {displayCancel}
           </Button>
           <Button
             variant={getConfirmVariant()}
             size="medium"
             onClick={handleConfirm}
           >
-            {confirmText}
+            {displayConfirm}
           </Button>
         </div>
       </div>

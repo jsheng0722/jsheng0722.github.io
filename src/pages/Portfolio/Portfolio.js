@@ -1,4 +1,5 @@
 import React, { useRef, useState, forwardRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Footer from '../../components/Layout/Footer/Footer';
 import Header from '../../components/Layout/Header/Header';
 import Card from './Components/Card';
@@ -299,6 +300,7 @@ const Contact = forwardRef((props, ref) => {
 
 // Main Portfolio Component
 function Portfolio () {
+    const navigate = useNavigate();
     const contactRef = useRef(null);
 
     const scrollToContact = () => {
@@ -308,6 +310,20 @@ function Portfolio () {
     return (
         <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100">
             <Header />
+
+            {/* 左侧悬浮栏：返回博客 */}
+            <div className="fixed left-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 pl-2">
+                <button
+                    type="button"
+                    onClick={() => navigate('/blog')}
+                    className="flex items-center gap-2 px-4 py-3 rounded-r-xl shadow-lg bg-gradient-to-br from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium text-base whitespace-nowrap transition-all hover:scale-105 hover:shadow-xl"
+                    title="返回博客"
+                >
+                    <span>←</span>
+                    <span>博客</span>
+                </button>
+            </div>
+
             <div className='w-[80%] bg-white shadow-lg rounded'>
                 <Welcome />
                 <About scrollToContact={scrollToContact}/>

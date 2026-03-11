@@ -2,8 +2,10 @@ import React from 'react';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import FileManager from '../../components/FileManager/FileManager';
+import { useI18n } from '../../context/I18nContext';
 
 function FileManagerPage() {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Header />
@@ -12,10 +14,10 @@ function FileManagerPage() {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-            文件管理器
+            {t('FileManagerTitle')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            浏览和管理您的个人文件系统，就像使用电脑一样
+            {t('FileManagerPageDesc')}
           </p>
         </div>
 

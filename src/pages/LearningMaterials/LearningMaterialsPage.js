@@ -2,18 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FaBookOpen, FaPlus, FaEdit, FaTrash, FaExternalLinkAlt } from 'react-icons/fa';
 import { Button, Card, EmptyState, Input, SearchBox, Textarea, Badge } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
+import { useI18n } from '../../context/I18nContext';
 
 const STORAGE_KEY = 'learningMaterialsList';
 
-const MATERIAL_TYPES = [
-  { value: 'pdf', label: 'PDF' },
-  { value: 'doc', label: '文档' },
-  { value: 'video', label: '视频' },
-  { value: 'course', label: '课程' },
-  { value: 'code', label: '代码' },
-  { value: 'link', label: '链接' },
-  { value: 'other', label: '其他' }
-];
+const MATERIAL_TYPE_VALUES = ['pdf', 'doc', 'video', 'course', 'code', 'link', 'other'];
+const MATERIAL_TYPE_KEYS = { pdf: 'MaterialsTypePdf', doc: 'MaterialsTypeDoc', video: 'MaterialsTypeVideo', course: 'MaterialsTypeCourse', code: 'MaterialsTypeCode', link: 'MaterialsTypeLink', other: 'MaterialsTypeOther' };
 
 function loadMaterials() {
   try {
@@ -28,6 +22,7 @@ function saveMaterials(list) {
 }
 
 function LearningMaterialsPage() {
+  const { t } = useI18n();
   const [materials, setMaterials] = useState([]);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -66,7 +61,7 @@ function LearningMaterialsPage() {
     e.preventDefault();
     const title = form.title.trim();
     if (!title) {
-      alert('请填写资料标题');
+      alert(t('MaterialsFillTitle'));
       return;
     }
     const tags = form.tags
@@ -106,7 +101,7 @@ function LearningMaterialsPage() {
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm('确定删除这条学习资料？')) return;
+    if (!window.confirm(t('MaterialsConfirmDelete'))) return;
     const next = materials.filter((m) => m.id !== id);
     setMaterials(next);
     saveMaterials(next);
@@ -116,16 +111,16 @@ function LearningMaterialsPage() {
   return (
     <PageLayout className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-6">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">学习资料</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('MaterialsTitle')}</h1>
         <p className="text-gray-600 dark:text-gray-400">
-          存储学习相关文件或链接（本地保存）。
+          {t('MaterialsStorageDesc')}
         </p>
       </div>
 
       <Card className="mb-6">
         <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
           <SearchBox
-            placeholder="搜索标题、类型、路径、描述、标签..."
+            placeholder={t('MaterialsSearchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 min-w-0"
@@ -138,7 +133,7 @@ function LearningMaterialsPage() {
             icon={showForm ? <FaEdit /> : <FaPlus />}
             iconPosition="left"
           >
-            {showForm ? '收起表单' : '添加资料'}
+            {showForm ? t('MaterialsToggleForm') : t('MaterialsAddItem')}
           </Button>
         </div>
       </Card>
@@ -146,57 +141,57 @@ function LearningMaterialsPage() {
       {showForm && (
         <Card className="mb-6 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            {editingId ? '编辑学习资料' : '新增学习资料'}
+            {editingId ? t('MaterialsEditItem') : t('MaterialsNewItem')}
           </h2>
           <form onSubmit={handleSave} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="标题 *"
+                label={t('MaterialsTitleLabel')}
                 value={form.title}
                 onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                placeholder="例如：英语语法总结 PDF"
+                placeholder="e.g. English grammar PDF"
                 required
               />
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">类型</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('MaterialsTypeLabel')}</label>
                 <select
                   value={form.type}
                   onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 >
-                  {MATERIAL_TYPES.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
+                  {MATERIAL_TYPE_VALUES.map((value) => (
+                    <option key={value} value={value}>
+                      {t(MATERIAL_TYPE_KEYS[value])}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
             <Input
-              label="文件路径 / 链接"
+              label={t('MaterialsPathLabel')}
               value={form.filePath}
               onChange={(e) => setForm((f) => ({ ...f, filePath: e.target.value }))}
-              placeholder="例如：/docs/english/grammar.pdf 或 https://..."
+              placeholder={t('MaterialsPathPlaceholder')}
             />
             <Textarea
-              label="说明"
+              label={t('MaterialsDescLabel')}
               value={form.description}
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-              placeholder="记录这份资料的用途、重点等"
+              placeholder={t('MaterialsDescPlaceholder')}
               rows={3}
             />
             <Input
-              label="标签（逗号分隔）"
+              label={t('MaterialsTagsLabel')}
               value={form.tags}
               onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))}
-              placeholder="英语, 语法, 期末复习"
+              placeholder={t('MaterialsTagsPlaceholder')}
             />
             <div className="flex gap-2">
               <Button type="submit" icon={<FaPlus />} iconPosition="left">
-                {editingId ? '保存修改' : '添加资料'}
+                {editingId ? t('MaterialsSaveChange') : t('MaterialsAddItem')}
               </Button>
               <Button type="button" variant="ghost" onClick={resetForm}>
-                取消
+                {t('Cancel')}
               </Button>
             </div>
           </form>
@@ -206,8 +201,8 @@ function LearningMaterialsPage() {
       {filtered.length === 0 ? (
         <EmptyState
           icon="inbox"
-          title={search ? '未找到匹配资料' : '还没有学习资料'}
-          description={search ? '试试其他搜索关键词' : '点击“添加资料”开始整理学习文件'}
+          title={search ? t('MaterialsNoSearchResult') : t('MaterialsNoData')}
+          description={search ? t('MaterialsNoSearchHint') : t('MaterialsNoDataDesc')}
         />
       ) : (
         <Card className="overflow-hidden p-0">
@@ -244,7 +239,7 @@ function LearningMaterialsPage() {
                         variant="ghost"
                         icon={<FaExternalLinkAlt />}
                         onClick={() => window.open(item.filePath, '_blank')}
-                        title="打开文件/链接"
+                        title={t('MaterialsOpenFile')}
                       />
                     )}
                     <Button
@@ -252,14 +247,14 @@ function LearningMaterialsPage() {
                       variant="ghost"
                       icon={<FaEdit />}
                       onClick={() => handleEdit(item)}
-                      title="编辑"
+                      title={t('Edit')}
                     />
                     <Button
                       size="small"
                       variant="danger"
                       icon={<FaTrash />}
                       onClick={() => handleDelete(item.id)}
-                      title="删除"
+                      title={t('Delete')}
                     />
                   </div>
                 </div>

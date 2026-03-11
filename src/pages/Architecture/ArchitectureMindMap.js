@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { useI18n } from '../../context/I18nContext';
 import ReactFlow, {
   Background,
   Controls,
@@ -19,10 +20,27 @@ import {
   FaPalette, FaCog, FaDatabase, FaChevronRight, FaChevronDown
 } from 'react-icons/fa';
 
+// 架构节点中文标签 -> i18n key，用于目录中英切换
+const ARCH_LABEL_TO_KEY = {
+  '项目架构': 'ArchRoot',
+  '路由系统': 'ArchRoutes',
+  '主要页面': 'ArchMainPages',
+  '笔记系统': 'ArchNotesSystem',
+  '内容管理': 'ArchContentMgmt',
+  '展示页面': 'ArchShowPages',
+  '工具页面': 'ArchToolsPages',
+  '组件库': 'ArchComponents',
+  '工具函数': 'ArchUtils',
+  '上下文': 'ArchContext',
+  '部署信息': 'ArchDeployment',
+  '加载中...': 'ArchLoading',
+};
+
 // 自定义节点组件 - 文件系统风格
 function FileSystemNode({ data }) {
+  const { t } = useI18n();
   const { label, icon: Icon, color, type = 'folder' } = data;
-  
+  const displayLabel = ARCH_LABEL_TO_KEY[label] ? t(ARCH_LABEL_TO_KEY[label]) : label;
   const isFolder = type === 'folder';
   
   return (
@@ -50,7 +68,7 @@ function FileSystemNode({ data }) {
       />
       
       {Icon && <Icon className="text-lg flex-shrink-0" />}
-      <div className="font-semibold text-sm truncate">{label}</div>
+      <div className="font-semibold text-sm truncate">{displayLabel}</div>
       {isFolder && <span className="text-xs opacity-75">📁</span>}
       
       {/* 输出连接点（底部） */}
@@ -75,6 +93,7 @@ const nodeTypes = {
 
 // 左侧导航目录组件
 function NavigationTree({ nodes, edges, onNodeClick }) {
+  const { t } = useI18n();
   const [expanded, setExpanded] = useState({});
   
   const toggleExpand = (nodeId) => {
@@ -150,7 +169,7 @@ function NavigationTree({ nodes, edges, onNodeClick }) {
           )}
           {Icon && <Icon className="w-4 h-4 text-gray-600 dark:text-gray-400 flex-shrink-0" />}
           <span className="text-sm text-gray-700 dark:text-gray-300 truncate flex-1">
-            {node.data.label}
+            {ARCH_LABEL_TO_KEY[node.data.label] ? t(ARCH_LABEL_TO_KEY[node.data.label]) : node.data.label}
           </span>
         </div>
         {hasChildren && isExpanded && (
@@ -167,9 +186,9 @@ function NavigationTree({ nodes, edges, onNodeClick }) {
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
         <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <FaLayerGroup className="text-blue-500" />
-          项目架构导航
+          {t('ArchNav')}
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">点击项目聚焦到对应位置</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('ArchNavHint')}</p>
       </div>
       <div className="p-2">
         {rootNodes.map(node => renderNode(node))}
@@ -504,6 +523,7 @@ function layoutAndConvertNodes(nodeData, nodeMap) {
 }
 
 function ArchitectureMindMap() {
+  const { t } = useI18n();
   const [architectureData, setArchitectureData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -517,7 +537,7 @@ function ArchitectureMindMap() {
     fetch(dataPath)
       .then(response => {
         if (!response.ok) {
-          throw new Error('无法加载架构数据');
+          throw new Error(t('ArchNoData'));
         }
         return response.json();
       })
@@ -527,10 +547,10 @@ function ArchitectureMindMap() {
       })
       .catch(err => {
         console.warn('加载架构数据失败，使用默认数据:', err);
-        setError(err.message);
+        setError(t('ArchLoadFail'));
         setLoading(false);
       });
-  }, []);
+  }, [t]);
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     return generateFileSystemLayout(architectureData);
@@ -561,7 +581,7 @@ function ArchitectureMindMap() {
       <div className="flex items-center justify-center w-full h-full bg-gray-50 dark:bg-gray-950">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">正在加载架构数据...</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('ArchLoadingData')}</p>
         </div>
       </div>
     );
@@ -571,8 +591,8 @@ function ArchitectureMindMap() {
     return (
       <div className="flex items-center justify-center w-full h-full bg-gray-50 dark:bg-gray-950">
         <div className="text-center">
-          <p className="text-red-600 dark:text-red-400 mb-2">加载失败: {error}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">请运行 npm run generate-architecture 生成架构数据</p>
+          <p className="text-red-600 dark:text-red-400 mb-2">{t('ArchLoadFail')}: {error}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t('ArchLoadFailHint')}</p>
         </div>
       </div>
     );

@@ -9,10 +9,12 @@ import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
 import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 // import FloatingActionButton from '../../components/FloatingActionButton'; // 暂时未使用
 import { FloatingToolbar } from '../../components/UI';
+import { useI18n } from '../../context/I18nContext';
 
 function NoteEditor() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useI18n();
   const editNote = location.state?.editNote; // 获取要编辑的笔记
   const isEditing = !!editNote;
 
@@ -85,7 +87,7 @@ function NoteEditor() {
 
   const handleSave = () => {
     if (!note.title || !note.content) {
-      alert('请填写标题和内容');
+      alert(t('RequiredTitleAndContent'));
       return;
     }
 
@@ -123,11 +125,11 @@ function NoteEditor() {
         } else {
           existingNotes.push(noteData);
         }
-        alert('笔记已更新！\n\n✅ 修改已保存到浏览器本地存储\n💡 如需永久保存，请更新 noteList_s.json 中对应的笔记数据');
+        alert(t('NoteUpdated'));
       } else {
         // 新建模式：添加新笔记
         existingNotes.push(noteData);
-        alert('笔记已保存到浏览器本地存储！\n\n✅ 笔记会立即显示在笔记首页\n💡 如需永久保存，请复制以下内容到 noteList_s.json：\n\n' + JSON.stringify(noteData, null, 2));
+        alert(t('NoteSaved') + '\n\n' + JSON.stringify(noteData, null, 2));
       }
       
       localStorage.setItem('userNotes', JSON.stringify(existingNotes));
@@ -136,13 +138,13 @@ function NoteEditor() {
       navigate('/notes');
     } catch (error) {
       console.error('保存失败:', error);
-      alert('保存失败，请重试');
+      alert(t('NoteSaveFailed'));
       setSaving(false);
     }
   };
 
   const handleCancel = () => {
-    if (window.confirm('确定要放弃当前编辑吗？')) {
+    if (window.confirm(t('NoteConfirmDiscard'))) {
       navigate('/notes');
     }
   };

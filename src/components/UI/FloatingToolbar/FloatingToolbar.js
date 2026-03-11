@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { FaPlus, FaTimes, FaCog } from 'react-icons/fa';
+import { useI18n } from '../../../context/I18nContext';
 
 function FloatingToolbar({
   tools = [],
@@ -16,6 +17,7 @@ function FloatingToolbar({
   className = '',
   ...props
 }) {
+  const { t } = useI18n();
   const [isExpanded, setIsExpanded] = useState(expanded);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
 
@@ -136,8 +138,8 @@ function FloatingToolbar({
           <div className="absolute bottom-16 right-0 bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-4 min-w-[200px] border border-gray-200 dark:border-gray-700">
             {settingsContent || (
               <div>
-                <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">工具栏设置</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">设置内容</p>
+                <h4 className="text-sm font-semibold mb-3 text-gray-900 dark:text-gray-100">{t('ToolbarSettings')}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('SettingsContent')}</p>
               </div>
             )}
           </div>

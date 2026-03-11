@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { FaExternalLinkAlt, FaTrash, FaClock } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
+import { useI18n } from '../../context/I18nContext';
 
 function VideoPlayer() {
+  const { t } = useI18n();
   const [videos, setVideos] = useState([]);
   const [filteredVideos, setFilteredVideos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -65,7 +67,7 @@ function VideoPlayer() {
   // 删除视频
   const handleDeleteVideo = (videoId, e) => {
     e.stopPropagation(); // 防止触发列表项的点击事件
-    if (window.confirm('确定要删除这个收藏吗？')) {
+    if (window.confirm(t('VideoConfirmDelete'))) {
       const updatedVideos = videos.filter(video => video.id !== videoId);
       setVideos(updatedVideos);
       setFilteredVideos(updatedVideos);
@@ -76,7 +78,7 @@ function VideoPlayer() {
   // 添加视频收藏
   const handleAddVideo = () => {
     if (!newVideo.title.trim() || !newVideo.url.trim()) {
-      alert('请填写标题和视频链接');
+      alert(t('VideoRequiredTitleUrl'));
       return;
     }
 
@@ -109,7 +111,7 @@ function VideoPlayer() {
     });
     setShowAddForm(false);
 
-    alert('视频收藏成功！');
+    alert(t('VideoSaved'));
   };
 
 
@@ -123,10 +125,10 @@ function VideoPlayer() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                我的视频收藏
+                {t('VideoMyCollection')}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-400">
-                精选视频内容 · 学习资源分享 · 个人作品展示
+                {t('VideoSubtitle')}
               </p>
             </div>
             <div className="flex space-x-3">
@@ -134,7 +136,7 @@ function VideoPlayer() {
                 onClick={() => setShowAddForm(true)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
               >
-                ➕ 收藏视频
+                ➕ {t('VideoAddFavorite')}
               </button>
             </div>
           </div>
@@ -144,7 +146,7 @@ function VideoPlayer() {
         {showAddForm && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">收藏视频</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('VideoAddFormTitle')}</h2>
               <button
                 onClick={() => setShowAddForm(false)}
                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -164,7 +166,7 @@ function VideoPlayer() {
                   value={newVideo.title}
                   onChange={(e) => setNewVideo(prev => ({ ...prev, title: e.target.value }))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="输入视频标题..."
+                  placeholder={t('VideoTitlePlaceholder')}
                 />
               </div>
 
@@ -208,7 +210,7 @@ function VideoPlayer() {
                   onChange={(e) => setNewVideo(prev => ({ ...prev, description: e.target.value }))}
                   rows={2}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="视频描述（可选）..."
+                  placeholder={t('VideoDescPlaceholder')}
                 />
               </div>
 
@@ -222,7 +224,7 @@ function VideoPlayer() {
                   onChange={(e) => setNewVideo(prev => ({ ...prev, reason: e.target.value }))}
                   rows={2}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="为什么收藏这个视频？（可选）"
+                  placeholder={t('VideoReasonPlaceholder')}
                 />
               </div>
 
@@ -250,7 +252,7 @@ function VideoPlayer() {
           <div className="flex flex-col md:flex-row gap-4">
             <input
               type="text"
-              placeholder="搜索视频..."
+              placeholder={t('VideoSearchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
@@ -303,7 +305,7 @@ function VideoPlayer() {
                     <button
                       onClick={(e) => handleDeleteVideo(video.id, e)}
                       className="ml-2 text-gray-400 hover:text-red-500 transition-colors"
-                      title="删除"
+                      title={t('Delete')}
                     >
                       <FaTrash className="w-4 h-4" />
                     </button>

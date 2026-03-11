@@ -24,40 +24,33 @@ function Header() {
     <div className="flex w-full items-center justify-center">
       <div className="w-[60%]">
         <Navbar navItems={[
-          // 主要入口
           { label: t('Home'), path: '/' },
-          { label: '桌面', path: '/desktop' },
-          // 内容管理分组
+          { label: t('Desktop'), path: '/desktop' },
           {
-            label: '内容',
+            label: t('Content'),
             children: [
-              { label: '动态', path: '/blog' },
-              { label: '视频', path: '/video' },
-              { label: '收藏', path: '/shop' },
+              { label: t('Video'), path: '/video' },
+              { label: t('Favorites'), path: '/shop' },
               { label: t('Music'), path: '/music' },
-              { label: '文件管理', path: '/files' }
+              { label: t('FileManager'), path: '/files' }
             ]
           },
-          // 学习记录（笔记、单词本等）
           {
-            label: '学习记录',
+            label: t('StudyRecords'),
             children: [
               { label: t('Notes'), path: '/notes' },
-              { label: '单词本', path: '/vocabulary' },
-              { label: '学习资料', path: '/learning-materials' }
+              { label: t('Vocabulary'), path: '/vocabulary' },
+              { label: t('LearningMaterials'), path: '/learning-materials' }
             ]
           },
-          // 作品集
-          { label: t('Portfolio'), path: '/portfolio' },
-          // 产品
+          { label: t('Blog'), path: '/blog' },
           { label: t('Products'), path: '/products' },
-          // 工具
           {
-            label: '工具',
+            label: t('Tools'),
             children: [
-              { label: '记账', path: '/accounting' },
-              { label: '项目架构', path: '/architecture' },
-              { label: 'PDF', path: '/pdf' }
+              { label: t('Accounting'), path: '/accounting' },
+              { label: t('Architecture'), path: '/architecture' },
+              { label: t('PDF'), path: '/pdf' }
             ]
           }
         ]} />
@@ -77,8 +70,8 @@ function Header() {
           className="px-2 py-1 text-sm rounded bg-gray-700 hover:bg-gray-600 text-white border border-gray-600"
           title={t('Language')}
         >
-          <option value="zh">中文</option>
-          <option value="en">English</option>
+          <option value="zh">{t('LangZh')}</option>
+          <option value="en">{t('LangEn')}</option>
         </select>
       </div>
     </div>

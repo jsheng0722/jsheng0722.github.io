@@ -2,9 +2,11 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaFolder, FaFile, FaFileAlt, FaMusic, FaImage, FaCode, FaVideo, FaSync, FaExternalLinkAlt } from 'react-icons/fa';
 import { Button, Card, Dialog, Badge } from '../UI';
+import { useI18n } from '../../context/I18nContext';
 
 function FileManager() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [currentPath, setCurrentPath] = useState('/');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [sortBy, setSortBy] = useState('name'); // 'name', 'size', 'date', 'type'
@@ -324,7 +326,7 @@ function FileManager() {
         if (note && note.id) {
           navigate(`/notes/view/${note.id}`, { state: { note } });
         } else {
-          alert('无法找到对应的笔记');
+          alert(t('FileNoteNotFound'));
         }
       }
       setSelectedFile(null);
@@ -344,7 +346,7 @@ function FileManager() {
       navigate('/blog');
       setSelectedFile(null);
     } else {
-      alert('该文件类型暂不支持直接打开');
+      alert(t('FileTypeUnsupported'));
     }
   };
 
@@ -359,6 +361,11 @@ function FileManager() {
     }));
   };
 
+  const getCategoryDisplayName = (name) => {
+    const map = { '首页': 'Home', '笔记': 'FileCategoryNotes', '音乐': 'FileCategoryMusic', '视频': 'FileCategoryVideo', '商品': 'FileCategoryProducts', '动态': 'FileCategoryPosts', '灵感歌词': 'FileCategoryLyrics', '图形': 'FileCategoryDiagrams' };
+    return map[name] ? t(map[name]) : name;
+  };
+
   return (
     <Card className="h-full flex flex-col">
       {/* 工具栏 */}
@@ -370,7 +377,7 @@ function FileManager() {
               size="small"
               variant="ghost"
             >
-              首页
+              {t('Home')}
             </Button>
             <span className="text-gray-400">/</span>
             <span className="text-sm text-gray-600 dark:text-gray-400">{currentPath}</span>
@@ -383,9 +390,9 @@ function FileManager() {
               variant="ghost"
               icon={<FaSync />}
               iconPosition="left"
-              title="刷新文件系统"
+              title={t('FileRefreshTitle')}
             >
-              刷新
+              {t('FileRefresh')}
             </Button>
             
             <select
@@ -393,10 +400,10 @@ function FileManager() {
               onChange={(e) => setSortBy(e.target.value)}
               className="px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
             >
-              <option value="name">按名称</option>
-              <option value="size">按大小</option>
-              <option value="date">按日期</option>
-              <option value="type">按类型</option>
+              <option value="name">{t('FileSortByName')}</option>
+              <option value="size">{t('FileSortBySize')}</option>
+              <option value="date">{t('FileSortByDate')}</option>
+              <option value="type">{t('FileSortByType')}</option>
             </select>
             
             <div className="flex bg-gray-100 dark:bg-gray-700 rounded p-1">
@@ -422,10 +429,9 @@ function FileManager() {
         {getCurrentItems().length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400">
             <FaFolder className="w-16 h-16 mb-4 text-gray-300 dark:text-gray-600" />
-            <h3 className="text-lg font-medium mb-2">暂无内容</h3>
+            <h3 className="text-lg font-medium mb-2">{t('FileNoContent')}</h3>
             <p className="text-sm text-center">
-              开始使用各个功能模块，<br />
-              您的内容将在这里显示
+              {t('FileNoContentDesc')}
             </p>
           </div>
         ) : viewMode === 'grid' ? (
@@ -441,11 +447,11 @@ function FileManager() {
                     {item.icon ? <item.icon className={`w-8 h-8 ${item.color}`} /> : getFileIcon(item)}
                   </div>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                    {item.name}
+                    {getCategoryDisplayName(item.name)}
                   </p>
                   {item.count && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      {item.count} 项
+                      {item.count} {t('FileItems')}
                     </p>
                   )}
                   {item.lastModified && (
@@ -470,16 +476,16 @@ function FileManager() {
                     {item.icon ? <item.icon className={`w-5 h-5 ${item.color}`} /> : getFileIcon(item)}
                   </div>
                   <div>
-                    <span className="text-gray-900 dark:text-gray-100">{item.name}</span>
+                    <span className="text-gray-900 dark:text-gray-100">{getCategoryDisplayName(item.name)}</span>
                     {item.count && (
                       <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                        ({item.count} 项)
+                        ({item.count} {t('FileItems')})
                       </span>
                     )}
                   </div>
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {item.lastModified || (item.type === 'folder' ? '文件夹' : '文件')}
+                  {item.lastModified || (item.type === 'folder' ? t('FileFolder') : t('FileFile'))}
                 </div>
               </div>
             ))}
@@ -489,14 +495,14 @@ function FileManager() {
 
       {/* 状态栏 */}
       <div className="border-t border-gray-200 dark:border-gray-700 p-2 text-sm text-gray-500 dark:text-gray-400">
-        <span>{getCurrentItems().length} 个项目</span>
+        <span>{getCurrentItems().length} {t('FileItems')}</span>
       </div>
 
       {/* 文件详情对话框 */}
       <Dialog
         isOpen={!!selectedFile}
         onClose={() => setSelectedFile(null)}
-        title={selectedFile ? `文件详情 - ${selectedFile.name}` : ''}
+        title={selectedFile ? `${t('FileDetail')} - ${getCategoryDisplayName(selectedFile.name)}` : ''}
         size="large"
       >
         {selectedFile && (
@@ -509,20 +515,20 @@ function FileManager() {
                 icon={<FaExternalLinkAlt />}
                 iconPosition="left"
               >
-                {selectedFile.category === '视频' ? '打开视频链接' : '打开文件'}
+                {selectedFile.category === '视频' ? t('FileOpenVideo') : t('FileOpen')}
               </Button>
             </div>
 
             {/* 基本信息 */}
             <div>
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">基本信息</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('FileBasicInfo')}</h3>
               <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">类型</span>
-                  <Badge variant="primary">{selectedFile.category}</Badge>
+                  <span className="text-gray-600 dark:text-gray-400">{t('AccType')}</span>
+                  <Badge variant="primary">{getCategoryDisplayName(selectedFile.category)}</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">最后修改</span>
+                  <span className="text-gray-600 dark:text-gray-400">{t('FileLastModified')}</span>
                   <span className="text-gray-900 dark:text-gray-100">{selectedFile.lastModified}</span>
                 </div>
               </div>
@@ -531,19 +537,19 @@ function FileManager() {
             {/* 详细内容 */}
             {selectedFile.metadata && (
               <div>
-                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">内容</h3>
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('FileContent')}</h3>
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 max-h-96 overflow-y-auto">
                   {selectedFile.category === '笔记' && (
                     <div className="space-y-3">
                       {selectedFile.metadata.category && (
                         <div>
-                          <span className="text-xs text-gray-500">分类：</span>
+                          <span className="text-xs text-gray-500">{t('FileCategoryLabel')}：</span>
                           <Badge variant="default" size="small">{selectedFile.metadata.category}</Badge>
                         </div>
                       )}
                       {selectedFile.metadata.tags && selectedFile.metadata.tags.length > 0 && (
                         <div>
-                          <span className="text-xs text-gray-500">标签：</span>
+                          <span className="text-xs text-gray-500">{t('FileTagsLabel')}：</span>
                           <div className="flex flex-wrap gap-1 mt-1">
                             {selectedFile.metadata.tags.map(tag => (
                               <Badge key={tag} variant="default" size="small">#{tag}</Badge>
@@ -553,13 +559,13 @@ function FileManager() {
                       )}
                       {selectedFile.metadata.author && (
                         <div>
-                          <span className="text-xs text-gray-500">作者：</span>
+                          <span className="text-xs text-gray-500">{t('FileAuthorLabel')}：</span>
                           <span className="text-sm">{selectedFile.metadata.author}</span>
                         </div>
                       )}
                       {selectedFile.metadata.excerpt && (
                         <div>
-                          <span className="text-xs text-gray-500">摘要：</span>
+                          <span className="text-xs text-gray-500">{t('FileExcerptLabel')}：</span>
                           <p className="text-sm mt-1">{selectedFile.metadata.excerpt}</p>
                         </div>
                       )}
@@ -576,7 +582,7 @@ function FileManager() {
                       )}
                       {selectedFile.metadata.url && (
                         <a href={selectedFile.metadata.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline text-sm">
-                          打开视频链接
+                          {t('FileOpenVideo')}
                         </a>
                       )}
                     </div>
@@ -597,7 +603,7 @@ function FileManager() {
                       )}
                       {selectedFile.metadata.rating && (
                         <div>
-                          <span className="text-sm">评分：</span>
+                          <span className="text-sm">{t('FileRatingLabel')}：</span>
                           <span className="text-yellow-500">{'★'.repeat(selectedFile.metadata.rating)}</span>
                         </div>
                       )}
@@ -626,7 +632,7 @@ function FileManager() {
                       )}
                       {selectedFile.metadata.mood && (
                         <div>
-                          <span className="text-xs text-gray-500">心情：</span>
+                          <span className="text-xs text-gray-500">{t('FileMoodLabel')}：</span>
                           <Badge variant="default" size="small">{selectedFile.metadata.mood}</Badge>
                         </div>
                       )}
@@ -636,7 +642,7 @@ function FileManager() {
                   {/* 显示原始数据（用于调试） */}
                   <details className="mt-4">
                     <summary className="cursor-pointer text-xs text-gray-500 hover:text-gray-700">
-                      查看原始数据
+                      {t('FileViewRaw')}
                     </summary>
                     <pre className="mt-2 text-xs bg-gray-900 text-green-400 p-2 rounded overflow-x-auto">
                       {JSON.stringify(selectedFile.metadata, null, 2)}

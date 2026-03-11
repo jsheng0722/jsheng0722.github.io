@@ -1,21 +1,24 @@
 /**
  * 通用空状态组件
- * 用于显示无数据时的状态
+ * 用于显示无数据时的状态；title/description 未传时使用 i18n 默认文案
  */
 
 import React from 'react';
 import { FaInbox, FaSearch, FaExclamationTriangle } from 'react-icons/fa';
+import { useI18n } from '../../../context/I18nContext';
 
 function EmptyState({
   icon = 'inbox', // 'inbox', 'search', 'warning', 'custom'
   customIcon,
-  title = '暂无数据',
+  title,
   description,
   action,
   size = 'medium', // 'small', 'medium', 'large'
   className = '',
   ...props
 }) {
+  const { t } = useI18n();
+  const displayTitle = title ?? t('NoData');
   // 获取图标
   const getIcon = () => {
     if (customIcon) return customIcon;
@@ -67,7 +70,7 @@ function EmptyState({
 
       {/* 标题 */}
       <h3 className={`${textSizes[size].title} font-semibold text-gray-700 dark:text-gray-300 mb-2`}>
-        {title}
+        {displayTitle}
       </h3>
 
       {/* 描述 */}

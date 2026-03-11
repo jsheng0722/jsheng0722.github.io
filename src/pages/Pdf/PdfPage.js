@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageLayout from '../../components/Layout/PageLayout';
 import { Card, Button } from '../../components/UI';
 import { FaFilePdf, FaUpload, FaDownload, FaTrash, FaEye, FaEdit } from 'react-icons/fa';
+import { useI18n } from '../../context/I18nContext';
 import * as pdfStorage from './pdfStorage';
 
 /**
@@ -11,6 +12,7 @@ import * as pdfStorage from './pdfStorage';
  */
 function PdfPage() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const inputRef = useRef(null);
@@ -99,10 +101,10 @@ function PdfPage() {
     <PageLayout className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-          PDF 文件
+          {t('PdfFiles')}
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400">
-          上传、下载 PDF 文件（保存在浏览器本地 IndexedDB，适配 GitHub Pages 等静态托管）
+          {t('PdfPageDesc')}
         </p>
       </div>
 
@@ -117,22 +119,22 @@ function PdfPage() {
         />
         <div className="flex flex-wrap items-center gap-4">
           <Button onClick={triggerUpload} icon={<FaUpload />} iconPosition="left">
-            上传 PDF
+            {t('PdfUpload')}
           </Button>
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            支持多选，仅限 .pdf 文件
+            {t('PdfUploadHint')}
           </span>
         </div>
       </Card>
 
       {loading ? (
         <Card className="p-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400">加载中…</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('PdfLoading')}</p>
         </Card>
       ) : files.length === 0 ? (
         <Card className="p-12 text-center">
           <FaFilePdf className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-          <p className="text-gray-500 dark:text-gray-400">暂无 PDF 文件，点击「上传 PDF」添加</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('PdfNoFiles')}</p>
         </Card>
       ) : (
         <Card className="overflow-hidden p-0">
@@ -152,20 +154,20 @@ function PdfPage() {
                     size="small"
                     icon={<FaEye />}
                     onClick={() => window.open(file.url, '_blank')}
-                    title="预览"
+                    title={t('PdfPreview')}
                     className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                   >
-                    预览
+                    {t('PdfPreview')}
                   </Button>
                   <Button
                     variant="ghost"
                     size="small"
                     icon={<FaEdit />}
                     onClick={() => navigate('/pdf/editor', { state: { fileId: file.id } })}
-                    title="编辑"
+                    title={t('PdfEdit')}
                     className="text-gray-500 hover:text-green-600 dark:text-gray-400 dark:hover:text-green-400"
                   >
-                    编辑
+                    {t('PdfEdit')}
                   </Button>
                   <a
                     href={file.url}
@@ -173,17 +175,17 @@ function PdfPage() {
                     className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 text-white"
                   >
                     <FaDownload className="w-4 h-4" />
-                    下载
+                    {t('PdfDownload')}
                   </a>
                   <Button
                     variant="ghost"
                     size="small"
                     icon={<FaTrash />}
                     onClick={() => handleRemove(file.id)}
-                    title="移除"
+                    title={t('PdfRemove')}
                     className="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400"
                   >
-                    移除
+                    {t('PdfRemove')}
                   </Button>
                 </div>
               </li>

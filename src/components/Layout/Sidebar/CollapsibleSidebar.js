@@ -1,6 +1,6 @@
 /**
  * 可折叠侧边栏组件
- * 包含天气、日历、展示窗等功能的按钮菜单
+ * 包含天气、日历、展示窗等功能的按钮菜单；文案随 i18n 切换
  */
 
 import React, { useState } from 'react';
@@ -8,8 +8,10 @@ import { FaBars, FaTimes, FaCloud, FaCalendarAlt, FaWindowRestore } from 'react-
 import OptimizedWeather from '../../Weather/OptimizedWeather';
 import CompactCalendar from '../../Calendar/CompactCalendar';
 import Showcase from '../../Showcase/Showcase';
+import { useI18n } from '../../context/I18nContext';
 
 function CollapsibleSidebar() {
+  const { t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const [activePanel, setActivePanel] = useState(null); // 'weather', 'calendar', 'showcase', null
 
@@ -35,7 +37,7 @@ function CollapsibleSidebar() {
   const menuItems = [
     {
       id: 'weather',
-      label: '天气',
+      label: t('SidebarWeather'),
       icon: FaCloud,
       component: <OptimizedWeather />,
       color: 'text-blue-500',
@@ -44,7 +46,7 @@ function CollapsibleSidebar() {
     },
     {
       id: 'calendar',
-      label: '日历',
+      label: t('SidebarCalendar'),
       icon: FaCalendarAlt,
       component: <CompactCalendar />,
       color: 'text-green-500',
@@ -53,7 +55,7 @@ function CollapsibleSidebar() {
     },
     {
       id: 'showcase',
-      label: '展示窗',
+      label: t('SidebarShowcase'),
       icon: FaWindowRestore,
       component: <Showcase />,
       color: 'text-purple-500',
@@ -78,7 +80,7 @@ function CollapsibleSidebar() {
             transition-all duration-300
             ${isOpen ? 'rotate-90' : ''}
           `}
-          aria-label="切换侧边栏"
+          aria-label={t('ToggleSidebar')}
         >
           {isOpen ? <FaTimes className="w-5 h-5" /> : <FaBars className="w-5 h-5" />}
         </button>
@@ -101,7 +103,7 @@ function CollapsibleSidebar() {
           {/* 菜单按钮区域 */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              快捷工具
+              {t('QuickTools')}
             </h2>
             <div className="space-y-2">
               {menuItems.map((item) => {
@@ -126,7 +128,7 @@ function CollapsibleSidebar() {
                     <span className="font-medium">{item.label}</span>
                     {isActive && (
                       <span className="ml-auto text-xs bg-current text-white px-2 py-1 rounded">
-                        已展开
+                        {t('SidebarExpanded')}
                       </span>
                     )}
                   </button>
@@ -145,7 +147,7 @@ function CollapsibleSidebar() {
                 <button
                   onClick={() => setActivePanel(null)}
                   className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                  aria-label="关闭面板"
+                  aria-label={t('ClosePanel')}
                 >
                   <FaTimes className="w-4 h-4" />
                 </button>
@@ -160,7 +162,7 @@ function CollapsibleSidebar() {
           {!activePanel && (
             <div className="flex-1 flex items-center justify-center p-4">
               <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-                点击上方按钮展开相应工具
+                {t('SidebarHint')}
               </p>
             </div>
           )}
@@ -172,7 +174,7 @@ function CollapsibleSidebar() {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={toggleSidebar}
-          aria-label="关闭侧边栏"
+          aria-label={t('CloseSidebar')}
         />
       )}
     </>

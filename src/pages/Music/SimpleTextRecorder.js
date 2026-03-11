@@ -8,10 +8,12 @@ import { FaPlus, FaSave, FaDownload, FaTrash, FaEdit } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { Button, Card, Collapsible, Textarea, EmptyState } from '../../components/UI';
+import { useI18n } from '../../context/I18nContext';
 
 const STORAGE_KEY = 'musicInspirations';
 
 function SimpleTextRecorder() {
+  const { t } = useI18n();
   // 从localStorage加载灵感数据
   const loadInspirations = () => {
     try {
@@ -46,7 +48,7 @@ function SimpleTextRecorder() {
   // 添加或编辑灵感
   const saveInspiration = () => {
     if (!formData.content.trim()) {
-      alert('请输入灵感内容');
+      alert(t('MusicInspirationInput'));
       return;
     }
 
@@ -89,7 +91,7 @@ function SimpleTextRecorder() {
 
   // 删除灵感
   const deleteInspiration = (index) => {
-    if (window.confirm('确定要删除这个灵感吗？')) {
+    if (window.confirm(t('MusicInspirationConfirmDelete'))) {
       const updatedInspirations = inspirations.filter((_, i) => i !== index);
       setInspirations(updatedInspirations);
       // localStorage会在useEffect中自动更新
@@ -129,7 +131,7 @@ function SimpleTextRecorder() {
 
   // 清空所有记录
   const clearAllInspirations = () => {
-    if (window.confirm('确定要清空所有灵感记录吗？此操作不可恢复！')) {
+    if (window.confirm(t('MusicInspirationConfirmClear'))) {
       setInspirations([]);
     }
   };
@@ -150,10 +152,10 @@ function SimpleTextRecorder() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-3">
             <FaPlus className="text-blue-500" />
-            简单灵感记录
+            {t('MusicSimpleRecord')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            记录您的创作灵感，生成txt文件供AI创作使用
+            {t('MusicSubtitle')}
           </p>
         </div>
 
@@ -166,7 +168,7 @@ function SimpleTextRecorder() {
                 icon={<FaPlus />}
                 iconPosition="left"
               >
-                添加灵感
+                {t('MusicAddInspiration')}
               </Button>
               
               <Button
@@ -176,7 +178,7 @@ function SimpleTextRecorder() {
                 icon={<FaDownload />}
                 iconPosition="left"
               >
-                下载txt文件
+                {t('MusicDownloadTxt')}
               </Button>
               
               <Button
@@ -186,12 +188,12 @@ function SimpleTextRecorder() {
                 icon={<FaTrash />}
                 iconPosition="left"
               >
-                清空记录
+                {t('MusicClearAll')}
               </Button>
             </div>
             
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              已记录 {inspirations.length} 条灵感
+              {t('MusicInspirationCount').replace('{count}', String(inspirations.length))}
             </div>
           </div>
         </Card>
@@ -200,16 +202,16 @@ function SimpleTextRecorder() {
         {showAddForm && (
           <Card className="mb-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-              {editingIndex >= 0 ? '编辑灵感' : '添加新灵感'}
+              {editingIndex >= 0 ? t('MusicEditInspiration') : t('MusicAddNewInspiration')}
             </h2>
             
             <div className="space-y-4">
               <Textarea
-                label="灵感内容"
+                label={t('MusicInspirationContent')}
                 value={formData.content}
                 onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
                 rows={6}
-                placeholder="记录您的创作灵感..."
+                placeholder={t('MusicInspirationPlaceholder')}
                 autoResize={true}
                 minRows={3}
                 maxRows={10}
@@ -223,13 +225,13 @@ function SimpleTextRecorder() {
                 icon={<FaSave />}
                 iconPosition="left"
               >
-                保存
+                {t('Save')}
               </Button>
               <Button
                 onClick={cancelEdit}
                 variant="secondary"
               >
-                取消
+                {t('Cancel')}
               </Button>
             </div>
           </Card>
@@ -240,15 +242,15 @@ function SimpleTextRecorder() {
           {inspirations.length === 0 ? (
             <EmptyState
               icon="inbox"
-              title="还没有记录任何灵感"
-              description="点击'添加灵感'开始记录您的创作想法"
+              title={t('MusicNoInspiration')}
+              description={t('MusicNoInspirationDesc')}
               action={
                 <Button
                   onClick={() => setShowAddForm(true)}
                   icon={<FaPlus />}
                   iconPosition="left"
                 >
-                  添加第一个灵感
+                  {t('MusicAddFirstInspiration')}
                 </Button>
               }
             />
@@ -259,7 +261,7 @@ function SimpleTextRecorder() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">
-                        灵感 {index + 1}
+                        {t('MusicInspirationContent')} {index + 1}
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">
                         {inspiration.timestamp}
@@ -296,7 +298,7 @@ function SimpleTextRecorder() {
         {inspirations.length > 0 && (
           <div className="mt-8">
             <Collapsible
-              title="txt文件预览"
+              title={t('MusicTxtPreview')}
               defaultExpanded={false}
               variant="card"
             >

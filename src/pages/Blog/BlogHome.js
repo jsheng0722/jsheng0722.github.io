@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { FaEdit, FaSearch, FaCalendar, FaEye, FaHeart, FaComment, FaThumbsUp, FaShare, FaImage, FaVideo, FaCode, FaBook, FaTrash } from 'react-icons/fa';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaEdit, FaSearch, FaCalendar, FaEye, FaHeart, FaComment, FaThumbsUp, FaShare, FaImage, FaVideo, FaCode, FaBook, FaTrash, FaFolderOpen } from 'react-icons/fa';
 import { ConfirmDialog } from '../../components/UI';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
+import { useI18n } from '../../context/I18nContext';
 
 function BlogHome() {
+  const navigate = useNavigate();
+  const { t } = useI18n();
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,14 +22,25 @@ function BlogHome() {
     title: '',
     content: '',
     category: '生活',
+    customCategory: '',
     tags: [],
     mood: '😊',
     location: '',
-    weather: '☀️'
+    weather: '☀️',
+    images: [],
+    video: ''
   });
 
-  const categories = ['全部', '技术', '生活', '随笔', '教程', '新闻', '分享'];
+  const categories = ['全部', '技术', '生活', '随笔', '教程', '新闻', '分享', '其他'];
   const tags = ['全部', 'React', 'JavaScript', 'Python', 'Web开发', 'AI', '设计', '学习', '工作', '生活'];
+  const getCategoryDisplayName = useMemo(() => {
+    const m = { '全部': 'BlogCatAll', '技术': 'BlogCatTech', '生活': 'BlogCatLife', '随笔': 'BlogCatEssay', '教程': 'BlogCatTutorial', '新闻': 'BlogCatNews', '分享': 'BlogCatShare', '其他': 'BlogCatOther' };
+    return (cat) => (m[cat] ? t(m[cat]) : cat);
+  }, [t]);
+  const getTagDisplayName = useMemo(() => {
+    const m = { '全部': 'BlogTagAll', 'React': 'BlogTagReact', 'JavaScript': 'BlogTagJS', 'Python': 'BlogTagPython', 'Web开发': 'BlogTagWebDev', 'AI': 'BlogTagAI', '设计': 'BlogTagDesign', '学习': 'BlogTagStudy', '工作': 'BlogTagWork', '生活': 'BlogTagLife' };
+    return (tag) => (m[tag] ? t(m[tag]) : tag);
+  }, [t]);
 
   useEffect(() => {
     // 从JSON文件加载动态数据
@@ -91,24 +106,27 @@ function BlogHome() {
 
   const handlePublishPost = () => {
     if (!newPost.title.trim() || !newPost.content.trim()) {
-      alert('请填写标题和内容');
+      alert(t('RequiredTitleAndContent'));
       return;
     }
 
     const now = new Date();
+    const resolvedCategory = newPost.category === '其他' ? ((newPost.customCategory || '').trim() || '其他') : newPost.category;
     const newPostData = {
       id: Date.now(),
       ...newPost,
+      category: resolvedCategory,
       author: 'jihui',
       date: now.toISOString().split('T')[0],
       time: now.toTimeString().split(' ')[0].slice(0, 5),
-      readTime: Math.ceil(newPost.content.length / 200) + '分钟',
+      readTime: Math.ceil(newPost.content.length / 200) + t('BlogReadTimeMin'),
       views: 0,
       likes: 0,
       comments: 0,
       cover: '/images/blog/default.jpg',
       type: 'article',
-      images: [],
+      images: Array.isArray(newPost.images) ? newPost.images : [],
+      video: (newPost.video || '').trim() || undefined,
       status: 'published',
       isLocal: true
     };
@@ -127,14 +145,17 @@ function BlogHome() {
       title: '',
       content: '',
       category: '生活',
+      customCategory: '',
       tags: [],
       mood: '😊',
       location: '',
-      weather: '☀️'
+      weather: '☀️',
+      images: [],
+      video: ''
     });
     setShowPublishForm(false);
 
-    alert('动态发布成功！');
+    alert(t('PostPublished'));
   };
 
   const handleInputChange = (field, value) => {
@@ -163,18 +184,23 @@ function BlogHome() {
   // 开始编辑动态
   const handleEditPost = (post) => {
     if (!post.isLocal) {
-      alert('只能编辑自己发布的动态');
+      alert(t('CannotEditOthers'));
       return;
     }
+    const catList = ['技术', '生活', '随笔', '教程', '新闻', '分享', '其他'];
+    const isOther = !catList.includes(post.category);
     setEditingPost(post);
     setNewPost({
       title: post.title,
       content: post.content,
-      category: post.category,
+      category: isOther ? '其他' : post.category,
+      customCategory: isOther ? post.category : '',
       tags: post.tags || [],
       mood: post.mood || '😊',
       location: post.location || '',
-      weather: post.weather || '☀️'
+      weather: post.weather || '☀️',
+      images: Array.isArray(post.images) ? post.images : [],
+      video: post.video || ''
     });
     setShowPublishForm(true);
   };
@@ -182,15 +208,17 @@ function BlogHome() {
   // 保存编辑
   const handleUpdatePost = () => {
     if (!newPost.title.trim() || !newPost.content.trim()) {
-      alert('请填写标题和内容');
+      alert(t('RequiredTitleAndContent'));
       return;
     }
 
     const now = new Date();
+    const resolvedCategory = newPost.category === '其他' ? ((newPost.customCategory || '').trim() || '其他') : newPost.category;
     const updatedPost = {
       ...editingPost,
       ...newPost,
-      readTime: Math.ceil(newPost.content.length / 200) + '分钟',
+      category: resolvedCategory,
+      readTime: Math.ceil(newPost.content.length / 200) + t('BlogReadTimeMin'),
       date: now.toISOString().split('T')[0],
       time: now.toTimeString().split(' ')[0].slice(0, 5),
       isLocal: true
@@ -216,21 +244,24 @@ function BlogHome() {
       title: '',
       content: '',
       category: '生活',
+      customCategory: '',
       tags: [],
       mood: '😊',
       location: '',
-      weather: '☀️'
+      weather: '☀️',
+      images: [],
+      video: ''
     });
     setEditingPost(null);
     setShowPublishForm(false);
 
-    alert('动态更新成功！');
+    alert(t('PostUpdated'));
   };
 
   // 删除动态
   const handleDeletePost = (post) => {
     if (!post.isLocal) {
-      alert('只能删除自己发布的动态');
+      alert(t('CannotDeleteOthers'));
       return;
     }
     setPostToDelete(post);
@@ -252,7 +283,7 @@ function BlogHome() {
 
     setShowDeleteDialog(false);
     setPostToDelete(null);
-    alert('动态已删除');
+    alert(t('PostDeleted'));
   };
 
   // 取消编辑
@@ -262,12 +293,66 @@ function BlogHome() {
       title: '',
       content: '',
       category: '生活',
+      customCategory: '',
       tags: [],
       mood: '😊',
       location: '',
-      weather: '☀️'
+      weather: '☀️',
+      images: [],
+      video: ''
     });
     setShowPublishForm(false);
+  };
+
+  const handleImageFiles = (e) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
+    e.target.value = '';
+    const maxSize = 2 * 1024 * 1024; // 单张建议 2MB 内
+    const next = (index, acc) => {
+      if (index >= files.length) {
+        if (acc.length) setNewPost(prev => ({ ...prev, images: [...(prev.images || []), ...acc] }));
+        return;
+      }
+      const file = files[index];
+      if (file.size > maxSize && !window.confirm(t('BlogImageLargeConfirm').replace('{name}', file.name).replace('{size}', (file.size / 1024 / 1024).toFixed(1)))) {
+        next(index + 1, acc);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target?.result;
+        const nextAcc = dataUrl ? [...acc, dataUrl] : acc;
+        next(index + 1, nextAcc);
+      };
+      reader.readAsDataURL(file);
+    };
+    next(0, []);
+  };
+
+  const handleVideoFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      alert(t('VideoUploadTip'));
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target?.result;
+      if (dataUrl) setNewPost(prev => ({ ...prev, video: dataUrl }));
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const removeImageAt = (index) => {
+    setNewPost(prev => ({
+      ...prev,
+      images: (prev.images || []).filter((_, i) => i !== index)
+    }));
   };
 
 
@@ -304,20 +389,40 @@ function BlogHome() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Header />
-      
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 页面标题 */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                我的动态
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                分享生活点滴 · 记录学习心得 · 展示技术成长
-              </p>
-            </div>
-          </div>
+
+      {/* 右侧固定工具栏：不收缩，作品集大按钮常显 */}
+      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col gap-2 pr-2">
+        <button
+          type="button"
+          onClick={() => navigate('/portfolio')}
+          className="flex items-center gap-2 px-4 py-3 rounded-l-xl shadow-lg bg-gradient-to-br from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-medium text-base whitespace-nowrap transition-all hover:scale-105 hover:shadow-xl"
+          title={t('BlogGoToPortfolio')}
+        >
+          <FaFolderOpen className="w-6 h-6 shrink-0" />
+          <span>{t('Portfolio')}</span>
+        </button>
+      </div>
+
+      {/* 主内容区：艺术字绝对定位在内容左侧外侧，不占流；中间正文保持 max-w-4xl 全宽 */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+        {/* 艺术字：绝对定位在内容区左侧外侧，不参与布局 */}
+        <div
+          className="absolute right-full top-8 mr-6 sm:mr-8 md:mr-10 whitespace-nowrap"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', letterSpacing: '0.1em' }}
+          aria-hidden
+        >
+          <span
+            className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-blue-600 via-indigo-500 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-500 opacity-90 pointer-events-none"
+          >
+            {t('Blog')}
+          </span>
+        </div>
+        {/* 正文内容：保持原有宽度与布局 */}
+        <div>
+        {/* 动态区域 */}
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t('BlogFeed')}</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">{t('BlogFeedSubtitle')}</p>
         </div>
 
         {/* 搜索和筛选 */}
@@ -328,7 +433,7 @@ function BlogHome() {
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="搜索动态内容..."
+                placeholder={t('SearchFeedPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -342,7 +447,7 @@ function BlogHome() {
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
             >
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>{getCategoryDisplayName(category)}</option>
               ))}
             </select>
 
@@ -352,9 +457,9 @@ function BlogHome() {
               onChange={(e) => setSelectedTag(e.target.value)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
             >
-              {tags.map(tag => (
-                <option key={tag} value={tag}>{tag}</option>
-              ))}
+{tags.map(tag => (
+              <option key={tag} value={tag}>{getTagDisplayName(tag)}</option>
+            ))}
             </select>
 
             {/* 发布动态按钮 */}
@@ -363,7 +468,7 @@ function BlogHome() {
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <FaEdit className="w-4 h-4" />
-              发布动态
+              {t('PublishPost')}
             </button>
           </div>
         </div>
@@ -373,7 +478,7 @@ function BlogHome() {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {editingPost ? '编辑动态' : '发布新动态'}
+                {editingPost ? t('EditPost') : t('NewPost')}
               </h2>
               <button
                 onClick={cancelEdit}
@@ -387,148 +492,168 @@ function BlogHome() {
               {/* 标题 */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  标题 *
+                  {t('TitleRequired')}
                 </label>
                 <input
                   type="text"
                   value={newPost.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="输入动态标题..."
+                  placeholder={t('TitlePlaceholder')}
                 />
               </div>
 
               {/* 内容 */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  内容 *
+                  {t('ContentRequired')}
                 </label>
                 <textarea
                   value={newPost.content}
                   onChange={(e) => handleInputChange('content', e.target.value)}
                   rows={6}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="分享你的想法..."
+                  placeholder={t('ContentPlaceholder')}
                 />
               </div>
 
-              {/* 分类和心情 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    分类
-                  </label>
-                  <select
-                    value={newPost.category}
-                    onChange={(e) => handleInputChange('category', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
-                  >
-                    {categories.filter(cat => cat !== '全部').map(category => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    心情
-                  </label>
-                  <select
-                    value={newPost.mood}
-                    onChange={(e) => handleInputChange('mood', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="😊">😊 开心</option>
-                    <option value="😢">😢 难过</option>
-                    <option value="😴">😴 疲惫</option>
-                    <option value="🤔">🤔 思考</option>
-                    <option value="🎉">🎉 兴奋</option>
-                    <option value="😌">😌 平静</option>
-                    <option value="🤩">🤩 激动</option>
-                    <option value="😤">😤 生气</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 位置和天气 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    位置
-                  </label>
-                  <input
-                    type="text"
-                    value={newPost.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="你在哪里？"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    天气
-                  </label>
-                  <select
-                    value={newPost.weather}
-                    onChange={(e) => handleInputChange('weather', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="☀️">☀️ 晴天</option>
-                    <option value="☁️">☁️ 多云</option>
-                    <option value="🌧️">🌧️ 雨天</option>
-                    <option value="❄️">❄️ 雪天</option>
-                    <option value="🌩️">🌩️ 雷雨</option>
-                    <option value="🌤️">🌤️ 阴天</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 标签 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  标签
+              {/* 图片 / 视频：小图标上传 */}
+              <div className="flex items-center gap-2 flex-wrap">
+                <label className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" title={t('BlogUploadImage')}>
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageFiles} />
+                  <FaImage className="w-4 h-4" />
                 </label>
-                <div className="flex flex-wrap gap-2 mb-2">
+                <label className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors" title={t('BlogUploadVideo')}>
+                  <input type="file" accept="video/*" className="hidden" onChange={handleVideoFile} />
+                  <FaVideo className="w-4 h-4" />
+                </label>
+                {(newPost.images || []).length > 0 && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('BlogSelectedImagesCount').replace('{count}', (newPost.images || []).length)}</span>
+                )}
+                {newPost.video && (
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('BlogSelectedVideo')}</span>
+                )}
+              </div>
+              {(newPost.images || []).length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {(newPost.images || []).map((url, index) => (
+                    <div key={index} className="relative">
+                      <img src={url} alt="" className="w-14 h-14 object-cover rounded border border-gray-200 dark:border-gray-600" onError={(e) => { e.target.style.display = 'none'; }} />
+                      <button type="button" onClick={() => removeImageAt(index)} className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white rounded-full text-xs leading-none flex items-center justify-center hover:bg-red-600">×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 标签：已选标签在上，输入框固定在下 */}
+              <div className="py-3 px-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/80 text-sm space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide shrink-0">{t('BlogTagsLabel')}</span>
                   {newPost.tags.map(tag => (
                     <span
                       key={tag}
-                      className="px-2 py-1 bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded text-sm flex items-center gap-1"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-md text-xs font-medium"
                     >
                       #{tag}
-                      <button
-                        onClick={() => removeTag(tag)}
-                        className="text-blue-400 hover:text-blue-600"
-                      >
-                        ✕
-                      </button>
+                      <button type="button" onClick={() => removeTag(tag)} className="hover:text-blue-900 dark:hover:text-blue-100 leading-none opacity-70 hover:opacity-100" aria-label={t('BlogRemoveTag')}>×</button>
                     </span>
                   ))}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2 pt-0.5">
                   <input
                     type="text"
-                    placeholder="添加标签..."
-                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    id="blog-tag-input"
+                    placeholder={t('BlogTagInputPlaceholder')}
+                    className="w-36 py-1.5 px-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        addTag(e.target.value.trim());
-                        e.target.value = '';
+                        e.preventDefault();
+                        const v = e.target.value.trim();
+                        if (v) { addTag(v); e.target.value = ''; }
                       }
                     }}
                   />
                   <button
+                    type="button"
                     onClick={() => {
-                      const input = document.querySelector('input[placeholder="添加标签..."]');
-                      if (input.value.trim()) {
-                        addTag(input.value.trim());
-                        input.value = '';
-                      }
+                      const input = document.getElementById('blog-tag-input');
+                      if (input?.value?.trim()) { addTag(input.value.trim()); input.value = ''; }
                     }}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                    className="py-1.5 px-2.5 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
                   >
-                    添加
+                    {t('BlogAdd')}
                   </button>
+                </div>
+              </div>
+
+              {/* 分类 / 心情 / 位置 / 天气：一行，位置不填则留空；分类选「其他」可自定义 */}
+              <div className="flex flex-wrap items-center gap-3 py-3 px-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/80 text-sm">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogCategoryLabel')}</span>
+                  <select
+                    value={newPost.category}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      handleInputChange('category', v);
+                      if (v !== '其他') handleInputChange('customCategory', '');
+                    }}
+                    className="py-1.5 pl-2 pr-6 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 text-sm appearance-none cursor-pointer"
+                  >
+                    {categories.filter(cat => cat !== '全部').map(category => (
+                      <option key={category} value={category}>{getCategoryDisplayName(category)}</option>
+                    ))}
+                  </select>
+                  {newPost.category === '其他' && (
+                    <input
+                      type="text"
+                      value={newPost.customCategory || ''}
+                      onChange={(e) => handleInputChange('customCategory', e.target.value)}
+                      placeholder={t('BlogCustomCategoryPlaceholder')}
+                      className="w-24 py-1.5 px-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
+                    />
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogMoodLabel')}</span>
+                  <select
+                    value={newPost.mood}
+                    onChange={(e) => handleInputChange('mood', e.target.value)}
+                    className="py-1.5 pl-2 pr-7 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm cursor-pointer"
+                  >
+                    <option value="😊">😊</option>
+                    <option value="😢">😢</option>
+                    <option value="😴">😴</option>
+                    <option value="🤔">🤔</option>
+                    <option value="🎉">🎉</option>
+                    <option value="😌">😌</option>
+                    <option value="🤩">🤩</option>
+                    <option value="😤">😤</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogLocationLabel')}</span>
+                  <input
+                    type="text"
+                    value={newPost.location}
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    className="w-24 py-1.5 px-2.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
+                    placeholder={t('BlogLocationPlaceholder')}
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogWeatherLabel')}</span>
+                  <select
+                    value={newPost.weather}
+                    onChange={(e) => handleInputChange('weather', e.target.value)}
+                    className="py-1.5 pl-2 pr-7 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm cursor-pointer"
+                  >
+                    <option value="☀️">☀️</option>
+                    <option value="☁️">☁️</option>
+                    <option value="🌧️">🌧️</option>
+                    <option value="❄️">❄️</option>
+                    <option value="🌩️">🌩️</option>
+                    <option value="🌤️">🌤️</option>
+                  </select>
                 </div>
               </div>
 
@@ -538,13 +663,13 @@ function BlogHome() {
                   onClick={cancelEdit}
                   className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  取消
+                  {t('BlogCancel')}
                 </button>
                 <button
                   onClick={editingPost ? handleUpdatePost : handlePublishPost}
                   className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  {editingPost ? '更新动态' : '发布动态'}
+                  {editingPost ? t('BlogUpdatePost') : t('BlogPublishPostButton')}
                 </button>
               </div>
             </div>
@@ -587,7 +712,7 @@ function BlogHome() {
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`px-2 py-1 rounded text-xs font-medium ${getCategoryColor(post.category)}`}>
-                      {post.category}
+                      {getCategoryDisplayName(post.category)}
                     </span>
                     <div className="flex items-center space-x-1 text-gray-500">
                       {getTypeIcon(post.type)}
@@ -601,14 +726,14 @@ function BlogHome() {
                         className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors flex items-center gap-1"
                       >
                         <FaEdit className="w-3 h-3" />
-                        编辑
+                        {t('BlogEdit')}
                       </button>
                       <button
                         onClick={() => handleDeletePost(post)}
                         className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors flex items-center gap-1"
                       >
                         <FaTrash className="w-3 h-3" />
-                        删除
+                        {t('BlogDelete')}
                       </button>
                     </div>
                   )}
@@ -638,13 +763,39 @@ function BlogHome() {
                 {/* 图片展示 */}
                 {post.images && post.images.length > 0 && (
                   <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {post.images.map((image, index) => (
-                      <div key={index} className="aspect-square bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                        <div className="text-4xl text-gray-400">🖼️</div>
+                    {post.images.map((url, index) => (
+                      <div key={index} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+                        <img src={url} alt="" className="w-full aspect-square object-cover" onError={(e) => { e.target.onerror = null; e.target.src = ''; e.target.className = 'w-full aspect-square object-contain'; e.target.parentElement.classList.add('flex', 'items-center', 'justify-center'); e.target.alt = t('BlogImageLoadFailed'); }} />
                       </div>
                     ))}
                   </div>
                 )}
+
+                {/* 视频展示 */}
+                {post.video && (() => {
+                  const v = post.video.trim();
+                  const ytMatch = v.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+                  const biliMatch = v.match(/bilibili\.com\/video\/(BV[a-zA-Z0-9]+)/);
+                  if (ytMatch) {
+                    return (
+                      <div className="mt-4 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 aspect-video max-w-2xl">
+                        <iframe title="YouTube" src={`https://www.youtube.com/embed/${ytMatch[1]}`} className="w-full h-full" allowFullScreen />
+                      </div>
+                    );
+                  }
+                  if (biliMatch) {
+                    return (
+                      <div className="mt-4 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 aspect-video max-w-2xl">
+                        <iframe title="B站" src={`https://player.bilibili.com/player.html?bvid=${biliMatch[1]}`} className="w-full h-full" allowFullScreen />
+                      </div>
+                    );
+                  }
+                  return (
+                    <div className="mt-4 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-600 max-w-2xl">
+                      <video src={v} controls className="w-full" />
+                    </div>
+                  );
+                })()}
 
                 {/* 标签 */}
                 <div className="flex flex-wrap gap-2 mt-4">
@@ -673,7 +824,7 @@ function BlogHome() {
                     </button>
                     <button className="flex items-center space-x-2 text-gray-500 hover:text-green-500 transition-colors">
                       <FaShare className="w-4 h-4" />
-                      <span>分享</span>
+                      <span>{t('BlogShare')}</span>
                     </button>
                   </div>
                   <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
@@ -697,13 +848,14 @@ function BlogHome() {
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📝</div>
             <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              {searchTerm ? '未找到匹配的动态' : '还没有动态'}
+              {searchTerm ? t('BlogNoResults') : t('BlogNoPostsYet')}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-6">
-              {searchTerm ? '尝试其他搜索关键词' : '点击"发布动态"按钮分享您的第一条动态'}
+              {searchTerm ? t('BlogNoResultsHint') : t('BlogNoPostsHint')}
             </p>
           </div>
         )}
+        </div>
       </main>
 
       {/* 删除确认对话框 */}
@@ -714,10 +866,10 @@ function BlogHome() {
           setShowDeleteDialog(false);
           setPostToDelete(null);
         }}
-        title="确认删除"
-        message={`确定要删除动态"${postToDelete?.title}"吗？此操作不可撤销。`}
-        confirmText="删除"
-        cancelText="取消"
+        title={t('ConfirmDeletePost')}
+        message={`${postToDelete?.title ? `"${postToDelete.title}"` : ''} ${t('ConfirmDeletePostMessage')}`}
+        confirmText={t('Delete')}
+        cancelText={t('Cancel')}
         type="danger"
       />
 

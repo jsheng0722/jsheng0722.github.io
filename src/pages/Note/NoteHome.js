@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBook, FaPencilAlt, FaCode, FaHeart, FaGraduationCap, FaPlus, FaThLarge, FaList, FaCloudDownloadAlt } from 'react-icons/fa';
+import { FaBook, FaPencilAlt, FaCode, FaHeart, FaGraduationCap, FaPlus, FaThLarge, FaList } from 'react-icons/fa';
 import { Button, Card, EmptyState, SearchBox } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
 import { NoteListItemCompact, NoteCard } from '../../components/Note';
-import { writeFilesToPickedFolder } from '../../utils/syncToProject';
+import { useI18n } from '../../context/I18nContext';
 
 const LAYOUT_KEY = 'notesLayoutView';
 
 function NoteHome() {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('全部');
@@ -119,28 +120,6 @@ function NoteHome() {
     navigate(`/notes/view/${note.id}`, { state: { note } });
   };
 
-  const syncNotesToProject = async () => {
-    const content = JSON.stringify(notes, null, 2);
-    const files = [{ name: 'userNotes.json', content }];
-    try {
-      const done = await writeFilesToPickedFolder(files);
-      if (done) {
-        alert('已直接写入所选文件夹。\n请选择项目的 public/content/notes 目录；下次 push 到 GitHub 即可。');
-        return;
-      }
-    } catch (e) {
-      console.warn('File System Access 写入失败，改用下载', e);
-    }
-    const blob = new Blob([content], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'userNotes.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    alert('已下载 userNotes.json。\n请将文件放入项目的 public/content/notes/ 目录，然后 push 到 GitHub。');
-  };
-
   return (
     <PageLayout className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex flex-col md:flex-row gap-6">
@@ -154,7 +133,7 @@ function NoteHome() {
             <FaBook className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{notes.length}</span>
-              <span className="text-xs opacity-90">总笔记数</span>
+              <span className="text-xs opacity-90">{t('NoteTotal')}</span>
             </div>
           </Card>
           <Card
@@ -165,7 +144,7 @@ function NoteHome() {
             <FaGraduationCap className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{getCategoryStats('学习笔记')}</span>
-              <span className="text-xs opacity-90">学习笔记</span>
+              <span className="text-xs opacity-90">{t('NoteStudy')}</span>
             </div>
           </Card>
           <Card
@@ -176,7 +155,7 @@ function NoteHome() {
             <FaHeart className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{getCategoryStats('日常日记')}</span>
-              <span className="text-xs opacity-90">日常日记</span>
+              <span className="text-xs opacity-90">{t('NoteDaily')}</span>
             </div>
           </Card>
           <Card
@@ -187,7 +166,7 @@ function NoteHome() {
             <FaPencilAlt className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{getCategoryStats('随笔写写')}</span>
-              <span className="text-xs opacity-90">随笔写写</span>
+              <span className="text-xs opacity-90">{t('NoteEssay')}</span>
             </div>
           </Card>
           <Card
@@ -198,7 +177,7 @@ function NoteHome() {
             <FaCode className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{getCategoryStats('算法')}</span>
-              <span className="text-xs opacity-90">算法题解</span>
+              <span className="text-xs opacity-90">{t('NoteAlgorithm')}</span>
             </div>
           </Card>
         </aside>
@@ -207,10 +186,10 @@ function NoteHome() {
       {/* 页面标题 */}
       <div className="mb-6">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-          我的笔记本
+          {t('NoteMyNotebook')}
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400">
-          学习笔记 · 日常日记 · 随笔写写 · 算法题解
+          {t('NoteSubtitle')}
         </p>
       </div>
 
@@ -219,7 +198,7 @@ function NoteHome() {
         <div className="flex flex-col md:flex-row gap-4 items-center">
           {/* 搜索框 */}
           <SearchBox
-            placeholder="搜索笔记标题、内容或标签..."
+            placeholder={t('NoteSearchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -229,7 +208,7 @@ function NoteHome() {
             <button
               type="button"
               onClick={() => setLayoutAndPersist('card')}
-              title="卡片视图"
+              title={t('NoteCardView')}
               className={`p-2 rounded-md transition-colors ${
                 layoutView === 'card'
                   ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
@@ -241,7 +220,7 @@ function NoteHome() {
             <button
               type="button"
               onClick={() => setLayoutAndPersist('compact')}
-              title="紧凑视图"
+              title={t('NoteCompactView')}
               className={`p-2 rounded-md transition-colors ${
                 layoutView === 'compact'
                   ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
@@ -253,22 +232,12 @@ function NoteHome() {
           </div>
 
           <Button
-            variant="ghost"
-            size="small"
-            icon={<FaCloudDownloadAlt />}
-            iconPosition="left"
-            onClick={syncNotesToProject}
-            title="下载到 public/content/notes/ 后 push 到 GitHub"
-          >
-            同步到项目
-          </Button>
-          <Button
             onClick={handleCreateNote}
             icon={<FaPlus />}
             iconPosition="left"
             className="whitespace-nowrap"
           >
-            写笔记
+            {t('NoteWriteNote')}
           </Button>
         </div>
       </Card>
@@ -277,7 +246,7 @@ function NoteHome() {
         {filteredNotes.length === 0 ? (
           <EmptyState
               icon="inbox"
-              title={searchTerm ? '未找到匹配的笔记' : '还没有笔记'}
+              title={searchTerm ? t('NoteNoMatch') : t('NoteNoNotes')}
               description={searchTerm ? '尝试其他搜索关键词' : '点击"写笔记"按钮创建您的第一篇笔记'}
               action={!searchTerm ? (
                 <Button

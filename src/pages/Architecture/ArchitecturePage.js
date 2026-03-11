@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import ArchitectureMindMapWrapper from './ArchitectureMindMap';
+import { useI18n } from '../../context/I18nContext';
 import { 
   FaLayerGroup
 } from 'react-icons/fa';
@@ -11,6 +12,7 @@ import {
  * 以文件系统树状结构展示项目整体架构
  */
 function ArchitecturePage() {
+  const { t } = useI18n();
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <Header />
@@ -20,10 +22,10 @@ function ArchitecturePage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-3">
             <FaLayerGroup className="text-blue-500" />
-            项目架构展示
+            {t('ArchTitle')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            以文件系统树状结构展示项目整体架构和关联关系
+            {t('ArchSubtitle')}
           </p>
         </div>
 

@@ -4,8 +4,10 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { FaCopy, FaCheck, FaMagic } from 'react-icons/fa';
 import { detectLanguageFromCode, normalizeLanguage } from './AlgorithmVisualizer/languageDetector';
+import { useI18n } from '../context/I18nContext';
 
 function CodeBlock({ language, children, isAlgorithmNote = false, note = null }) {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
@@ -53,10 +55,10 @@ function CodeBlock({ language, children, isAlgorithmNote = false, note = null })
               type="button"
               onClick={handleOpenVisualization}
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all flex items-center gap-1 text-sm shadow-md"
-              title="打开算法可视化工具"
+              title={t('CodeBlockVisualizeTitle')}
             >
               <FaMagic className="w-3 h-3" />
-              <span>可视化</span>
+              <span>{t('CodeBlockVisualize')}</span>
             </button>
           )}
           {/* 复制按钮 */}
@@ -66,17 +68,17 @@ function CodeBlock({ language, children, isAlgorithmNote = false, note = null })
             type="button"
             onClick={handleCopy}
             className="p-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg transition-all flex items-center gap-1 text-sm"
-            title="复制代码"
+            title={t('CodeBlockCopy')}
           >
             {copied ? (
               <>
                 <FaCheck className="w-3 h-3" />
-                <span>已复制</span>
+                <span>{t('CodeBlockCopied')}</span>
               </>
             ) : (
               <>
                 <FaCopy className="w-3 h-3" />
-                <span>复制</span>
+                <span>{t('CodeBlockCopy')}</span>
               </>
             )}
           </button>

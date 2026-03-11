@@ -9,8 +9,10 @@ import CodeBlock from '../../components/CodeBlock';
 import DiagramViewer from '../../components/DiagramEditor/DiagramViewer';
 import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 import { Button, Card, Badge, Dialog, Input } from '../../components/UI';
+import { useI18n } from '../../context/I18nContext';
 
 function NoteView() {
+  const { t } = useI18n();
   const { id: noteId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,7 +52,7 @@ function NoteView() {
   const performDelete = () => {
     const expect = String(note?.title || '').trim();
     if (confirmTitle.trim() !== expect) {
-      alert('请输入正确的笔记标题以确认删除');
+      alert(t('NoteConfirmDeleteTitle'));
       return;
     }
     const idStr = String(note.id);

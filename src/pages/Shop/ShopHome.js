@@ -3,8 +3,10 @@ import { FaHeart, FaExternalLinkAlt, FaStar, FaSearch, FaPlus } from 'react-icon
 import { Link } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
+import { useI18n } from '../../context/I18nContext';
 
 function ShopHome() {
+  const { t } = useI18n();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +14,10 @@ function ShopHome() {
   const [sortBy, setSortBy] = useState('name');
 
   const categories = ['全部', '电子产品', '服装', '家居', '图书', '运动', '美妆', '食品', '其他'];
+  const categoryToLabel = (cat) => {
+    const map = { '全部': 'ShopCategoryAll', '电子产品': 'ShopCategoryElectronics', '服装': 'ShopCategoryClothing', '家居': 'ShopCategoryHome', '图书': 'ShopCategoryBooks', '运动': 'ShopCategorySports', '美妆': 'ShopCategoryBeauty', '食品': 'ShopCategoryFood', '其他': 'ShopCategoryOther' };
+    return map[cat] ? t(map[cat]) : cat;
+  };
 
   useEffect(() => {
     // 从localStorage加载用户收藏的商品
@@ -79,14 +85,23 @@ function ShopHome() {
   const getStatusColor = (status) => {
     switch (status) {
       case '已购买':
+      case 'Bought':
         return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
       case '收藏中':
+      case 'Favoriting':
         return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
       case '考虑中':
+      case 'Considering':
         return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
     }
+  };
+  const getStatusText = (status) => {
+    if (status === '已购买') return t('ShopStatusBought');
+    if (status === '收藏中') return t('ShopStatusFavoriting');
+    if (status === '考虑中') return t('ShopStatusConsidering');
+    return status;
   };
 
   return (
@@ -97,10 +112,10 @@ function ShopHome() {
         {/* 页面标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-            我的商品收藏
+            {t('ShopMyCollection')}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            分享我喜欢的商品 · 记录购买心得 · 推荐优质好物
+            {t('ShopSubtitle')}
           </p>
         </div>
 
@@ -112,7 +127,7 @@ function ShopHome() {
               <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="搜索商品名称、描述或标签..."
+                placeholder={t('ShopSearchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -126,7 +141,7 @@ function ShopHome() {
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
             >
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>{categoryToLabel(category)}</option>
               ))}
             </select>
 
@@ -136,11 +151,11 @@ function ShopHome() {
               onChange={(e) => setSortBy(e.target.value)}
               className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
             >
-              <option value="name">按名称</option>
-              <option value="price-low">价格从低到高</option>
-              <option value="price-high">价格从高到低</option>
-              <option value="rating">按评分</option>
-              <option value="date">按添加时间</option>
+              <option value="name">{t('ShopSortByName')}</option>
+              <option value="price-low">{t('ShopSortPriceLow')}</option>
+              <option value="price-high">{t('ShopSortPriceHigh')}</option>
+              <option value="rating">{t('ShopSortByRating')}</option>
+              <option value="date">{t('ShopSortByDate')}</option>
             </select>
 
             {/* 添加商品按钮 */}
@@ -149,7 +164,7 @@ function ShopHome() {
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
             >
               <FaPlus className="w-4 h-4" />
-              添加商品
+              {t('ShopAddProduct')}
             </Link>
           </div>
         </div>
@@ -177,7 +192,7 @@ function ShopHome() {
                 {/* 状态标签 */}
                 <div className="absolute top-2 right-2">
                   <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(product.status)}`}>
-                    {product.status}
+                    {getStatusText(product.status)}
                   </span>
                 </div>
 
@@ -194,7 +209,7 @@ function ShopHome() {
                 {/* 分类标签 */}
                 <div className="flex items-center justify-between mb-2">
                   <span className="inline-block bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 px-2 py-1 rounded text-xs font-medium">
-                    {product.category}
+                    {categoryToLabel(product.category)}
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {product.addedDate}
@@ -277,7 +292,7 @@ function ShopHome() {
                     className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
                   >
                     <FaExternalLinkAlt className="w-4 h-4" />
-                    查看商品
+                    {t('ShopViewProduct')}
                   </a>
                   <button className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <FaHeart className="w-4 h-4" />
@@ -287,7 +302,7 @@ function ShopHome() {
                 {/* 来源信息 */}
                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    来源: {product.source}
+                    {t('ShopSource')}: {product.source}
                   </p>
                 </div>
               </div>
@@ -300,13 +315,10 @@ function ShopHome() {
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🛒</div>
             <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              {products.length === 0 ? '还没有收藏任何商品' : '未找到匹配的商品'}
+              {products.length === 0 ? t('ShopNoData') : t('ShopNoResult')}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              {products.length === 0 
-                ? '开始收藏您喜欢的商品吧！' 
-                : '尝试调整搜索条件或筛选器'
-              }
+              {products.length === 0 ? t('ShopNoDataHint') : t('ShopNoResultHint')}
             </p>
             {products.length === 0 && (
               <Link
@@ -314,7 +326,7 @@ function ShopHome() {
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
               >
                 <FaPlus className="w-4 h-4" />
-                添加第一个商品
+                {t('ShopAddFirst')}
               </Link>
             )}
           </div>

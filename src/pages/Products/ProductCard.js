@@ -1,29 +1,43 @@
 import React from 'react';
 import { FaExternalLinkAlt, FaGithub, FaCode, FaDollarSign, FaCheckCircle } from 'react-icons/fa';
+import { useI18n } from '../../context/I18nContext';
 
 function ProductCard({ product }) {
+    const { t } = useI18n();
     const getStatusColor = (status) => {
-        switch (status) {
-            case '已完成':
-                return 'bg-green-100 text-green-800';
-            case '提供服务':
-                return 'bg-blue-100 text-blue-800';
-            case '持续进行':
-                return 'bg-yellow-100 text-yellow-800';
-            default:
-                return 'bg-gray-100 text-gray-800';
-        }
+        const s = status || '';
+        if (s === '已完成' || s === t('ProductStatusDone')) return 'bg-green-100 text-green-800';
+        if (s === '提供服务' || s === t('ProductStatusService')) return 'bg-blue-100 text-blue-800';
+        if (s === '持续进行' || s === t('ProductStatusOngoing')) return 'bg-yellow-100 text-yellow-800';
+        return 'bg-gray-100 text-gray-800';
     };
-
+    const getStatusText = (status) => {
+        const s = status || '';
+        if (s === '已完成') return t('ProductStatusDone');
+        if (s === '提供服务') return t('ProductStatusService');
+        if (s === '持续进行') return t('ProductStatusOngoing');
+        return s;
+    };
     const getPriceColor = (price) => {
-        if (price === '免费' || price === '免费开源') {
-            return 'text-green-600';
-        } else if (price === '面议') {
-            return 'text-blue-600';
-        } else {
-            return 'text-gray-600';
-        }
+        const p = price || '';
+        if (p === '免费' || p === '免费开源' || p === t('ProductPriceFree')) return 'text-green-600';
+        if (p === '面议' || p === t('ProductPriceNegotiable')) return 'text-blue-600';
+        return 'text-gray-600';
     };
+    const getPriceText = (price) => {
+        const p = price || '';
+        if (p === '免费' || p === '免费开源') return t('ProductPriceFree');
+        if (p === '面议') return t('ProductPriceNegotiable');
+        return p;
+    };
+    const categoryToKey = {
+        '全部': 'ProductsAll',
+        'Web开发': 'ProductCategoryWebDev',
+        '数据分析': 'ProductCategoryDataAnalysis',
+        '学术项目': 'ProductCategoryAcademic',
+        '开发服务': 'ProductCategoryDevService',
+    };
+    const getCategoryLabel = (cat) => (categoryToKey[cat] ? t(categoryToKey[cat]) : cat);
 
     return (
         <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
@@ -53,14 +67,14 @@ function ProductCard({ product }) {
                         {product.title}
                     </h3>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(product.status)}`}>
-                        {product.status}
+                        {getStatusText(product.status)}
                     </span>
                 </div>
 
                 {/* 分类 */}
                 <div className="mb-3">
                     <span className="inline-block bg-gray-100 text-gray-700 px-2 py-1 rounded text-sm">
-                        {product.category}
+                        {getCategoryLabel(product.category)}
                     </span>
                 </div>
 
@@ -92,13 +106,13 @@ function ProductCard({ product }) {
                 <div className="flex items-center mb-4">
                     <FaDollarSign className="text-gray-400 mr-1" />
                     <span className={`font-semibold ${getPriceColor(product.price)}`}>
-                        {product.price}
+                        {getPriceText(product.price)}
                     </span>
                 </div>
 
                 {/* 功能特性 */}
                 <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">主要特性：</h4>
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">{t('ProductFeatures')}</h4>
                     <ul className="space-y-1">
                         {product.features.slice(0, 3).map((feature, index) => (
                             <li key={index} className="flex items-center text-sm text-gray-600">
@@ -108,7 +122,7 @@ function ProductCard({ product }) {
                         ))}
                         {product.features.length > 3 && (
                             <li className="text-sm text-gray-500">
-                                还有 {product.features.length - 3} 个特性...
+                                {t('ProductMoreFeatures').replace('{n}', String(product.features.length - 3))}
                             </li>
                         )}
                     </ul>
@@ -124,7 +138,7 @@ function ProductCard({ product }) {
                             className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
                         >
                             <FaExternalLinkAlt className="mr-2" />
-                            查看演示
+                            {t('ProductViewDemo')}
                         </a>
                     )}
                     {product.githubUrl && (
@@ -135,12 +149,12 @@ function ProductCard({ product }) {
                             className={`${product.demoUrl ? 'flex-1' : 'w-full'} bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors duration-200 flex items-center justify-center`}
                         >
                             <FaGithub className="mr-2" />
-                            {product.demoUrl ? '源码' : '查看项目'}
+                            {product.demoUrl ? t('ProductSourceCode') : t('ProductViewProject')}
                         </a>
                     )}
                     {!product.demoUrl && !product.githubUrl && (
                         <button className="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors duration-200">
-                            联系咨询
+                            {t('ProductContact')}
                         </button>
                     )}
                 </div>

@@ -1,17 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaBook, FaPlus, FaStar, FaStarHalfAlt, FaEdit, FaTrash, FaSave, FaTimes, FaSearch, FaVolumeUp, FaCloudDownloadAlt } from 'react-icons/fa';
-import { Button, Card, Badge, EmptyState, SearchBox, Input, Textarea } from '../../components/UI';
+import { Button, Card, Badge, EmptyState, SearchBox, Input, Textarea, Collapsible } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
 import PhoneticKeyboard from './PhoneticKeyboard';
 import { matchRootsAffixesInWord, getRootsAffixesList, saveRootsAffixesList } from './rootsAffixesData';
-import { writeFilesToPickedFolder } from '../../utils/syncToProject';
+import { writeFilesToPickedFolder, canUseFileSystemAccess } from '../../utils/syncToProject';
+import { useI18n } from '../../context/I18nContext';
+import { useSession } from '../../context/SessionContext';
 
 const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
 const STORAGE_KEY = 'vocabularyWords';
 
+const SYNC_SUCCESS_UNTIL_KEY = 'vocabSyncSuccessUntil';
+
+/** 同步成功提示显示到该时间戳（模块级 + sessionStorage，避免刷新/重挂载后提示丢失） */
+let syncSuccessUntil = 0;
+
+function getSyncSuccessUntilFromStorage() {
+  try {
+    const v = sessionStorage.getItem(SYNC_SUCCESS_UNTIL_KEY);
+    const t = v ? parseInt(v, 10) : 0;
+    return Number.isFinite(t) ? t : 0;
+  } catch (_) {
+    return 0;
+  }
+}
+
+function setSyncSuccessUntilStorage(until) {
+  try {
+    if (until > 0) sessionStorage.setItem(SYNC_SUCCESS_UNTIL_KEY, String(until));
+    else sessionStorage.removeItem(SYNC_SUCCESS_UNTIL_KEY);
+  } catch (_) {}
+}
+
 const PARTS_OF_SPEECH = [
-  { value: '', label: '不选' },
+  { value: 'None', label: '不选' },
   { value: 'n.', label: 'n. 名词' },
   { value: 'v.', label: 'v. 动词' },
   { value: 'adj.', label: 'adj. 形容词' },
@@ -37,6 +61,8 @@ function saveWords(words) {
 }
 
 function VocabularyPage() {
+  const { t } = useI18n();
+  const { startSession, sessionEnabled, VOCAB_SYNC_COUNT_KEY } = useSession();
   const [words, setWords] = useState([]);
   const [filteredWords, setFilteredWords] = useState([]);
   const [filter, setFilter] = useState('all'); // 'all' | 'new' | 'familiar'
@@ -49,6 +75,8 @@ function VocabularyPage() {
     phoneticAudio: '',
     partOfSpeech: '',
     definition: '',
+    relatedPhrases: '',
+    derivations: '',
     example: '',
     synonyms: '',
     remark: '',
@@ -63,6 +91,26 @@ function VocabularyPage() {
   const [rootsForm, setRootsForm] = useState({ word: '', type: '词根', meaning: '', example: '' });
   const [showQuickAddRoot, setShowQuickAddRoot] = useState(false);
   const [quickRootForm, setQuickRootForm] = useState({ word: '', type: '词根', meaning: '', example: '' });
+  const [syncInProgress, setSyncInProgress] = useState(false);
+  const [syncSuccessHint, setSyncSuccessHint] = useState(false);
+  const [sessionSyncCount, setSessionSyncCount] = useState(0);
+  const syncSuccessUntilRef = useRef(0);
+
+  // 从 sessionStorage 恢复本 session 的同步次数；仅当 session 未开启时清零，超时未点「结束」前仍保留次数
+  useEffect(() => {
+    if (sessionEnabled) {
+      try {
+        const n = parseInt(sessionStorage.getItem(VOCAB_SYNC_COUNT_KEY) || '0', 10);
+        const count = Number.isFinite(n) ? n : 0;
+        setSessionSyncCount(count);
+        if (count > 0) setSyncSuccessHint(true);
+      } catch (_) {
+        setSessionSyncCount(0);
+      }
+    } else {
+      setSessionSyncCount(0);
+    }
+  }, [sessionEnabled, VOCAB_SYNC_COUNT_KEY]);
 
   useEffect(() => {
     const base = process.env.PUBLIC_URL || '';
@@ -86,7 +134,24 @@ function VocabularyPage() {
     });
   }, []);
 
-  // 根据当前输入的单词匹配词根词缀（仅当单词长度>=2时计算）
+  // 若挂载时仍在「已同步」显示窗口内（含刷新后从 sessionStorage 恢复），恢复提示并设定时关闭
+  useEffect(() => {
+    const fromStorage = getSyncSuccessUntilFromStorage();
+    const until = Math.max(syncSuccessUntil, fromStorage);
+    if (until > Date.now()) {
+      syncSuccessUntil = until;
+      setSyncSuccessHint(true);
+      const ms = Math.min(until - Date.now(), 2500);
+      const t = setTimeout(() => {
+        setSyncSuccessHint(false);
+        syncSuccessUntil = 0;
+        setSyncSuccessUntilStorage(0);
+      }, ms);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
+  // 根据当前输入的单词匹配词根词缀
   const rootsResults = (form.word || '').trim().length >= 2 ? matchRootsAffixesInWord(form.word, rootsAffixesList) : [];
 
   useEffect(() => {
@@ -98,6 +163,8 @@ function VocabularyPage() {
       list = list.filter(w =>
         (w.word && w.word.toLowerCase().includes(q)) ||
         (w.definition && w.definition.toLowerCase().includes(q)) ||
+        (w.relatedPhrases && w.relatedPhrases.toLowerCase().includes(q)) ||
+        (w.derivations && w.derivations.toLowerCase().includes(q)) ||
         (w.example && w.example.toLowerCase().includes(q)) ||
         (w.partOfSpeech && w.partOfSpeech.toLowerCase().includes(q)) ||
         (w.synonyms && w.synonyms.toLowerCase().includes(q)) ||
@@ -118,6 +185,8 @@ function VocabularyPage() {
       phoneticAudio: '',
       partOfSpeech: '',
       definition: '',
+      relatedPhrases: '',
+      derivations: '',
       example: '',
       synonyms: '',
       remark: '',
@@ -134,7 +203,7 @@ function VocabularyPage() {
     e.preventDefault();
     const word = (form.word || '').trim();
     if (!word) {
-      alert('请填写单词');
+      alert(t('VocabFillWord'));
       return;
     }
     const item = {
@@ -144,7 +213,9 @@ function VocabularyPage() {
       phoneticAudio: (form.phoneticAudio || '').trim() || undefined,
       partOfSpeech: (form.partOfSpeech || '').trim(),
       definition: (form.definition || '').trim(),
-      example: (form.example || '').trim(),
+      relatedPhrases: (form.relatedPhrases || '').trim() || undefined,
+      derivations: (form.derivations || '').trim() || undefined,
+      example: (form.example || '').trim() || undefined,
       synonyms: (form.synonyms || '').trim() || undefined,
       remark: (form.remark || '').trim() || undefined,
       isNew: !!form.isNew,
@@ -175,6 +246,8 @@ function VocabularyPage() {
       phoneticAudio: w.phoneticAudio || '',
       partOfSpeech: w.partOfSpeech || '',
       definition: w.definition || '',
+      relatedPhrases: w.relatedPhrases || '',
+      derivations: w.derivations || '',
       example: w.example || '',
       synonyms: w.synonyms || '',
       remark: w.remark || '',
@@ -183,6 +256,76 @@ function VocabularyPage() {
     setSelectedRootsAffixes(Array.isArray(w.rootsAffixes) ? w.rootsAffixes : []);
     setEditingId(w.id);
     setShowForm(true);
+  };
+
+  /** 同步到本地：Chrome 选目录写入，其他浏览器下载 JSON 供放入仓库后 git push。
+   * 若尚未开启 session，则在首次同步时开启 session；在 session 期间同步成功后，「已同步」会持续显示并统计次数。 */
+  const handleSyncToLocal = async () => {
+    // 与本地存储相关的操作：若尚未开启 session，则开启
+    startSession();
+    const files = [
+      { name: 'words.json', content: JSON.stringify(words, null, 2) },
+      { name: 'rootsAffixes.json', content: JSON.stringify(rootsAffixesList, null, 2) }
+    ];
+    setSyncInProgress(true);
+    setSyncSuccessHint(false);
+    syncSuccessUntilRef.current = 0;
+    let result;
+    try {
+      result = await writeFilesToPickedFolder(files);
+      if (result.success) {
+        setSyncSuccessHint(true);
+        setSessionSyncCount((c) => {
+          try {
+            const fromStorage = parseInt(sessionStorage.getItem(VOCAB_SYNC_COUNT_KEY) || '0', 10);
+            const current = Number.isFinite(fromStorage) ? fromStorage : 0;
+            const next = current + 1;
+            sessionStorage.setItem(VOCAB_SYNC_COUNT_KEY, String(next));
+            return next;
+          } catch (_) {
+            return c + 1;
+          }
+        });
+        return;
+      }
+      if (result.cancelledByUser) return;
+    } catch (e) {
+      console.warn('File System Access 写入失败', e);
+    } finally {
+      setSyncInProgress(false);
+    }
+    // 非 Chrome 或用户取消：下载 JSON，提示放入 public/content/vocabulary/ 后 git push
+    const blob1 = new Blob([files[0].content], { type: 'application/json' });
+    const blob2 = new Blob([files[1].content], { type: 'application/json' });
+    const url1 = URL.createObjectURL(blob1);
+    const url2 = URL.createObjectURL(blob2);
+    const a1 = document.createElement('a');
+    const a2 = document.createElement('a');
+    a1.href = url1;
+    a1.download = 'words.json';
+    a2.href = url2;
+    a2.download = 'rootsAffixes.json';
+    a1.click();
+    setTimeout(() => {
+      a2.click();
+      URL.revokeObjectURL(url1);
+      URL.revokeObjectURL(url2);
+    }, 200);
+    alert(t('VocabSyncDownloaded'));
+    // 下载方式同样视为一次本地同步操作：确保已开启 session，并累计次数
+    startSession();
+    setSyncSuccessHint(true);
+    setSessionSyncCount((c) => {
+      try {
+        const fromStorage = parseInt(sessionStorage.getItem(VOCAB_SYNC_COUNT_KEY) || '0', 10);
+        const current = Number.isFinite(fromStorage) ? fromStorage : 0;
+        const next = current + 1;
+        sessionStorage.setItem(VOCAB_SYNC_COUNT_KEY, String(next));
+        return next;
+      } catch (_) {
+        return c + 1;
+      }
+    });
   };
 
   const handleInsertPhonetic = (char) => {
@@ -204,12 +347,12 @@ function VocabularyPage() {
     e?.preventDefault();
     const { word, type, meaning, example } = quickRootForm;
     if (!(word || '').trim()) {
-      alert('请填写词根/词缀');
+      alert(t('VocabFillRootAffix'));
       return;
     }
     const entry = {
       word: word.trim(),
-      type: type || '词根',
+      type: type || t('VocabRoot'),
       meaning: (meaning || '').trim(),
       example: (example || '').trim(),
       id: `ra-${Date.now()}-${word.trim().slice(0, 5)}`
@@ -233,10 +376,10 @@ function VocabularyPage() {
     e?.preventDefault();
     const { word, type, meaning, example } = rootsForm;
     if (!(word || '').trim()) {
-      alert('请填写词根/词缀');
+      alert(t('VocabFillRootAffix'));
       return;
     }
-    const entry = { word: word.trim(), type: type || '词根', meaning: (meaning || '').trim(), example: (example || '').trim() };
+    const entry = { word: word.trim(), type: type || t('VocabRoot'), meaning: (meaning || '').trim(), example: (example || '').trim() };
     if (rootsEditEntry != null) {
       const next = rootsAffixesList.map((item) => (item.id === rootsEditEntry.id ? { ...item, ...entry } : item));
       setRootsAffixesList(next);
@@ -252,7 +395,7 @@ function VocabularyPage() {
   };
 
   const deleteRootsEntry = (id) => {
-    if (!window.confirm('确定删除该词根/词缀？')) return;
+    if (!window.confirm(t('VocabConfirmDeleteRoot'))) return;
     const next = rootsAffixesList.filter((item) => item.id !== id);
     setRootsAffixesList(next);
     saveRootsAffixesList(next);
@@ -284,7 +427,7 @@ function VocabularyPage() {
   const fetchPhonetic = async () => {
     const word = (form.word || '').trim();
     if (!word) {
-      alert('请先输入单词');
+      alert(t('VocabInputWordFirst'));
       return;
     }
     setPhoneticLoading(true);
@@ -300,43 +443,10 @@ function VocabularyPage() {
       }));
       if (!text) throw new Error('无音标');
     } catch (err) {
-      alert('无法获取音标，请检查单词拼写或稍后重试');
+      alert(t('VocabPhoneticFailed'));
     } finally {
       setPhoneticLoading(false);
     }
-  };
-
-  const syncVocabularyToProject = async () => {
-    const files = [
-      { name: 'words.json', content: JSON.stringify(words, null, 2) },
-      { name: 'rootsAffixes.json', content: JSON.stringify(rootsAffixesList, null, 2) }
-    ];
-    try {
-      const done = await writeFilesToPickedFolder(files);
-      if (done) {
-        alert('已直接写入所选文件夹。\n请选择项目的 public/content/vocabulary 目录；下次 push 到 GitHub 即可。');
-        return;
-      }
-    } catch (e) {
-      console.warn('File System Access 写入失败，改用下载', e);
-    }
-    const blob1 = new Blob([files[0].content], { type: 'application/json' });
-    const blob2 = new Blob([files[1].content], { type: 'application/json' });
-    const url1 = URL.createObjectURL(blob1);
-    const url2 = URL.createObjectURL(blob2);
-    const a1 = document.createElement('a');
-    const a2 = document.createElement('a');
-    a1.href = url1;
-    a1.download = 'words.json';
-    a2.href = url2;
-    a2.download = 'rootsAffixes.json';
-    a1.click();
-    setTimeout(() => {
-      a2.click();
-      URL.revokeObjectURL(url1);
-      URL.revokeObjectURL(url2);
-    }, 200);
-    alert('已下载 words.json 与 rootsAffixes.json。\n请将这两个文件放入项目的 public/content/vocabulary/ 目录，然后 push 到 GitHub。');
   };
 
   /** 根据单词从 API 获取音标与读音 URL，用于列表无 phoneticAudio 时补拉并播放 */
@@ -398,11 +508,11 @@ function VocabularyPage() {
       }
       return;
     }
-    alert('未获取到该单词的读音，请检查拼写或稍后重试');
+    alert(t('VocabNoPronunciation'));
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm('确定删除该单词？')) return;
+    if (!window.confirm(t('VocabConfirmDeleteWord'))) return;
     const next = words.filter(w => w.id !== id);
     setWords(next);
     saveWords(next);
@@ -425,7 +535,7 @@ function VocabularyPage() {
             <FaBook className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{words.length}</span>
-              <span className="text-xs opacity-90">总词数</span>
+              <span className="text-xs opacity-90">{t('VocabTotalWords')}</span>
             </div>
           </Card>
           <Card
@@ -436,7 +546,7 @@ function VocabularyPage() {
             <FaStarHalfAlt className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{newCount}</span>
-              <span className="text-xs opacity-90">生词</span>
+              <span className="text-xs opacity-90">{t('VocabNewWords')}</span>
             </div>
           </Card>
           <Card
@@ -447,27 +557,51 @@ function VocabularyPage() {
             <FaStar className="w-6 h-6 md:w-7 md:h-7 opacity-80 shrink-0" />
             <div className="min-w-0 flex-1 flex flex-col items-center justify-center text-center">
               <span className="text-xl md:text-2xl font-bold leading-tight">{familiarCount}</span>
-              <span className="text-xs opacity-90">熟词</span>
+              <span className="text-xs opacity-90">{t('VocabFamiliarWords')}</span>
             </div>
           </Card>
         </aside>
 
         <main className="min-w-0 flex-1">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-            单词本
-          </h1>
+          <div className="flex items-center gap-2 flex-wrap mb-1">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+              {t('VocabTitle')}
+            </h1>
+            <button
+              type="button"
+              onClick={handleSyncToLocal}
+              disabled={syncInProgress}
+              title={canUseFileSystemAccess() ? t('VocabSyncToProject') : t('VocabSyncExport')}
+              className="w-8 h-8 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center justify-center shrink-0 disabled:opacity-50 transition-colors"
+            >
+              {syncInProgress ? (
+                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <FaCloudDownloadAlt className="w-4 h-4" />
+              )}
+            </button>
+            {(() => {
+              const fromStorage = getSyncSuccessUntilFromStorage();
+              const until = Math.max(syncSuccessUntil, fromStorage);
+              const inWindow = until > 0 && Date.now() < until;
+              const showSuccess = syncSuccessHint || inWindow;
+              return showSuccess ? (
+                <span className="text-sm text-green-600 dark:text-green-400 font-medium">
+                  {t('VocabSyncSuccess')}
+                  {sessionSyncCount > 0 ? ` (${sessionSyncCount} 次)` : ''}
+                </span>
+              ) : null;
+            })()}
+          </div>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            记录生词与熟词，支持筛选与搜索
+            {t('VocabSubtitle')}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="small" icon={<FaCloudDownloadAlt />} iconPosition="left" onClick={syncVocabularyToProject} title="下载到 public/content/vocabulary/ 后 push 到 GitHub">
-            同步到项目
-          </Button>
+        <div className="flex items-center gap-2 flex-wrap">
           <Button variant="ghost" size="small" icon={<FaSearch />} iconPosition="left" onClick={openRootsManager}>
-            管理词根词缀
+            {t('VocabManageRoots')}
           </Button>
         </div>
       </div>
@@ -476,26 +610,26 @@ function VocabularyPage() {
       {showRootsManager && (
         <Card className="mb-6 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">词根词缀词典</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('VocabRootsDict')}</h2>
             <Button variant="ghost" size="small" icon={<FaTimes />} onClick={() => { setShowRootsManager(false); setRootsEditEntry(null); }}>
-              关闭
+              {t('VocabClose')}
             </Button>
           </div>
           <form onSubmit={saveRootsEntry} className="flex flex-wrap gap-3 mb-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-            <Input placeholder="词根/词缀" value={rootsForm.word} onChange={(e) => setRootsForm((f) => ({ ...f, word: e.target.value }))} className="w-28" />
+            <Input placeholder={`${t('VocabRoot')}/${t('VocabAffix')}`} value={rootsForm.word} onChange={(e) => setRootsForm((f) => ({ ...f, word: e.target.value }))} className="w-28" />
             <select value={rootsForm.type} onChange={(e) => setRootsForm((f) => ({ ...f, type: e.target.value }))} className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
-              <option value="词根">词根</option>
-              <option value="词缀">词缀</option>
+              <option value="词根">{t('VocabRoot')}</option>
+              <option value="词缀">{t('VocabAffix')}</option>
             </select>
-            <Input placeholder="释义" value={rootsForm.meaning} onChange={(e) => setRootsForm((f) => ({ ...f, meaning: e.target.value }))} className="flex-1 min-w-[100px]" />
-            <Input placeholder="例句" value={rootsForm.example} onChange={(e) => setRootsForm((f) => ({ ...f, example: e.target.value }))} className="flex-1 min-w-[100px]" />
+            <Input placeholder={t('VocabMeaning')} value={rootsForm.meaning} onChange={(e) => setRootsForm((f) => ({ ...f, meaning: e.target.value }))} className="flex-1 min-w-[100px]" />
+            <Input placeholder={t('VocabExample')} value={rootsForm.example} onChange={(e) => setRootsForm((f) => ({ ...f, example: e.target.value }))} className="flex-1 min-w-[100px]" />
             {rootsEditEntry ? (
               <>
-                <Button type="submit" size="small">保存</Button>
-                <Button type="button" variant="ghost" size="small" onClick={cancelEditRoots}>取消</Button>
+                <Button type="submit" size="small">{t('Save')}</Button>
+                <Button type="button" variant="ghost" size="small" onClick={cancelEditRoots}>{t('Cancel')}</Button>
               </>
             ) : (
-              <Button type="submit" size="small" icon={<FaPlus />}>添加</Button>
+              <Button type="submit" size="small" icon={<FaPlus />}>{t('VocabAdd')}</Button>
             )}
           </form>
           <div className="max-h-64 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700">
@@ -519,17 +653,17 @@ function VocabularyPage() {
       <Card className="mb-6">
         <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
           <SearchBox
-            placeholder="搜索单词、释义或例句..."
+            placeholder={t('VocabSearchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-1 min-w-0"
           />
           <Button
-            onClick={() => { resetForm(); setShowForm(!showForm); setForm({ ...form, word: '', phonetic: '', phoneticAudio: '', partOfSpeech: '', definition: '', example: '', synonyms: '', remark: '', isNew: true }); setSelectedRootsAffixes([]); }}
+            onClick={() => { resetForm(); setShowForm(!showForm); setSelectedRootsAffixes([]); }}
             icon={showForm ? <FaTimes /> : <FaPlus />}
             iconPosition="left"
           >
-            {showForm ? '取消' : '添加单词'}
+            {showForm ? t('Cancel') : t('VocabAddWord')}
           </Button>
         </div>
       </Card>
@@ -538,20 +672,20 @@ function VocabularyPage() {
       {showForm && (
         <Card className="mb-6 p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
-            {editingId ? '编辑单词' : '添加单词'}
+            {editingId ? t('VocabEditWord') : t('VocabAddWord')}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="单词 *"
+                label={t('VocabWordRequired')}
                 value={form.word}
                 onChange={(e) => setForm(f => ({ ...f, word: e.target.value }))}
                 placeholder="例如 biology、readable"
                 required
               />
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">类型（词性）</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('VocabPartOfSpeech')}</label>
                 <select
                   value={form.partOfSpeech}
                   onChange={(e) => setForm(f => ({ ...f, partOfSpeech: e.target.value }))}
@@ -569,7 +703,7 @@ function VocabularyPage() {
               <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                   <FaSearch />
-                  匹配的词根词缀
+                  {t('VocabMatchedRoots')}
                 </h3>
                 {rootsResults.length > 0 ? (
                   <div className="flex flex-wrap gap-2 max-h-36 overflow-y-auto">
@@ -607,7 +741,7 @@ function VocabularyPage() {
                     })}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">未匹配到词根或词缀</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('VocabNoMatch')}</p>
                 )}
                 {selectedRootsAffixes.length > 0 && (
                   <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
@@ -641,15 +775,15 @@ function VocabularyPage() {
                       variant="secondary"
                       size="small"
                       onClick={() => setShowQuickAddRoot(true)}
-                      title="词根词缀库中没有当前单词相关项时可在此添加，并自动选入本词"
+                      title={t('VocabAddNewRoot')}
                     >
-                      添加新词根/词缀
+                      {t('VocabAddNewRoot')}
                     </Button>
                   ) : (
                     <div className="space-y-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         <Input
-                          placeholder="词根或词缀，如 bio、-able"
+                          placeholder={`${t('VocabRoot')}/${t('VocabAffix')} e.g. bio, -able`}
                           value={quickRootForm.word}
                           onChange={(e) => setQuickRootForm((f) => ({ ...f, word: e.target.value }))}
                         />
@@ -658,23 +792,23 @@ function VocabularyPage() {
                           onChange={(e) => setQuickRootForm((f) => ({ ...f, type: e.target.value }))}
                           className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm"
                         >
-                          <option value="词根">词根</option>
-                          <option value="词缀">词缀</option>
+                          <option value="词根">{t('VocabRoot')}</option>
+                          <option value="词缀">{t('VocabAffix')}</option>
                         </select>
                       </div>
                       <Input
-                        placeholder="释义"
+                        placeholder={t('VocabMeaning')}
                         value={quickRootForm.meaning}
                         onChange={(e) => setQuickRootForm((f) => ({ ...f, meaning: e.target.value }))}
                       />
                       <Input
-                        placeholder="例词（可选）"
+                        placeholder={`${t('VocabExample')} (optional)`}
                         value={quickRootForm.example}
                         onChange={(e) => setQuickRootForm((f) => ({ ...f, example: e.target.value }))}
                       />
                       <div className="flex gap-2">
-                        <Button type="button" size="small" onClick={handleQuickAddRoot}>添加并选入本词</Button>
-                        <Button type="button" variant="ghost" size="small" onClick={() => { setShowQuickAddRoot(false); setQuickRootForm({ word: '', type: '词根', meaning: '', example: '' }); }}>取消</Button>
+                        <Button type="button" size="small" onClick={handleQuickAddRoot}>{t('VocabAddAndSelect')}</Button>
+                        <Button type="button" variant="ghost" size="small" onClick={() => { setShowQuickAddRoot(false); setQuickRootForm({ word: '', type: '词根', meaning: '', example: '' }); }}>{t('Cancel')}</Button>
                       </div>
                     </div>
                   )}
@@ -687,7 +821,7 @@ function VocabularyPage() {
                 <div className="flex items-end gap-2">
                   <div className="flex-1 min-w-0">
                     <Input
-                      label="音标"
+                      label={t('VocabPhonetic')}
                       value={form.phonetic}
                       onChange={(e) => setForm(f => ({ ...f, phonetic: e.target.value }))}
                       placeholder="例如 /ˈæpl/ 或点击自动获取"
@@ -702,7 +836,7 @@ function VocabularyPage() {
                     disabled={phoneticLoading || !(form.word || '').trim()}
                     title="根据单词自动获取音标与读音（需联网）"
                   >
-                    {phoneticLoading ? '获取中…' : '自动获取'}
+                    {phoneticLoading ? t('VocabFetching') : t('VocabAutoFetch')}
                   </Button>
                   {(form.phoneticAudio || form.phonetic || form.word) && (
                     <button
@@ -725,32 +859,56 @@ function VocabularyPage() {
               </div>
             </div>
             <Textarea
-              label="释义"
+              label={t('VocabMeaning')}
               value={form.definition}
               onChange={(e) => setForm(f => ({ ...f, definition: e.target.value }))}
               placeholder="单词释义"
               rows={2}
             />
-            <Textarea
-              label="例句"
-              value={form.example}
-              onChange={(e) => setForm(f => ({ ...f, example: e.target.value }))}
-              placeholder="例句（可选）"
-              rows={2}
-            />
-            <Input
-              label="近义词"
-              value={form.synonyms}
-              onChange={(e) => setForm(f => ({ ...f, synonyms: e.target.value }))}
-              placeholder="多个用逗号分隔，如 happy, joyful, glad"
-            />
-            <Textarea
-              label="备注"
-              value={form.remark}
-              onChange={(e) => setForm(f => ({ ...f, remark: e.target.value }))}
-              placeholder="可选备注"
-              rows={2}
-            />
+            <Collapsible title={t('VocabRelatedPhrases')} defaultExpanded={false}>
+              <Textarea
+                label=""
+                value={form.relatedPhrases}
+                onChange={(e) => setForm(f => ({ ...f, relatedPhrases: e.target.value }))}
+                placeholder="关联短语（可选）"
+                rows={2}
+              />
+            </Collapsible>
+            <Collapsible title={t('VocabDerivations')} defaultExpanded={false}>
+              <Textarea
+                label=""
+                value={form.derivations}
+                onChange={(e) => setForm(f => ({ ...f, derivations: e.target.value }))}
+                placeholder="派生/联想（可选）"
+                rows={2}
+              />
+            </Collapsible>
+            <Collapsible title={t('VocabSynonyms')} defaultExpanded={false}>
+              <Input
+                label=""
+                value={form.synonyms}
+                onChange={(e) => setForm(f => ({ ...f, synonyms: e.target.value }))}
+                placeholder="多个用逗号分隔，如 happy, joyful, glad"
+              />
+            </Collapsible>
+            <Collapsible title={t('VocabExample')} defaultExpanded={false}>
+              <Textarea
+                label=""
+                value={form.example}
+                onChange={(e) => setForm(f => ({ ...f, example: e.target.value }))}
+                placeholder="例句（可选）"
+                rows={2}
+              />
+            </Collapsible>
+            <Collapsible title={t('VocabNotes')} defaultExpanded={false}>
+              <Textarea
+                label=""
+                value={form.remark}
+                onChange={(e) => setForm(f => ({ ...f, remark: e.target.value }))}
+                placeholder="可选备注"
+                rows={2}
+              />
+            </Collapsible>
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -779,8 +937,8 @@ function VocabularyPage() {
       {filteredWords.length === 0 ? (
         <EmptyState
           icon="inbox"
-          title={searchTerm || filter !== 'all' ? '没有匹配的单词' : '还没有单词'}
-          description={searchTerm || filter !== 'all' ? '试试其他筛选或搜索' : '点击「添加单词」开始记录'}
+          title={searchTerm || filter !== 'all' ? t('VocabNoSearchResult') : t('VocabNoWords')}
+          description={searchTerm || filter !== 'all' ? '' : ''}
           action={!searchTerm && filter === 'all' ? (
             <Button onClick={() => setShowForm(true)} icon={<FaPlus />} iconPosition="left">
               添加单词
@@ -841,6 +999,16 @@ function VocabularyPage() {
                       {w.definition}
                     </p>
                   )}
+                  {w.relatedPhrases && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      {t('VocabRelatedPhrases')}：{w.relatedPhrases}
+                    </p>
+                  )}
+                  {w.derivations && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      {t('VocabDerivations')}：{w.derivations}
+                    </p>
+                  )}
                   {w.example && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 italic line-clamp-1">
                       {w.example}
@@ -848,12 +1016,12 @@ function VocabularyPage() {
                   )}
                   {w.synonyms && (
                     <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                      近义词：{w.synonyms}
+                      {t('VocabSynonyms')}：{w.synonyms}
                     </p>
                   )}
                   {w.remark && (
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      备注：{w.remark}
+                      {t('VocabNotes')}：{w.remark}
                     </p>
                   )}
                 </div>

@@ -4,24 +4,27 @@
  */
 
 import React from 'react';
+import { useI18n } from '../../../context/I18nContext';
 
 function ColorPicker({
   value = '#000000',
   onChange,
-  title = '选择颜色',
+  title,
   size = 24,
   className = '',
   ...props
 }) {
+  const { t } = useI18n();
+  const displayTitle = title ?? t('SelectColor');
   return (
     <input
       type="color"
       value={value}
       onChange={(e) => onChange?.(e.target.value)}
-      title={title}
+      title={displayTitle}
       className={`cursor-pointer rounded border border-gray-300 dark:border-gray-600 bg-transparent ${className}`}
       style={{ width: size, height: size, minWidth: size, minHeight: size }}
-      aria-label={title}
+      aria-label={displayTitle}
       {...props}
     />
   );

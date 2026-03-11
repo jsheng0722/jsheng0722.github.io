@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FaHome, FaFolder, FaMusic, FaFileAlt, FaCode, FaImage, FaDesktop, FaEdit, FaVideo, FaShoppingCart, FaWallet } from 'react-icons/fa';
 import DesktopShortcut from './DesktopShortcut';
+import { useI18n } from '../../context/I18nContext';
 
 function Desktop() {
-  const shortcuts = [
-    { icon: FaHome, label: '首页', path: '/', color: 'text-blue-500' },
-    { icon: FaDesktop, label: '桌面', path: '/desktop', color: 'text-gray-500' },
-    { icon: FaEdit, label: '动态', path: '/blog', color: 'text-indigo-500' },
-    { icon: FaVideo, label: '视频', path: '/video', color: 'text-red-500' },
-    { icon: FaShoppingCart, label: '收藏', path: '/shop', color: 'text-orange-500' },
-    { icon: FaCode, label: '作品集', path: '/portfolio', color: 'text-purple-500' },
-    { icon: FaFileAlt, label: '笔记', path: '/notes', color: 'text-pink-500' },
-    { icon: FaImage, label: '产品', path: '/products', color: 'text-amber-500' },
-    { icon: FaMusic, label: '音乐', path: '/music', color: 'text-violet-500' },
-    { icon: FaFolder, label: '文件管理', path: '/files', color: 'text-yellow-500' },
-    { icon: FaWallet, label: '记账', path: '/accounting', color: 'text-emerald-500' }
-  ];
+  const { t } = useI18n();
+  const shortcuts = useMemo(() => [
+    { icon: FaHome, label: t('Home'), path: '/', color: 'text-blue-500' },
+    { icon: FaDesktop, label: t('Desktop'), path: '/desktop', color: 'text-gray-500' },
+    { icon: FaEdit, label: t('Blog'), path: '/blog', color: 'text-indigo-500' },
+    { icon: FaVideo, label: t('Video'), path: '/video', color: 'text-red-500' },
+    { icon: FaShoppingCart, label: t('Favorites'), path: '/shop', color: 'text-orange-500' },
+    { icon: FaCode, label: t('Portfolio'), path: '/portfolio', color: 'text-purple-500' },
+    { icon: FaFileAlt, label: t('Notes'), path: '/notes', color: 'text-pink-500' },
+    { icon: FaImage, label: t('Products'), path: '/products', color: 'text-amber-500' },
+    { icon: FaMusic, label: t('Music'), path: '/music', color: 'text-violet-500' },
+    { icon: FaFolder, label: t('FileManager'), path: '/files', color: 'text-yellow-500' },
+    { icon: FaWallet, label: t('Accounting'), path: '/accounting', color: 'text-emerald-500' }
+  ], [t]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-8">

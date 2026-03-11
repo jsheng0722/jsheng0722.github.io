@@ -1,20 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { FaPlus, FaTrash, FaWallet, FaArrowDown, FaArrowUp, FaCalendarAlt, FaExpandAlt, FaCompressAlt } from 'react-icons/fa';
 import PageLayout from '../../components/Layout/PageLayout';
 import { Card, Pagination, StatCard, EmptyState, Loading, DataExportImport } from '../../components/UI';
 import { addEntry, getEntriesByMonth, getEntriesByYear, deleteEntry } from '../../utils/accountingDB';
-
-const ACCOUNTING_COLUMNS = [
-  { key: 'type', label: '类型' },
-  { key: 'amount', label: '金额' },
-  { key: 'category', label: '分类' },
-  { key: 'date', label: '日期' },
-  { key: 'note', label: '备注' },
-];
+import { useI18n } from '../../context/I18nContext';
 
 const INCOME_CATEGORIES = ['工资', '奖金', '兼职', '理财', '其他'];
 const EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '住房', '医疗', '教育', '其他'];
-const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
 function getCurrentYearMonth() {
   const d = new Date();
@@ -35,6 +27,15 @@ function getCalendarDays(yearMonth) {
 }
 
 function AccountingPage() {
+  const { t } = useI18n();
+  const ACCOUNTING_COLUMNS = useMemo(() => [
+    { key: 'type', label: t('AccType') },
+    { key: 'amount', label: t('AccAmount') },
+    { key: 'category', label: t('AccCategory') },
+    { key: 'date', label: t('AccDate') },
+    { key: 'note', label: t('AccNote') },
+  ], [t]);
+  const WEEKDAYS = useMemo(() => [t('AccWeekday0'), t('AccWeekday1'), t('AccWeekday2'), t('AccWeekday3'), t('AccWeekday4'), t('AccWeekday5'), t('AccWeekday6')], [t]);
   const [yearMonth, setYearMonth] = useState(getCurrentYearMonth());
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarExpanded, setCalendarExpanded] = useState(false);
@@ -136,7 +137,7 @@ function AccountingPage() {
       if (added >= rows.length) {
         loadEntries();
         if (exportScope === 'year') getEntriesByYear(calYear).then(setEntriesYear);
-        window.alert(`已导入 ${added} 条`);
+        window.alert(t('AccImported').replace('{n}', String(added)));
         return;
       }
       const row = rows[added];
@@ -180,7 +181,7 @@ function AccountingPage() {
   };
 
   const handleDelete = (id) => {
-    if (!window.confirm('确定删除这条记录？')) return;
+    if (!window.confirm(t('AccConfirmDelete'))) return;
     deleteEntry(id).then(loadEntries).catch(console.error);
   };
 
@@ -202,16 +203,16 @@ function AccountingPage() {
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-3">
               <FaWallet className="text-emerald-500" />
-              记账
+              {t('AccTitle')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              数据保存在本机 IndexedDB，仅前端存储，不上传服务器
+              {t('AccStorageDesc')}
             </p>
           </div>
 
           {/* Month selector */}
           <div className="mb-4 flex items-center gap-4 flex-wrap">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">月份</label>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('AccMonth')}</label>
             <input
               type="month"
               value={yearMonth}
@@ -221,7 +222,7 @@ function AccountingPage() {
               }}
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3 py-2"
             />
-            <span className="text-sm text-gray-500 dark:text-gray-400">导出/打印范围：</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('AccExportScope')}</span>
             <div className="flex gap-2">
               {['day', 'month', 'year'].map((scope) => (
                 <button
@@ -230,7 +231,7 @@ function AccountingPage() {
                   onClick={() => setExportScope(scope)}
                   className={`px-3 py-1 rounded text-sm ${exportScope === scope ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'}`}
                 >
-                  {scope === 'day' ? '当天' : scope === 'month' ? '当月' : '当年'}
+                  {scope === 'day' ? t('AccToday') : scope === 'month' ? t('AccThisMonth') : t('AccThisYear')}
                 </button>
               ))}
             </div>
@@ -255,7 +256,7 @@ function AccountingPage() {
             className="absolute -left-[9999px] w-[800px] p-6 bg-white text-black"
             aria-hidden="true"
           >
-            <h2 className="text-lg font-bold mb-4">记账 {exportScopeLabel}</h2>
+            <h2 className="text-lg font-bold mb-4">{t('AccTitle')} {exportScopeLabel}</h2>
             <table className="w-full border border-gray-300 text-sm">
               <thead>
                 <tr>
@@ -284,7 +285,7 @@ function AccountingPage() {
           <div className="grid grid-cols-3 gap-3 mb-6">
             <StatCard
               icon={<FaArrowDown />}
-              label="收入"
+              label={t('AccIncome')}
               value={`¥${summary.income.toFixed(2)}`}
               borderVariant="emerald"
               valueVariant="emerald"
@@ -292,7 +293,7 @@ function AccountingPage() {
             />
             <StatCard
               icon={<FaArrowUp />}
-              label="支出"
+              label={t('AccExpense')}
               value={`¥${summary.expense.toFixed(2)}`}
               borderVariant="red"
               valueVariant="red"
@@ -300,7 +301,7 @@ function AccountingPage() {
             />
             <StatCard
               icon={<FaWallet />}
-              label="结余"
+              label={t('AccBalance')}
               value={`¥${summary.balance.toFixed(2)}`}
               borderVariant="blue"
               valueVariant={summary.balance >= 0 ? 'blue' : 'red'}
@@ -312,7 +313,7 @@ function AccountingPage() {
           <Card className="mb-6">
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
               <FaPlus className="w-4 h-4" />
-              记一笔
+              {t('AccAddOne')}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="flex flex-wrap gap-3">
@@ -326,7 +327,7 @@ function AccountingPage() {
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                     }`}
                   >
-                    收入
+                    {t('AccIncome')}
                   </button>
                   <button
                     type="button"
@@ -337,7 +338,7 @@ function AccountingPage() {
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                     }`}
                   >
-                    支出
+                    {t('AccExpense')}
                   </button>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -345,7 +346,7 @@ function AccountingPage() {
                     type="number"
                     step="0.01"
                     min="0"
-                    placeholder="金额"
+                    placeholder={t('AccAmountPlaceholder')}
                     value={form.amount}
                     onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
                     className="w-24 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
@@ -375,7 +376,7 @@ function AccountingPage() {
               />
                   <input
                     type="text"
-                    placeholder="备注"
+                    placeholder={t('AccNotePlaceholder')}
                     value={form.note}
                     onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
                     className="flex-1 min-w-[80px] rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
@@ -384,7 +385,7 @@ function AccountingPage() {
                     type="submit"
                     className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
                   >
-                    添加
+                    {t('AccAdd')}
                   </button>
                 </div>
               </div>
@@ -395,7 +396,7 @@ function AccountingPage() {
           <Card>
             <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
               <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-                {selectedDate ? `${selectedDate} 当日收支` : `${yearMonth} 明细`}
+                {selectedDate ? `${selectedDate} ${t('AccDaySummary')}` : `${yearMonth} ${t('AccMonthDetail')}`}
               </h2>
               {selectedDate && (
                 <button
@@ -403,16 +404,16 @@ function AccountingPage() {
                   onClick={() => setSelectedDate(null)}
                   className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  查看整月
+                  {t('AccViewMonth')}
                 </button>
               )}
             </div>
             {loading ? (
-              <Loading text="加载中…" size="small" className="py-6" />
+              <Loading text={t('Loading')} size="small" className="py-6" />
             ) : displayEntries.length === 0 ? (
               <EmptyState
                 size="small"
-                title={selectedDate ? '当天暂无记录' : '本月暂无记录'}
+                title={selectedDate ? t('AccNoRecordToday') : t('AccNoRecordMonth')}
               />
             ) : (
           <>
@@ -458,7 +459,7 @@ function AccountingPage() {
                         type="button"
                         onClick={() => handleDelete(entry.id)}
                         className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                        title="删除"
+                        title={t('Delete')}
                       >
                         <FaTrash className="w-3.5 h-3.5" />
 </button>
@@ -471,7 +472,7 @@ function AccountingPage() {
             pageSize={PAGE_SIZE}
             currentPage={page}
             onPageChange={setPage}
-            itemLabel="条"
+            itemLabel={t('PaginationItemLabel')}
             className="mt-3"
           />
           </>
@@ -485,18 +486,18 @@ function AccountingPage() {
             <div className="flex items-center justify-between gap-2 mb-2">
               <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
                 <FaCalendarAlt className="w-3.5 h-3.5" />
-                日历
+                {t('SidebarCalendar')}
               </h2>
               <button
                 type="button"
                 onClick={() => setCalendarExpanded(!calendarExpanded)}
                 className="p-1.5 rounded text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                title={calendarExpanded ? '缩小' : '放大'}
+                title={calendarExpanded ? t('AccCollapse') : t('AccExpand')}
               >
                 {calendarExpanded ? <FaCompressAlt className="w-3.5 h-3.5" /> : <FaExpandAlt className="w-3.5 h-3.5" />}
               </button>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">点击日期查看当日收支</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('AccClickDateHint')}</p>
             <div className="grid grid-cols-7 gap-0.5">
               {WEEKDAYS.map((w) => (
                 <div key={w} className="text-center text-[10px] font-medium text-gray-500 dark:text-gray-400 py-0.5">

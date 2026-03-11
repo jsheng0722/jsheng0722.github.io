@@ -6,9 +6,10 @@ import CompactCalendar from '../../components/Calendar/CompactCalendar';
 import Showcase from '../../components/Showcase/Showcase';
 import WelcomeBanner from '../../components/WelcomeBanner/WelcomeBanner';
 import { FaCloud, FaCalendarAlt, FaWindowRestore, FaChevronRight } from 'react-icons/fa';
+import { useI18n } from '../../context/I18nContext';
 
 function NewHome() {
-  // 使用对象来管理每个面板的展开状态
+  const { t } = useI18n();
   const [expandedPanels, setExpandedPanels] = useState({
     weather: false,
     calendar: false,
@@ -23,27 +24,9 @@ function NewHome() {
   };
 
   const panels = [
-    {
-      id: 'weather',
-      label: '天气',
-      icon: FaCloud,
-      component: <OptimizedWeather />,
-      color: 'bg-blue-500 hover:bg-blue-600'
-    },
-    {
-      id: 'calendar',
-      label: '日历',
-      icon: FaCalendarAlt,
-      component: <CompactCalendar />,
-      color: 'bg-green-500 hover:bg-green-600'
-    },
-    {
-      id: 'showcase',
-      label: '展示窗',
-      icon: FaWindowRestore,
-      component: <Showcase />,
-      color: 'bg-purple-500 hover:bg-purple-600'
-    }
+    { id: 'weather', label: t('SidebarWeather'), icon: FaCloud, component: <OptimizedWeather />, color: 'bg-blue-500 hover:bg-blue-600' },
+    { id: 'calendar', label: t('SidebarCalendar'), icon: FaCalendarAlt, component: <CompactCalendar />, color: 'bg-green-500 hover:bg-green-600' },
+    { id: 'showcase', label: t('SidebarShowcase'), icon: FaWindowRestore, component: <Showcase />, color: 'bg-purple-500 hover:bg-purple-600' }
   ];
 
   return (
@@ -115,8 +98,8 @@ function NewHome() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">欢迎来到首页</h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">聚合日程、音乐与内容展示的个性化控制台</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100">{t('HomeWelcome')}</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">{t('HomeSubtitle')}</p>
           </div>
 
           {/* 居中内容区域 */}

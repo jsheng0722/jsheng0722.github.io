@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Loading, EmptyState } from '../index';
+import { useI18n } from '../../../context/I18nContext';
 
 /**
- * 通用文件查看器组件
- * 支持 HTML 和文本文件的显示
- * 
- * @param {string} filePath - 文件路径
- * @param {string} basePath - 基础路径（可选，默认为空）
- * @param {boolean} showLoading - 是否显示加载状态（默认 true）
+ * 通用文件查看器组件；未选择/加载中/加载失败等文案随 i18n 切换
  */
 function FileViewer({ 
   filePath, 
   basePath = '', 
   showLoading = true 
 }) {
+  const { t } = useI18n();
   const [content, setContent] = useState('');
   const [isHtml, setIsHtml] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -59,21 +56,21 @@ function FileViewer({
   if (!filePath) {
     return (
       <EmptyState 
-        title="未选择文件" 
-        description="请选择一个文件查看其内容"
+        title={t('FileViewerNoFile')} 
+        description={t('FileViewerNoFileDesc')}
         icon="file"
       />
     );
   }
 
   if (loading && showLoading) {
-    return <Loading text="加载文件中..." />;
+    return <Loading text={t('LoadingFile')} />;
   }
 
   if (error) {
     return (
       <EmptyState 
-        title="加载失败" 
+        title={t('LoadFailed')} 
         description={error}
         icon="warning"
       />

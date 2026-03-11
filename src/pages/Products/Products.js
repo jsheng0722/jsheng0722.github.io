@@ -3,8 +3,10 @@ import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import ProductCard from './ProductCard';
 import ProductFilter from './ProductFilter';
+import { useI18n } from '../../context/I18nContext';
 
 function Products() {
+    const { t } = useI18n();
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,7 +56,7 @@ function Products() {
                 <div className="flex-grow flex items-center justify-center">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">加载中...</p>
+                        <p className="mt-4 text-gray-600">{t('Loading')}</p>
                     </div>
                 </div>
                 <Footer />
@@ -70,9 +72,9 @@ function Products() {
             <div className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center mb-8">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">我的产品与服务</h1>
+                        <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('ProductsMyServices')}</h1>
                         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            展示我的技术能力、开发项目以及提供的专业服务
+                            {t('ProductsSubtitle')}
                         </p>
                     </div>
                     
@@ -81,7 +83,7 @@ function Products() {
                         <div className="relative">
                             <input
                                 type="text"
-                                placeholder="搜索产品或技术..."
+                                placeholder={t('ProductsSearchPlaceholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full px-4 py-3 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -117,8 +119,8 @@ function Products() {
                         <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">没有找到匹配的产品</h3>
-                        <p className="mt-1 text-sm text-gray-500">尝试调整搜索条件或筛选器</p>
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">{t('ProductsNoResult')}</h3>
+                        <p className="mt-1 text-sm text-gray-500">{t('ProductsNoResultDesc')}</p>
                     </div>
                 )}
             </div>
