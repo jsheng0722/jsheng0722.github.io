@@ -12,7 +12,6 @@ import Products from "./pages/Products/Products";
 import Music from './pages/Music/Music';
 import SimpleTextRecorder from './pages/Music/SimpleTextRecorder';
 import FileManagerPage from './pages/FileManager/FileManagerPage';
-import DesktopPage from './pages/Desktop/DesktopPage';
 import BlogHome from './pages/Blog/BlogHome';
 import VideoPlayer from './pages/Video/VideoPlayer';
 import ShopHome from './pages/Shop/ShopHome';
@@ -24,6 +23,7 @@ import PdfEditorPage from './pages/Pdf/PdfEditorPage';
 import AccountingPage from './pages/Accounting/AccountingPage';
 import VocabularyPage from './pages/Vocabulary/VocabularyPage';
 import LearningMaterialsPage from './pages/LearningMaterials/LearningMaterialsPage';
+import ImageLabPage from './pages/ImageLab/ImageLabPage';
 import { ThemeProvider } from './context/ThemeContext';
 import { I18nProvider } from './context/I18nContext';
 import { SessionProvider } from './context/SessionContext';
@@ -52,7 +52,6 @@ function App() {
             <Route path="/music" element={<Music />} />
             <Route path="/music/simple-recorder" element={<SimpleTextRecorder />} />
             <Route path="/files" element={<FileManagerPage />} />
-            <Route path="/desktop" element={<DesktopPage />} />
             <Route path="/blog" element={<BlogHome />} />
             <Route path="/video" element={<VideoPlayer />} />
             <Route path="/shop" element={<ShopHome />} />
@@ -64,6 +63,7 @@ function App() {
             <Route path="/accounting" element={<AccountingPage />} />
             <Route path="/vocabulary" element={<VocabularyPage />} />
             <Route path="/learning-materials" element={<LearningMaterialsPage />} />
+            <Route path="/image-lab" element={<ImageLabPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

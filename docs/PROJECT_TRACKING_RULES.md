@@ -14,7 +14,7 @@
 - [ ] `src/App.js` 中的路由定义
 - [ ] `README.md` 中的路由列表（第212行开始）
 - [ ] `public/data/architecture.json` 中的路由数据
-- [ ] `docs/README.md` 中的路由说明（如有）
+- [ ] `docs/DOCS_INDEX.md` 无需逐条同步路由（以根 README 为准）
 
 **检查步骤**：
 1. 统计 `src/App.js` 中的 `<Route>` 数量（不包括404）
@@ -28,13 +28,15 @@
 
 ### 2. 组件一致性检查
 
+**约定**：凡**可作为通用组件**的新组件，必须先加入 `src/components/UI/` 并在 `index.js` 导出，再在页面中调用；不得在业务目录下先写通用组件再被多处引用。详见 `docs/COMPONENTS.md`。
+
 **检查时机**：每次添加/删除/修改通用组件后
 
 **检查内容**：
 - [ ] `src/components/UI/` 中的组件列表
 - [ ] `src/components/UI/index.js` 中的导出
 - [ ] `README.md` 中的组件列表（第147行）
-- [ ] `src/components/UI/README.md` 中的组件文档
+- [ ] `docs/UI_COMPONENTS_API.md` 中的组件 API（原 UI README 已迁入）
 
 **检查步骤**：
 1. 列出 `src/components/UI/` 目录下的所有组件文件夹
@@ -44,7 +46,7 @@
 
 **记录位置**：
 - 更新 `README.md` 的"通用UI组件库"部分
-- 更新 `src/components/UI/README.md`
+- 更新 `docs/UI_COMPONENTS_API.md`（组件 API）
 
 ---
 
@@ -73,17 +75,17 @@
 **检查时机**：每次整理文档后
 
 **检查内容**：
-- [ ] `docs/README.md` 中的所有链接是否有效
+- [ ] `docs/DOCS_INDEX.md` 中的所有链接是否有效
 - [ ] `README.md` 中引用的文档是否存在
 - [ ] 文档之间的交叉引用是否有效
 
 **检查步骤**：
-1. 遍历 `docs/README.md` 中的所有 `[文本](./路径)` 链接
+1. 遍历 `docs/DOCS_INDEX.md` 中的所有 `[文本](./路径)` 链接
 2. 检查目标文件是否存在
 3. 检查路径是否正确（相对路径）
 4. 检查文档中的交叉引用
 
-**记录位置**：修复 `docs/README.md` 中的无效链接
+**记录位置**：修复 `docs/DOCS_INDEX.md` 中的无效链接
 
 ---
 
@@ -94,7 +96,7 @@
 **检查内容**：
 - [ ] 新功能是否有对应的文档
 - [ ] 文档是否放在正确的位置
-- [ ] 文档是否在 `docs/README.md` 中索引
+- [ ] 文档是否在 `docs/DOCS_INDEX.md` 中索引
 
 **文档位置规则**：
 - **部署相关** → `docs/deployment/`
@@ -107,7 +109,7 @@
 **检查步骤**：
 1. 确认新功能有文档
 2. 确认文档位置符合规则
-3. 在 `docs/README.md` 中添加索引
+3. 在 `docs/DOCS_INDEX.md` 中添加索引
 4. 更新相关文档的交叉引用
 
 ---
@@ -140,7 +142,7 @@
 2. **更新文档**
    - 创建功能文档（如需要）
    - 更新 `README.md` 的功能列表
-   - 更新 `docs/README.md` 的索引
+   - 更新 `docs/DOCS_INDEX.md` 的索引
 
 3. **更新架构数据**
    - 运行 `npm run generate-architecture`
@@ -186,7 +188,7 @@
 
 2. **删除文档**
    - 删除相关功能文档
-   - 从 `docs/README.md` 中移除索引
+   - 从 `docs/DOCS_INDEX.md` 中移除索引
    - 从 `README.md` 中移除描述
 
 3. **更新架构**
@@ -237,7 +239,7 @@
   - SearchBox, FileViewer
   - Pagination, StatCard
 - **布局组件**: PageLayout, Header, Footer
-- **已文档化**: ✅ 在 README.md 和 UI/README.md 中
+- **已文档化**: ✅ 根 README.md + `docs/UI_COMPONENTS_API.md`
 
 #### 文档状态
 - **文档总数**: 约33个

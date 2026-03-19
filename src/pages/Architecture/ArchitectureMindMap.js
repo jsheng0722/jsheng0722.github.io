@@ -14,7 +14,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { 
-  FaHome, FaStickyNote, FaMusic, FaFolder, FaDesktop, 
+  FaHome, FaStickyNote, FaMusic, FaFolder, 
   FaBlog, FaVideo, FaShoppingCart, FaCode, FaImage,
   FaEye, FaEdit, FaFileAlt, FaChartLine, FaLayerGroup,
   FaPalette, FaCog, FaDatabase, FaChevronRight, FaChevronDown
@@ -203,7 +203,6 @@ const iconMap = {
   'FaStickyNote': FaStickyNote,
   'FaMusic': FaMusic,
   'FaFolder': FaFolder,
-  'FaDesktop': FaDesktop,
   'FaBlog': FaBlog,
   'FaVideo': FaVideo,
   'FaShoppingCart': FaShoppingCart,
@@ -294,7 +293,7 @@ function generateFileSystemLayout(architectureData) {
 
     architectureData.routes.forEach(route => {
       const path = route.path;
-      if (path === '/' || path === '/home' || path === '/classic' || path === '/desktop') {
+      if (path === '/' || path === '/home' || path === '/classic') {
         routeGroups['主要页面'].push(route);
       } else if (path.startsWith('/notes')) {
         routeGroups['笔记系统'].push(route);

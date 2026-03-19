@@ -7,7 +7,6 @@ import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
 import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
 import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
-// import FloatingActionButton from '../../components/FloatingActionButton'; // 暂时未使用
 import { FloatingToolbar } from '../../components/UI';
 import { useI18n } from '../../context/I18nContext';
 
@@ -628,7 +627,7 @@ function NoteEditor() {
             <p className="pt-2"><strong>💾 永久保存（可选）：</strong></p>
             <ul className="ml-6 space-y-1 list-disc">
               <li>如需永久保存，可复制弹窗中的JSON数据</li>
-              <li>添加到 <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">public/content/noteList_s.json</code> 文件中</li>
+              <li>添加到 <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">public/content/notes/noteList_s.json</code> 文件中</li>
               <li>这样即使清除浏览器缓存，笔记也不会丢失</li>
             </ul>
           </div>

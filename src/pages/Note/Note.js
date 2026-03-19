@@ -10,7 +10,8 @@
         const [currentNote, setCurrentNote] = useState(null);
 
         useEffect(() => {
-            fetch('/content/noteList_s.json')
+            const base = process.env.PUBLIC_URL || '';
+            fetch(`${base}/content/notes/noteList_s.json`)
                 .then(response => response.json())
                 .then(data => setNotes(data))
                 .catch(error => console.error('Failed to load notes', error));

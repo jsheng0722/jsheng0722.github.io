@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import Header from '../../components/Layout/Header/Header';
-import Footer from '../../components/Layout/Footer/Footer';
-import { FaArrowLeft, FaEdit, FaCalendar, FaUser, FaClock, FaTags, FaTrash, FaSearchPlus, FaSearchMinus, FaTextHeight } from 'react-icons/fa';
+import PageLayout from '../../components/Layout/PageLayout';
+import { FaArrowLeft, FaEdit, FaCalendar, FaUser, FaClock, FaTags, FaTrash, FaSearchPlus, FaSearchMinus, FaTextHeight, FaStickyNote } from 'react-icons/fa';
 import { getDisplayCategory, getCategoryIcon } from '../../components/Note/noteCategoryUtils';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from '../../components/CodeBlock';
@@ -86,21 +85,16 @@ function NoteView() {
 
   if (!note) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-        <Header />
-        <main className="max-w-7xl mx-auto px-4 py-20 text-center">
-          <div className="text-6xl mb-4">📝</div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            笔记未找到
-          </h2>
-          <Button
-            onClick={() => navigate('/notes')}
-          >
-            返回笔记列表
-          </Button>
-        </main>
-        <Footer />
-      </div>
+      <PageLayout className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center gap-2 mb-4 py-1.5 border-b border-gray-200 dark:border-gray-700">
+          <Button size="small" variant="ghost" onClick={() => navigate('/notes')} icon={<FaArrowLeft />} iconPosition="left">返回列表</Button>
+        </div>
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="text-4xl mb-3">📝</div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">笔记未找到</h2>
+          <Button size="small" onClick={() => navigate('/notes')}>返回笔记列表</Button>
+        </div>
+      </PageLayout>
     );
   }
 
@@ -108,81 +102,40 @@ function NoteView() {
   const categoryIcon = getCategoryIcon(note?.category, 'w-5 h-5');
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <Header />
-      
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 操作栏 */}
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={() => navigate('/notes')}
-              variant="ghost"
-              icon={<FaArrowLeft />}
-              iconPosition="left"
-            >
-              返回笔记列表
-            </Button>
-            
-            {/* 缩放提示 */}
-            <div className="hidden sm:flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-              <span>💡 使用缩放按钮调整笔记内容大小，不影响页面布局</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {/* 内容缩放控制 */}
-            <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-              <Button
-                onClick={decreaseContentZoom}
-                disabled={contentZoom <= 50}
-                variant="ghost"
-                size="small"
-                icon={<FaSearchMinus />}
-                title="缩小内容"
-              />
-              <Button
-                onClick={resetContentZoom}
-                variant="ghost"
-                size="small"
-                icon={<FaTextHeight />}
-                iconPosition="left"
-                title="重置缩放"
-              >
-                {contentZoom}%
-              </Button>
-              <Button
-                onClick={increaseContentZoom}
-                disabled={contentZoom >= 200}
-                variant="ghost"
-                size="small"
-                icon={<FaSearchPlus />}
-                title="放大内容"
-              />
-            </div>
-
-            <Button
-              onClick={handleEdit}
-              icon={<FaEdit />}
-              iconPosition="left"
-            >
-              编辑
-            </Button>
-            <Button
-              onClick={openDeleteDialog}
-              variant="danger"
-              icon={<FaTrash />}
-              iconPosition="left"
-            >
-              删除
-            </Button>
-          </div>
+    <>
+    <PageLayout className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* 工具栏：返回列表、缩放、编辑、删除 */}
+      <div className="flex flex-wrap items-center gap-2 mb-4 py-1.5 border-b border-gray-200 dark:border-gray-700">
+        <Button size="small" variant="ghost" onClick={() => navigate('/notes')} icon={<FaArrowLeft />} iconPosition="left">
+          返回列表
+        </Button>
+        <span className="flex-1" />
+        <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded p-0.5">
+          <Button size="small" variant="ghost" onClick={decreaseContentZoom} disabled={contentZoom <= 50} icon={<FaSearchMinus />} title="缩小" />
+          <Button size="small" variant="ghost" onClick={resetContentZoom} icon={<FaTextHeight />} iconPosition="left" title="重置">
+            {contentZoom}%
+          </Button>
+          <Button size="small" variant="ghost" onClick={increaseContentZoom} disabled={contentZoom >= 200} icon={<FaSearchPlus />} title="放大" />
         </div>
+        <Button size="small" variant="ghost" onClick={handleEdit} icon={<FaEdit />} iconPosition="left">编辑</Button>
+        <Button size="small" variant="danger" onClick={openDeleteDialog} icon={<FaTrash />} iconPosition="left">删除</Button>
+      </div>
 
-        {/* 笔记内容 */}
-        <Card>
+      {/* 悬浮备注标签栏（不占布局流，浮在左侧） */}
+      <div
+        className="fixed left-0 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-r-lg border border-l-0 border-amber-200 dark:border-amber-700/50 bg-amber-50/95 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 shadow-md cursor-not-allowed opacity-90"
+        title="备注（开发中）"
+        aria-hidden
+      >
+        <FaStickyNote className="w-5 h-5 shrink-0 opacity-80" />
+        <span className="text-xs font-medium">备注</span>
+      </div>
+
+      {/* 笔记正文 */}
+      <main className="min-w-0">
+          <Card>
           {/* 头部装饰条 */}
-          <div className={`h-2 rounded-t-xl ${
+          <div className={`h-1 rounded-t-lg ${
             note.category === '学习笔记' ? 'bg-gradient-to-r from-amber-500 to-amber-600' :
             note.category === '日常日记' || note.category === '生活' ? 'bg-gradient-to-r from-pink-500 to-pink-600' :
             note.category === '随笔写写' || note.category === '随笔' ? 'bg-gradient-to-r from-purple-500 to-purple-600' :
@@ -190,9 +143,9 @@ function NoteView() {
             'bg-gradient-to-r from-blue-500 to-blue-600'
           }`}></div>
 
-          <div className="p-8">
+          <div className="p-4">
             {/* 分类标签 */}
-            <div className="mb-6">
+            <div className="mb-2">
               <Badge
                 variant={
                   note.category === '学习笔记' ? 'warning' :
@@ -201,8 +154,8 @@ function NoteView() {
                   (note.category === '算法' || note.category === 'LeetCode') ? 'success' :
                   'primary'
                 }
-                size="medium"
-                className="inline-flex items-center gap-2 px-4 py-2"
+                size="small"
+                className="inline-flex items-center gap-1 px-2 py-0.5 text-xs"
               >
                 {categoryIcon}
                 {displayCategory}
@@ -210,12 +163,12 @@ function NoteView() {
             </div>
 
             {/* 标题 */}
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
               {note.title}
             </h1>
 
             {/* 元信息 */}
-            <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-400 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center gap-2">
                 <FaUser className="w-4 h-4" />
                 <span>{note.author}</span>
@@ -234,12 +187,12 @@ function NoteView() {
 
             {/* 标签 */}
             {note.tags && note.tags.length > 0 && (
-              <div className="flex items-center gap-2 flex-wrap mb-6">
-                <FaTags className="w-4 h-4 text-gray-400" />
+              <div className="flex items-center gap-1.5 flex-wrap mb-3">
+                <FaTags className="w-3.5 h-3.5 text-gray-400" />
                 {note.tags.map(tag => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                    className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs"
                   >
                     #{tag}
                   </span>
@@ -249,7 +202,7 @@ function NoteView() {
 
             {/* 算法特殊信息 */}
             {(note.category === '算法' || note.category === 'LeetCode') && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-green-50 dark:bg-green-900/10 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 p-3 bg-green-50 dark:bg-green-900/10 rounded text-sm">
                 {note.problemNumber && (
                   <div>
                     <div className="text-xs text-gray-600 dark:text-gray-400">题号</div>
@@ -286,17 +239,17 @@ function NoteView() {
             {/* 流程图/思维导图 */}
             {note.diagram && <DiagramViewer diagramData={note.diagram} />}
 
-            {/* 笔记内容 */}
+            {/* 笔记内容：紧凑字号以多展示内容 */}
             <div 
-              className={`prose prose-lg dark:prose-invert max-w-none
-                prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100
-                prose-p:text-gray-700 dark:prose-p:text-gray-300
+              className={`prose prose-sm dark:prose-invert max-w-none
+                prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-headings:mt-3 prose-headings:mb-1
+                prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:my-1
                 prose-strong:text-gray-900 dark:prose-strong:text-gray-100
-                prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-                prose-pre:bg-transparent prose-pre:p-0
-                prose-ul:list-disc prose-ol:list-decimal
-                prose-li:text-gray-700 dark:prose-li:text-gray-300
-                prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4`}
+                prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs
+                prose-pre:bg-transparent prose-pre:p-0 prose-pre:my-1
+                prose-ul:list-disc prose-ol:list-decimal prose-ul:my-1 prose-ol:my-1
+                prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-0
+                prose-blockquote:border-l-2 prose-blockquote:border-blue-500 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-3 prose-blockquote:py-0.5 prose-blockquote:my-1 prose-blockquote:text-sm`}
               style={{
                 transform: `scale(${contentZoom / 100})`,
                 transformOrigin: 'top left',
@@ -361,8 +314,7 @@ function NoteView() {
           </div>
         </Card>
       </main>
-
-      <Footer />
+    </PageLayout>
 
       {/* 删除确认对话框 */}
       <Dialog
@@ -387,7 +339,7 @@ function NoteView() {
           <Button variant="danger" onClick={performDelete}>确认删除</Button>
         </div>
       </Dialog>
-    </div>
+    </>
   );
 }
 

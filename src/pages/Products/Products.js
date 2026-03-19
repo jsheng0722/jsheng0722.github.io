@@ -1,133 +1,159 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
-import ProductCard from './ProductCard';
-import ProductFilter from './ProductFilter';
+import { Card } from '../../components/UI';
 import { useI18n } from '../../context/I18nContext';
+import {
+  FaBlog,
+  FaStickyNote,
+  FaBook,
+  FaFolderOpen,
+  FaVideo,
+  FaHeart,
+  FaMusic,
+  FaFolder,
+  FaWallet,
+  FaFilePdf,
+  FaChartLine,
+  FaSitemap,
+  FaImage,
+  FaArrowRight,
+} from 'react-icons/fa';
+
+const FEATURES = {
+  blog: {
+    path: '/blog',
+    icon: FaBlog,
+    titleKey: 'ProductsFeatureBlog',
+    descKey: 'ProductsFeatureBlogDesc',
+  },
+  study: [
+    { path: '/notes', icon: FaStickyNote, titleKey: 'Notes', descKey: 'ProductsFeatureNotesDesc' },
+    { path: '/vocabulary', icon: FaBook, titleKey: 'Vocabulary', descKey: 'ProductsFeatureVocabDesc' },
+    { path: '/learning-materials', icon: FaFolderOpen, titleKey: 'LearningMaterials', descKey: 'ProductsFeatureMaterialsDesc' },
+  ],
+  content: [
+    { path: '/video', icon: FaVideo, titleKey: 'Video', descKey: 'ProductsFeatureVideoDesc' },
+    { path: '/shop', icon: FaHeart, titleKey: 'Favorites', descKey: 'ProductsFeatureShopDesc' },
+    { path: '/music', icon: FaMusic, titleKey: 'Music', descKey: 'ProductsFeatureMusicDesc' },
+    { path: '/files', icon: FaFolder, titleKey: 'FileManager', descKey: 'ProductsFeatureFilesDesc' },
+  ],
+  tools: [
+    { path: '/accounting', icon: FaWallet, titleKey: 'Accounting', descKey: 'ProductsFeatureAccountingDesc' },
+    { path: '/pdf', icon: FaFilePdf, titleKey: 'PDF', descKey: 'ProductsFeaturePdfDesc' },
+    { path: '/visualization', icon: FaChartLine, titleKey: 'ProductsFeatureVisualization', descKey: 'ProductsFeatureVisualizationDesc' },
+    { path: '/architecture', icon: FaSitemap, titleKey: 'Architecture', descKey: 'ProductsFeatureArchDesc' },
+    { path: '/image-lab', icon: FaImage, titleKey: 'ImageLab', descKey: 'ProductsFeatureImageLabDesc' },
+  ],
+};
+
+const SECTION_CLASS = 'mb-10 last:mb-0';
+const ROW_WRAPPER_CLASS = 'w-full';
+const CARD_ROW_CLASS = 'flex flex-nowrap justify-start gap-x-[5px] w-full max-w-full overflow-x-auto py-2';
+
+function FeatureCard({ path, icon: Icon, titleKey, descKey, t }) {
+  return (
+    <Link to={path} className="flex-shrink-0 w-fit min-w-[140px] max-w-[320px] block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-xl">
+      <Card hover clickable padding="medium" className="h-full flex flex-col min-w-0 overflow-hidden text-left">
+        <div className="flex items-start gap-2 min-w-0">
+          <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+          </div>
+          <div className="min-w-0 flex-1 overflow-hidden break-words">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 break-words">{t(titleKey)}</h3>
+            <p className="mt-0.5 text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 break-words">{t(descKey)}</p>
+            <span className="inline-flex items-center gap-1 mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-indigo-600 dark:text-indigo-400 flex-shrink-0">
+              {t('ProductsGoTo')}
+              <FaArrowRight className="w-3 h-3" />
+            </span>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+
+function BlogBanner({ t }) {
+  const { path, icon: Icon, titleKey, descKey } = FEATURES.blog;
+  return (
+    <Link
+      to={path}
+      className="block w-full rounded-2xl overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-700 dark:from-violet-800 dark:via-purple-800 dark:to-indigo-900 p-6 sm:p-8 shadow-xl hover:shadow-2xl transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-white">
+            <Icon className="w-7 h-7" />
+          </div>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">{t(titleKey)}</h2>
+            <p className="mt-1 text-white/90 text-sm sm:text-base max-w-2xl">{t(descKey)}</p>
+          </div>
+        </div>
+        <span className="inline-flex items-center gap-2 text-white font-medium sm:self-center">
+          {t('ProductsGoTo')}
+          <FaArrowRight className="w-4 h-4" />
+        </span>
+      </div>
+    </Link>
+  );
+}
 
 function Products() {
-    const { t } = useI18n();
-    const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('全部');
+  const { t } = useI18n();
 
-    useEffect(() => {
-        fetch('/me/products.json')
-            .then(response => response.json())
-            .then(data => {
-                setProducts(data);
-                setFilteredProducts(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error('Error loading products:', error);
-                setLoading(false);
-            });
-    }, []);
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950">
+      <Header />
+      <main className="flex-1">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('ProductsMyServices')}</h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">{t('ProductsSubtitleFeatures')}</p>
+          </div>
 
-    useEffect(() => {
-        let filtered = products;
+          {/* 博客 - 顶部长条 */}
+          <section className="mb-10">
+            <BlogBanner t={t} />
+          </section>
 
-        // 按分类筛选
-        if (selectedCategory !== '全部') {
-            filtered = filtered.filter(product => product.category === selectedCategory);
-        }
-
-        // 按搜索词筛选
-        if (searchTerm) {
-            filtered = filtered.filter(product =>
-                product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                product.technologies.some(tech => tech.toLowerCase().includes(searchTerm.toLowerCase()))
-            );
-        }
-
-        setFilteredProducts(filtered);
-    }, [products, selectedCategory, searchTerm]);
-
-    const categories = ['全部', ...new Set(products.map(product => product.category))];
-
-    if (loading) {
-        return (
-            <div className="flex flex-col min-h-screen bg-gray-50">
-                <Header />
-                <div className="flex-grow flex items-center justify-center">
-                    <div className="text-center">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-                        <p className="mt-4 text-gray-600">{t('Loading')}</p>
-                    </div>
-                </div>
-                <Footer />
+          {/* 学习记录 / 内容 / 工具：Flex 单行，卡片随内容伸缩，列间距 5px */}
+          <section className={SECTION_CLASS}>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('ProductsSectionStudy')}</h2>
+            <div className={ROW_WRAPPER_CLASS}>
+              <div className={CARD_ROW_CLASS}>
+                {FEATURES.study.map((item) => (
+                  <FeatureCard key={item.path} {...item} t={t} />
+                ))}
+              </div>
             </div>
-        );
-    }
-
-    return (
-        <div className="flex flex-col min-h-screen bg-gray-50">
-            <Header />
-            
-            {/* 页面标题和搜索 */}
-            <div className="bg-white shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('ProductsMyServices')}</h1>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            {t('ProductsSubtitle')}
-                        </p>
-                    </div>
-                    
-                    {/* 搜索栏 */}
-                    <div className="max-w-md mx-auto mb-8">
-                        <div className="relative">
-                            <input
-                                type="text"
-                                placeholder={t('ProductsSearchPlaceholder')}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full px-4 py-3 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            />
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          </section>
+          <section className={SECTION_CLASS}>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('ProductsSectionContent')}</h2>
+            <div className={ROW_WRAPPER_CLASS}>
+              <div className={CARD_ROW_CLASS}>
+                {FEATURES.content.map((item) => (
+                  <FeatureCard key={item.path} {...item} t={t} />
+                ))}
+              </div>
             </div>
-
-            {/* 筛选器和产品网格 */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <ProductFilter
-                    categories={categories}
-                    selectedCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                />
-                
-                {/* 产品网格 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-                    {filteredProducts.map(product => (
-                        <ProductCard key={product.id} product={product} />
-                    ))}
-                </div>
-
-                {/* 无结果提示 */}
-                {filteredProducts.length === 0 && (
-                    <div className="text-center py-12">
-                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.709M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">{t('ProductsNoResult')}</h3>
-                        <p className="mt-1 text-sm text-gray-500">{t('ProductsNoResultDesc')}</p>
-                    </div>
-                )}
+          </section>
+          <section className={SECTION_CLASS}>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('ProductsSectionTools')}</h2>
+            <div className={ROW_WRAPPER_CLASS}>
+              <div className={CARD_ROW_CLASS}>
+                {FEATURES.tools.map((item) => (
+                  <FeatureCard key={item.path} {...item} t={t} />
+                ))}
+              </div>
             </div>
-
-            <Footer />
+          </section>
         </div>
-    );
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
 export default Products;

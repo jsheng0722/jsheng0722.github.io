@@ -9,7 +9,7 @@
 - **适用**: 临时笔记、草稿
 
 ### 方式2: JSON文件（永久）⭐ 推荐
-- **位置**: `public/content/noteList_s.json`
+- **位置**: `public/content/notes/noteList_s.json`
 - **优点**: 永久保存，部署后不会丢失
 - **缺点**: 需要手动操作
 - **适用**: 重要笔记、长期保存
@@ -62,7 +62,7 @@ npm run export-notes
    }
    ```
 
-3. **打开 `public/content/noteList_s.json`**
+3. **打开 `public/content/notes/noteList_s.json`**
 4. **添加到数组中**
    ```json
    [
@@ -200,7 +200,7 @@ Node.js脚本 → 写入文件 → ✅ 允许
 2. 运行导出脚本
    npm run export-notes
 3. Git提交更新
-   git add public/content/noteList_s.json
+   git add public/content/notes/noteList_s.json
    git commit -m "Update notes"
 ```
 

@@ -30,7 +30,7 @@
 ## 数据来源
 
 - **用户笔记**：`localStorage.userNotes`（数组），新建/编辑保存到此。
-- **内置笔记**：`/content/noteList_s.json`，与 userNotes 合并后展示。
+- **内置笔记**：`/content/notes/noteList_s.json`，与 userNotes 合并后展示。
 - **已删除 ID**：`localStorage.notesDeletedIds`（字符串数组），删除时写入；列表加载时过滤掉这些 id，使 JSON 与 userNotes 中的笔记都能从列表“消失”。
 
 ---

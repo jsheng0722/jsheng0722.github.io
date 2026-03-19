@@ -46,7 +46,7 @@
 - **适用**: 临时笔记、草稿
 
 ### 方式2: JSON文件（永久）
-- **保存位置**: `public/content/noteList_s.json`
+- **保存位置**: `public/content/notes/noteList_s.json`
 - **优点**: 永久保存，不会丢失
 - **缺点**: 需要手动添加JSON数据
 - **适用**: 重要笔记、长期保存
@@ -170,7 +170,7 @@ const map = new Map();
 ```
 访问笔记首页
   ↓
-加载noteList_s.json
+加载 public/content/notes/noteList_s.json
   ↓
 加载localStorage数据
   ↓

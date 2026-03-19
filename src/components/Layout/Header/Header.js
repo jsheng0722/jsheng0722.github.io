@@ -25,7 +25,6 @@ function Header() {
       <div className="w-[60%]">
         <Navbar navItems={[
           { label: t('Home'), path: '/' },
-          { label: t('Desktop'), path: '/desktop' },
           {
             label: t('Content'),
             children: [
@@ -50,7 +49,8 @@ function Header() {
             children: [
               { label: t('Accounting'), path: '/accounting' },
               { label: t('Architecture'), path: '/architecture' },
-              { label: t('PDF'), path: '/pdf' }
+              { label: t('PDF'), path: '/pdf' },
+              { label: t('ImageLab'), path: '/image-lab' }
             ]
           }
         ]} />

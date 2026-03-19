@@ -57,13 +57,13 @@ function NoteHome() {
       .then(fileUserNotes => {
         const userNotes = Array.isArray(fileUserNotes) ? fileUserNotes : JSON.parse(localStorage.getItem('userNotes') || '[]');
         if (Array.isArray(fileUserNotes)) localStorage.setItem('userNotes', JSON.stringify(fileUserNotes));
-        return fetch(`${base}/content/noteList_s.json`)
+        return fetch(`${base}/content/notes/noteList_s.json`)
           .then(res => res.json())
           .then(data => applyMerge(data, userNotes));
       })
       .catch(() => {
         const fallbackUserNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-        fetch(`${base}/content/noteList_s.json`)
+        fetch(`${base}/content/notes/noteList_s.json`)
           .then(response => response.json())
           .then(data => applyMerge(data, fallbackUserNotes))
           .catch(err => {

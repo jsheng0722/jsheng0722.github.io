@@ -6,6 +6,16 @@
 
 这是一个基于React构建的现代化个人网站，采用**静态网站架构**，无需后端支持即可部署到GitHub Pages等静态托管服务。网站集成了多个实用功能模块，提供优秀的用户体验和响应式布局。
 
+## 📌 项目追踪（维护时请同步更新）
+
+| 项目 | 说明 |
+|------|------|
+| **路由与页面** | 以 `src/App.js` 为准；README 下方「页面路由」表与 `PROJECT_ARCHITECTURE.md` 需与之一致。 |
+| **架构可视化数据** | `public/data/architecture.json` 由 `npm run generate-architecture` 生成（`predeploy` 已包含）。改路由或大规模改目录后请执行一次。 |
+| **通用组件** | **新组件若可复用，必须先加入 `src/components/UI/` 并在 `index.js` 导出，再在页面中调用**；禁止在业务目录先写通用组件再被多处引用。详见 [`docs/COMPONENTS.md`](docs/COMPONENTS.md)。 |
+| **文案/i18n** | 界面文案集中在 `src/context/I18nContext.js`（`en` / `zh` 同 Key）。 |
+| **已移除** | 桌面页 `/desktop` 及旧首页碎片（`Home.js`、`MarkdownEditor` 等）已删除；勿再引用。 |
+
 ## ✨ 核心功能
 
 ### 1. 🏠 智能首页
@@ -210,11 +220,11 @@ react-basic/
 │   │   │   ├── Header/       # 顶部导航
 │   │   │   ├── Footer/       # 底部信息
 │   │   │   └── PageLayout.js # 页面布局包装器 ⭐
-│   │   └── UI/               # 通用UI组件库（17个组件）
+│   │   └── UI/               # 通用UI组件库（见 docs/COMPONENTS.md）
 │   │       ├── SearchBox/    # 搜索框组件 ⭐
 │   │       └── FileViewer/   # 文件查看器 ⭐
 │   ├── pages/
-│   │   ├── Home/             # 首页
+│   │   ├── Home/             # 首页（NewHome、ClassicHome）
 │   │   ├── Note/             # 笔记系统
 │   │   │   ├── NoteHome.js   # 笔记首页
 │   │   │   ├── NoteEditor.js # 笔记编辑器
@@ -240,7 +250,6 @@ react-basic/
 | `/` | NewHome | 智能首页（天气 + 日历 + 展示窗） |
 | `/home` | NewHome | 首页重定向 |
 | `/classic` | ClassicHome | 经典首页（学习教程） |
-| `/desktop` | DesktopPage | 桌面页面 |
 
 ### 学习记录
 | 路由 | 页面组件 | 说明 |
@@ -277,6 +286,7 @@ react-basic/
 | `/pdf/editor` | PdfEditorPage | PDF 编辑 |
 | `/visualization` | VisualizationPage | 算法可视化 |
 | `/architecture` | ArchitecturePage | 项目架构可视化 |
+| `/image-lab` | ImageLabPage | 图像实验室（翻转/旋转、OCR、马赛克笔刷等） |
 
 ### 系统页面
 | 路由 | 页面组件 | 说明 |
@@ -357,8 +367,8 @@ music list/童话镇/
 - **切换方式**：点击顶部导航栏的「语言 / Language」下拉，选择「中文」或「English」即可；当前语言会保存到本地（localStorage），下次访问自动应用。
 - **实现方式**：使用 `src/context/I18nContext.js` 提供全局 `useI18n()`，页面与组件通过 `t('Key')` 获取当前语言的文案；所有文案键在 `I18nContext` 的 `en` / `zh` 对象中维护。
 - **已覆盖范围**：
-  - **全局**：Header 导航、Footer、桌面快捷方式、404 页面、通用 UI 组件（Pagination、EmptyState、ConfirmDialog、SearchBox、FileViewer、CollapsibleSidebar、ColorPicker、FloatingToolbar、CodeBlock 等）
-  - **首页与布局**：NewHome、Desktop、PageLayout
+  - **全局**：Header 导航、Footer、404 页面、通用 UI 组件（见 `src/components/UI/index.js`：Button、Modal、ConfirmDialog、Pagination、EmptyState、SearchBox、FileViewer、FloatingToolbar、CodeBlock 等）
+  - **首页与布局**：NewHome、PageLayout
   - **学习记录**：笔记首页/编辑/查看、单词本、学习资料（含分类与空状态）
   - **内容与展示**：博客（动态发布、分类/标签、表单与列表）、音乐、视频收藏、商品收藏（Shop）、产品与服务（Products，含分类与状态）、作品集、文件管理器、项目架构（含左侧目录与画布节点）
   - **工具**：记账、PDF 列表与编辑、算法可视化相关文案
@@ -378,6 +388,7 @@ npm start
 npm run build
 
 # 工具脚本
+npm run generate-architecture    # 扫描 src 生成架构 JSON（deploy 前会自动执行）
 npm run generate-music-metadata  # 生成音乐元数据
 npm run generate-file-structure  # 生成文件结构
 npm run generate-home-content    # 生成首页内容
@@ -520,7 +531,6 @@ MIT License
 ## 👨‍💻 作者
 
 Jihui
-
 ## 🎉 最新更新（v3.3.0）
 
 ### 中英切换（i18n）完整优化
@@ -599,3 +609,4 @@ Jihui
 最后更新: 2025-10-30  
 版本: 3.1.0  
 状态: ✅ 通用组件库落地，主要页面完成替换
+

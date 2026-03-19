@@ -122,7 +122,7 @@ public/music/music list/
 react-basic/
 ├── public/
 │   ├── content/                  # 笔记内容
-│   │   ├── noteList_s.json
+│   │   ├── notes/noteList_s.json
 │   │   └── noteList_categories.json
 │   ├── music/                    # 音乐文件
 │   │   ├── musicList.json

@@ -104,7 +104,7 @@ function NewHome() {
 
           {/* 居中内容区域 */}
           <div className="flex justify-center">
-            <div className="w-full max-w-4xl space-y-6">
+            <div className="w-full max-w-5xl space-y-6">
               {panels.map((panel) => {
                 if (!expandedPanels[panel.id]) return null;
                 

@@ -61,11 +61,6 @@
       "icon": "FaFileAlt"
     },
     {
-      "path": "/desktop",
-      "component": "DesktopPage",
-      "icon": "FaDesktop"
-    },
-    {
       "path": "/blog",
       "component": "BlogHome",
       "icon": "FaHome"
@@ -94,6 +89,36 @@
       "path": "/architecture",
       "component": "ArchitecturePage",
       "icon": "FaFileAlt"
+    },
+    {
+      "path": "/pdf",
+      "component": "PdfPage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/pdf/editor",
+      "component": "PdfEditorPage",
+      "icon": "FaEdit"
+    },
+    {
+      "path": "/accounting",
+      "component": "AccountingPage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/vocabulary",
+      "component": "VocabularyPage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/learning-materials",
+      "component": "LearningMaterialsPage",
+      "icon": "FaFileAlt"
+    },
+    {
+      "path": "/image-lab",
+      "component": "ImageLabPage",
+      "icon": "FaImage"
     },
     {
       "path": "*",
@@ -239,18 +264,7 @@
       "name": "Desktop",
       "type": "folder",
       "path": "components\\Desktop",
-      "children": [
-        {
-          "name": "Desktop.js",
-          "type": "file",
-          "path": "components\\Desktop\\Desktop.js"
-        },
-        {
-          "name": "DesktopShortcut.js",
-          "type": "file",
-          "path": "components\\Desktop\\DesktopShortcut.js"
-        }
-      ]
+      "children": []
     },
     {
       "name": "DiagramEditor",
@@ -278,13 +292,7 @@
       "name": "Dialog",
       "type": "folder",
       "path": "components\\Dialog",
-      "children": [
-        {
-          "name": "ConfirmationDialog.js",
-          "type": "file",
-          "path": "components\\Dialog\\ConfirmationDialog.js"
-        }
-      ]
+      "children": []
     },
     {
       "name": "FileManager",
@@ -299,14 +307,16 @@
       ]
     },
     {
-      "name": "FloatingActionButton.js",
-      "type": "file",
-      "path": "components\\FloatingActionButton.js"
-    },
-    {
-      "name": "FloatingToolbar.js",
-      "type": "file",
-      "path": "components\\FloatingToolbar.js"
+      "name": "Giscus",
+      "type": "folder",
+      "path": "components\\Giscus",
+      "children": [
+        {
+          "name": "Giscus.js",
+          "type": "file",
+          "path": "components\\Giscus\\Giscus.js"
+        }
+      ]
     },
     {
       "name": "Layout",
@@ -413,11 +423,6 @@
       "path": "components\\MusicPlayer",
       "children": [
         {
-          "name": "AudioDebugger.js",
-          "type": "file",
-          "path": "components\\MusicPlayer\\AudioDebugger.js"
-        },
-        {
           "name": "DraggableMusicPlayer.js",
           "type": "file",
           "path": "components\\MusicPlayer\\DraggableMusicPlayer.js"
@@ -433,6 +438,11 @@
           "path": "components\\MusicPlayer\\FixedMusicPlayer.js"
         },
         {
+          "name": "GlobalMusicToolbar.js",
+          "type": "file",
+          "path": "components\\MusicPlayer\\GlobalMusicToolbar.js"
+        },
+        {
           "name": "LyricsDisplay.js",
           "type": "file",
           "path": "components\\MusicPlayer\\LyricsDisplay.js"
@@ -443,14 +453,36 @@
           "path": "components\\MusicPlayer\\LyricsRecognizer.js"
         },
         {
-          "name": "MusicIcon.js",
-          "type": "file",
-          "path": "components\\MusicPlayer\\MusicIcon.js"
-        },
-        {
           "name": "UnifiedMusicPlayer.js",
           "type": "file",
           "path": "components\\MusicPlayer\\UnifiedMusicPlayer.js"
+        }
+      ]
+    },
+    {
+      "name": "Note",
+      "type": "folder",
+      "path": "components\\Note",
+      "children": [
+        {
+          "name": "index.js",
+          "type": "file",
+          "path": "components\\Note\\index.js"
+        },
+        {
+          "name": "NoteCard.js",
+          "type": "file",
+          "path": "components\\Note\\NoteCard.js"
+        },
+        {
+          "name": "noteCategoryUtils.js",
+          "type": "file",
+          "path": "components\\Note\\noteCategoryUtils.js"
+        },
+        {
+          "name": "NoteListItemCompact.js",
+          "type": "file",
+          "path": "components\\Note\\NoteListItemCompact.js"
         }
       ]
     },
@@ -544,6 +576,30 @@
           ]
         },
         {
+          "name": "ColorPicker",
+          "type": "folder",
+          "path": "components\\UI\\ColorPicker",
+          "children": [
+            {
+              "name": "ColorPicker.js",
+              "type": "file",
+              "path": "components\\UI\\ColorPicker\\ColorPicker.js"
+            }
+          ]
+        },
+        {
+          "name": "DataExportImport",
+          "type": "folder",
+          "path": "components\\UI\\DataExportImport",
+          "children": [
+            {
+              "name": "DataExportImport.js",
+              "type": "file",
+              "path": "components\\UI\\DataExportImport\\DataExportImport.js"
+            }
+          ]
+        },
+        {
           "name": "Dialog",
           "type": "folder",
           "path": "components\\UI\\Dialog",
@@ -612,13 +668,7 @@
           "name": "FloatingCodeVisualizer",
           "type": "folder",
           "path": "components\\UI\\FloatingCodeVisualizer",
-          "children": [
-            {
-              "name": "FloatingCodeVisualizer.js",
-              "type": "file",
-              "path": "components\\UI\\FloatingCodeVisualizer\\FloatingCodeVisualizer.js"
-            }
-          ]
+          "children": []
         },
         {
           "name": "FloatingToolbar",
@@ -641,6 +691,18 @@
               "name": "Form.js",
               "type": "file",
               "path": "components\\UI\\Form\\Form.js"
+            }
+          ]
+        },
+        {
+          "name": "IconToggleButton",
+          "type": "folder",
+          "path": "components\\UI\\IconToggleButton",
+          "children": [
+            {
+              "name": "IconToggleButton.js",
+              "type": "file",
+              "path": "components\\UI\\IconToggleButton\\IconToggleButton.js"
             }
           ]
         },
@@ -698,6 +760,18 @@
           ]
         },
         {
+          "name": "Pagination",
+          "type": "folder",
+          "path": "components\\UI\\Pagination",
+          "children": [
+            {
+              "name": "Pagination.js",
+              "type": "file",
+              "path": "components\\UI\\Pagination\\Pagination.js"
+            }
+          ]
+        },
+        {
           "name": "SearchBox",
           "type": "folder",
           "path": "components\\UI\\SearchBox",
@@ -706,6 +780,18 @@
               "name": "SearchBox.js",
               "type": "file",
               "path": "components\\UI\\SearchBox\\SearchBox.js"
+            }
+          ]
+        },
+        {
+          "name": "StatCard",
+          "type": "folder",
+          "path": "components\\UI\\StatCard",
+          "children": [
+            {
+              "name": "StatCard.js",
+              "type": "file",
+              "path": "components\\UI\\StatCard\\StatCard.js"
             }
           ]
         },
@@ -782,56 +868,107 @@
       "path": "components\\Visualizations",
       "children": [
         {
-          "name": "ConnectionSystem.js",
+          "name": "algorithmPatterns.js",
           "type": "file",
-          "path": "components\\Visualizations\\ConnectionSystem.js"
+          "path": "components\\Visualizations\\algorithmPatterns.js"
+        },
+        {
+          "name": "algorithmSteps.js",
+          "type": "file",
+          "path": "components\\Visualizations\\algorithmSteps.js"
+        },
+        {
+          "name": "CallTreeSidebar.js",
+          "type": "file",
+          "path": "components\\Visualizations\\CallTreeSidebar.js"
+        },
+        {
+          "name": "codeParser.js",
+          "type": "file",
+          "path": "components\\Visualizations\\codeParser.js"
+        },
+        {
+          "name": "CodeStructureNode.js",
+          "type": "file",
+          "path": "components\\Visualizations\\CodeStructureNode.js"
+        },
+        {
+          "name": "DynamicMethodVisualization.js",
+          "type": "file",
+          "path": "components\\Visualizations\\DynamicMethodVisualization.js"
+        },
+        {
+          "name": "expressionEvaluator.js",
+          "type": "file",
+          "path": "components\\Visualizations\\expressionEvaluator.js"
         },
         {
           "name": "tools",
           "type": "folder",
           "path": "components\\Visualizations\\tools",
-          "children": [
-            {
-              "name": "ListTool.js",
-              "type": "file",
-              "path": "components\\Visualizations\\tools\\ListTool.js"
-            },
-            {
-              "name": "LoopTool.js",
-              "type": "file",
-              "path": "components\\Visualizations\\tools\\LoopTool.js"
-            },
-            {
-              "name": "OperationNode.js",
-              "type": "file",
-              "path": "components\\Visualizations\\tools\\OperationNode.js"
-            },
-            {
-              "name": "VariableTool.js",
-              "type": "file",
-              "path": "components\\Visualizations\\tools\\VariableTool.js"
-            }
-          ]
-        },
-        {
-          "name": "VisualizationFloatingMenu.js",
-          "type": "file",
-          "path": "components\\Visualizations\\VisualizationFloatingMenu.js"
-        },
-        {
-          "name": "VisualizationModal.js",
-          "type": "file",
-          "path": "components\\Visualizations\\VisualizationModal.js"
-        },
-        {
-          "name": "VisualizationToolbar.js",
-          "type": "file",
-          "path": "components\\Visualizations\\VisualizationToolbar.js"
+          "children": []
         },
         {
           "name": "VisualizationToolkit.js",
           "type": "file",
           "path": "components\\Visualizations\\VisualizationToolkit.js"
+        },
+        {
+          "name": "VizComponents",
+          "type": "folder",
+          "path": "components\\Visualizations\\VizComponents",
+          "children": [
+            {
+              "name": "DoubleLoopViz.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\DoubleLoopViz.js"
+            },
+            {
+              "name": "EmptyVizMessage.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\EmptyVizMessage.js"
+            },
+            {
+              "name": "formatValue.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\formatValue.js"
+            },
+            {
+              "name": "GenericFallback.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\GenericFallback.js"
+            },
+            {
+              "name": "index.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\index.js"
+            },
+            {
+              "name": "ListItemCard.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\ListItemCard.js"
+            },
+            {
+              "name": "LoopWithConditionViz.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\LoopWithConditionViz.js"
+            },
+            {
+              "name": "parseParams.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\parseParams.js"
+            },
+            {
+              "name": "SingleLoopViz.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\SingleLoopViz.js"
+            },
+            {
+              "name": "StepByStepViz.js",
+              "type": "file",
+              "path": "components\\Visualizations\\VizComponents\\StepByStepViz.js"
+            }
+          ]
         }
       ]
     },
@@ -867,6 +1004,18 @@
   ],
   "pages": [
     {
+      "name": "Accounting",
+      "type": "folder",
+      "path": "pages\\Accounting",
+      "children": [
+        {
+          "name": "AccountingPage.js",
+          "type": "file",
+          "path": "pages\\Accounting\\AccountingPage.js"
+        }
+      ]
+    },
+    {
       "name": "Architecture",
       "type": "folder",
       "path": "pages\\Architecture",
@@ -899,13 +1048,7 @@
       "name": "Desktop",
       "type": "folder",
       "path": "pages\\Desktop",
-      "children": [
-        {
-          "name": "DesktopPage.js",
-          "type": "file",
-          "path": "pages\\Desktop\\DesktopPage.js"
-        }
-      ]
+      "children": []
     },
     {
       "name": "FileManager",
@@ -958,29 +1101,38 @@
           "path": "pages\\Home\\ClassicHome.js"
         },
         {
-          "name": "Home.js",
-          "type": "file",
-          "path": "pages\\Home\\Home.js"
-        },
-        {
-          "name": "MarkdownEditor.js",
-          "type": "file",
-          "path": "pages\\Home\\MarkdownEditor.js"
-        },
-        {
-          "name": "Navigation.js",
-          "type": "file",
-          "path": "pages\\Home\\Navigation.js"
-        },
-        {
           "name": "NewHome.js",
           "type": "file",
           "path": "pages\\Home\\NewHome.js"
+        }
+      ]
+    },
+    {
+      "name": "ImageLab",
+      "type": "folder",
+      "path": "pages\\ImageLab",
+      "children": [
+        {
+          "name": "ImageLabPage.js",
+          "type": "file",
+          "path": "pages\\ImageLab\\ImageLabPage.js"
         },
         {
-          "name": "Sidebar.js",
+          "name": "imageLabUtils.js",
           "type": "file",
-          "path": "pages\\Home\\Sidebar.js"
+          "path": "pages\\ImageLab\\imageLabUtils.js"
+        }
+      ]
+    },
+    {
+      "name": "LearningMaterials",
+      "type": "folder",
+      "path": "pages\\LearningMaterials",
+      "children": [
+        {
+          "name": "LearningMaterialsPage.js",
+          "type": "file",
+          "path": "pages\\LearningMaterials\\LearningMaterialsPage.js"
         }
       ]
     },
@@ -1117,6 +1269,38 @@
       "path": "pages\\NotFoundPage.js"
     },
     {
+      "name": "Pdf",
+      "type": "folder",
+      "path": "pages\\Pdf",
+      "children": [
+        {
+          "name": "pdfConstants.js",
+          "type": "file",
+          "path": "pages\\Pdf\\pdfConstants.js"
+        },
+        {
+          "name": "PdfEditorPage.js",
+          "type": "file",
+          "path": "pages\\Pdf\\PdfEditorPage.js"
+        },
+        {
+          "name": "PdfPage.js",
+          "type": "file",
+          "path": "pages\\Pdf\\PdfPage.js"
+        },
+        {
+          "name": "pdfStorage.js",
+          "type": "file",
+          "path": "pages\\Pdf\\pdfStorage.js"
+        },
+        {
+          "name": "pdfUtils.js",
+          "type": "file",
+          "path": "pages\\Pdf\\pdfUtils.js"
+        }
+      ]
+    },
+    {
       "name": "Portfolio",
       "type": "folder",
       "path": "pages\\Portfolio",
@@ -1222,6 +1406,28 @@
           "path": "pages\\Visualization\\VisualizationPage.js"
         }
       ]
+    },
+    {
+      "name": "Vocabulary",
+      "type": "folder",
+      "path": "pages\\Vocabulary",
+      "children": [
+        {
+          "name": "PhoneticKeyboard.js",
+          "type": "file",
+          "path": "pages\\Vocabulary\\PhoneticKeyboard.js"
+        },
+        {
+          "name": "rootsAffixesData.js",
+          "type": "file",
+          "path": "pages\\Vocabulary\\rootsAffixesData.js"
+        },
+        {
+          "name": "VocabularyPage.js",
+          "type": "file",
+          "path": "pages\\Vocabulary\\VocabularyPage.js"
+        }
+      ]
     }
   ],
   "contexts": [
@@ -1231,6 +1437,11 @@
       "path": "context\\I18nContext.js"
     },
     {
+      "name": "SessionContext.js",
+      "type": "file",
+      "path": "context\\SessionContext.js"
+    },
+    {
       "name": "ThemeContext.js",
       "type": "file",
       "path": "context\\ThemeContext.js"
@@ -1238,10 +1449,20 @@
   ],
   "utils": [
     {
+      "name": "accountingDB.js",
+      "type": "file",
+      "path": "utils\\accountingDB.js"
+    },
+    {
       "name": "algorithm",
       "type": "folder",
       "path": "utils\\algorithm",
       "children": []
+    },
+    {
+      "name": "dataExport.js",
+      "type": "file",
+      "path": "utils\\dataExport.js"
     },
     {
       "name": "lrcParser.js",
@@ -1249,10 +1470,15 @@
       "path": "utils\\lrcParser.js"
     },
     {
+      "name": "syncToProject.js",
+      "type": "file",
+      "path": "utils\\syncToProject.js"
+    },
+    {
       "name": "WeatherAPI.js",
       "type": "file",
       "path": "utils\\WeatherAPI.js"
     }
   ],
-  "generatedAt": "2026-01-27T00:33:33.691Z"
+  "generatedAt": "2026-03-14T11:18:46.056Z"
 }
