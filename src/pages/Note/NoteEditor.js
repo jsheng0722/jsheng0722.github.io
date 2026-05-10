@@ -9,6 +9,12 @@ import DiagramEditor from '../../components/DiagramEditor/DiagramEditor';
 import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 import { FloatingToolbar } from '../../components/UI';
 import { useI18n } from '../../context/I18nContext';
+import { isApiConfigured } from '../../config/dataBackend';
+import {
+  getUserNotesFromLocalStorage,
+  setUserNotesToLocalStorage,
+  upsertUserNoteRemote,
+} from '../../services/noteRepository';
 
 function NoteEditor() {
   const navigate = useNavigate();
@@ -84,7 +90,7 @@ function NoteEditor() {
     setContentZoom(100);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!note.title || !note.content) {
       alert(t('RequiredTitleAndContent'));
       return;
@@ -113,25 +119,33 @@ function NoteEditor() {
         })
       };
 
-      // 保存到localStorage
-      const existingNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-      
+      const existingNotes = getUserNotesFromLocalStorage();
+
       if (isEditing) {
-        // 编辑模式：更新现有笔记
         const index = existingNotes.findIndex(n => n.id === note.id);
         if (index !== -1) {
           existingNotes[index] = noteData;
         } else {
           existingNotes.push(noteData);
         }
+      } else {
+        existingNotes.push(noteData);
+      }
+
+      setUserNotesToLocalStorage(existingNotes);
+
+      let remoteOk = true;
+      if (isApiConfigured()) {
+        remoteOk = await upsertUserNoteRemote(noteData);
+      }
+
+      if (!remoteOk) {
+        alert(t('NoteRemoteSyncFailed'));
+      } else if (isEditing) {
         alert(t('NoteUpdated'));
       } else {
-        // 新建模式：添加新笔记
-        existingNotes.push(noteData);
         alert(t('NoteSaved') + '\n\n' + JSON.stringify(noteData, null, 2));
       }
-      
-      localStorage.setItem('userNotes', JSON.stringify(existingNotes));
 
       setSaving(false);
       navigate('/notes');

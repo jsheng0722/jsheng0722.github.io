@@ -9,6 +9,13 @@ import DiagramViewer from '../../components/DiagramEditor/DiagramViewer';
 import StayingFunVisualization from '../../components/StayingFunVisualization/StayingFunVisualization';
 import { Button, Card, Badge, Dialog, Input } from '../../components/UI';
 import { useI18n } from '../../context/I18nContext';
+import { isApiConfigured } from '../../config/dataBackend';
+import {
+  getUserNotesFromLocalStorage,
+  setUserNotesToLocalStorage,
+  recordDeletedNoteId,
+  deleteUserNoteRemote,
+} from '../../services/noteRepository';
 
 function NoteView() {
   const { t } = useI18n();
@@ -20,7 +27,7 @@ function NoteView() {
     if (fromState != null) return fromState;
     if (!noteId) return null;
     try {
-      const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
+      const userNotes = getUserNotesFromLocalStorage();
       const found = userNotes.find((n) => String(n.id) === String(noteId));
       return found || null;
     } catch (_) {
@@ -48,23 +55,23 @@ function NoteView() {
     setShowDeleteDialog(true);
   };
 
-  const performDelete = () => {
+  const performDelete = async () => {
     const expect = String(note?.title || '').trim();
     if (confirmTitle.trim() !== expect) {
       alert(t('NoteConfirmDeleteTitle'));
       return;
     }
     const idStr = String(note.id);
-    // 从 userNotes 中移除（统一用字符串比较，避免类型不一致删不掉）
-    const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
+    const userNotes = getUserNotesFromLocalStorage();
     const updatedNotes = userNotes.filter(n => String(n.id) !== idStr);
-    localStorage.setItem('userNotes', JSON.stringify(updatedNotes));
-    // 记录“已删除 id”，列表页会过滤掉（包括来自 JSON 的笔记）
-    try {
-      const deletedIds = JSON.parse(localStorage.getItem('notesDeletedIds') || '[]');
-      if (!deletedIds.includes(idStr)) deletedIds.push(idStr);
-      localStorage.setItem('notesDeletedIds', JSON.stringify(deletedIds));
-    } catch (_) {}
+    setUserNotesToLocalStorage(updatedNotes);
+    recordDeletedNoteId(idStr);
+
+    if (isApiConfigured()) {
+      const remoteOk = await deleteUserNoteRemote(idStr);
+      if (!remoteOk) alert(t('NoteRemoteSyncFailed'));
+    }
+
     setShowDeleteDialog(false);
     navigate('/notes');
   };

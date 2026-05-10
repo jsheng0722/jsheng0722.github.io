@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaFolder, FaFile, FaFileAlt, FaMusic, FaImage, FaCode, FaVideo, FaSync, FaExternalLinkAlt } from 'react-icons/fa';
 import { Button, Card, Dialog, Badge } from '../UI';
 import { useI18n } from '../../context/I18nContext';
+import { getUserNotesFromLocalStorage } from '../../services/noteRepository';
 
 function FileManager() {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ function FileManager() {
     };
 
     // 添加笔记文件夹
-    const notes = safeParseJSON('userNotes');
+    const notes = getUserNotesFromLocalStorage();
     if (notes.length > 0) {
       fileSystem['/notes'] = {
         type: 'folder',
@@ -321,7 +322,7 @@ function FileManager() {
         navigate(`/notes/view/${metadata.id}`, { state: { note: metadata } });
       } else {
         // 如果没有 id，尝试从 localStorage 中找到对应的笔记
-        const userNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
+        const userNotes = getUserNotesFromLocalStorage();
         const note = userNotes.find(n => n.title === selectedFile.name);
         if (note && note.id) {
           navigate(`/notes/view/${note.id}`, { state: { note } });

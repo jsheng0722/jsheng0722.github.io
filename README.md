@@ -15,6 +15,7 @@
 | **通用组件** | **新组件若可复用，必须先加入 `src/components/UI/` 并在 `index.js` 导出，再在页面中调用**；禁止在业务目录先写通用组件再被多处引用。详见 [`docs/COMPONENTS.md`](docs/COMPONENTS.md)。 |
 | **文案/i18n** | 界面文案集中在 `src/context/I18nContext.js`（`en` / `zh` 同 Key）。 |
 | **已移除** | 桌面页 `/desktop` 及旧首页碎片（`Home.js`、`MarkdownEditor` 等）已删除；勿再引用。 |
+| **动态后端 / 数据库** | 配置 `REACT_APP_API_BASE_URL`（见 `.env.example`）后，笔记列表/保存/删除会同时请求该地址下的 `/api/notes`；未配置时行为与原先一致。数据访问请经 `src/services/noteRepository.js` 与 `src/config/dataBackend.js`，避免页面直接散落 `localStorage`。配套示例后端见同级目录 `react-dynamic`。 |
 
 ## ✨ 核心功能
 

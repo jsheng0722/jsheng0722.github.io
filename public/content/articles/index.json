@@ -1,0 +1,19 @@
+[
+  {
+    "id": "welcome-file-based-notes",
+    "slug": "welcome-file-based-notes",
+    "storage": "article",
+    "title": "welcome-file-based-notes",
+    "category": "随笔写写",
+    "tags": [],
+    "date": "",
+    "author": "",
+    "readTime": "",
+    "excerpt": "--- id: \"article-welcome-001\" slug: \"welcome-file-based-notes\" title: \"基于仓库文件的笔记说明\" category: \"学习笔记\" tags: [\"workflow\",\"git\"] date: \"2026-04-02\" author: \"Jihui\"…",
+    "difficulty": "",
+    "problemNumber": "",
+    "timeComplexity": "",
+    "spaceComplexity": "",
+    "hasDiagram": false
+  }
+]

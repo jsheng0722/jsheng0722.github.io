@@ -1,0 +1,12 @@
+[
+  {
+    "id": "example-study-entry",
+    "slug": "example-study-entry",
+    "title": "example-study-entry",
+    "type": "other",
+    "filePath": "",
+    "tags": [],
+    "updatedAt": "2026-05-09T05:00:10.162Z",
+    "descriptionPreview": "--- id: 10001 slug: \"example-study-entry\" title: \"示例：一条学习资料（Markdown）\" type: \"link\" filePath: \"https://react.dev\" tags: [\"react\",\"doc\"] updatedAt: \"2026-04-02T12:00:00.000Z\" --- 这里是正文，可用 Markdown 写**较"
+  }
+]

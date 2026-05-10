@@ -194,6 +194,8 @@ const translations = {
     NoteUpdated: 'Note updated! Saved to local storage. For permanent save, update public/content/notes/noteList_s.json.',
     NoteSaved: 'Note saved to local storage! For permanent save, copy to public/content/notes/noteList_s.json.',
     NoteSaveFailed: 'Save failed, please retry',
+    NoteRemoteSyncFailed:
+      'Saved locally, but syncing to the server failed. Check REACT_APP_API_BASE_URL and the backend.',
     NoteConfirmDiscard: 'Discard current edit?',
     NoteConfirmDeleteTitle: 'Enter note title to confirm delete',
     // 学习资料
@@ -769,6 +771,8 @@ const translations = {
 NoteUpdated: '笔记已更新！\n\n✅ 修改已保存到浏览器本地存储\n💡 如需永久保存，请更新 public/content/notes/noteList_s.json 中对应的笔记数据',
    NoteSaved: '笔记已保存到浏览器本地存储！\n\n✅ 笔记会立即显示在笔记首页\n💡 如需永久保存，请复制以下内容到 public/content/notes/noteList_s.json：',
     NoteSaveFailed: '保存失败，请重试',
+    NoteRemoteSyncFailed:
+      '已保存到本机，但同步到远程失败。请检查 REACT_APP_API_BASE_URL 与后端服务（如 react-dynamic）。',
     NoteConfirmDiscard: '确定要放弃当前编辑吗？',
     NoteConfirmDeleteTitle: '请输入正确的笔记标题以确认删除',
     MaterialsTitle: '学习资料',

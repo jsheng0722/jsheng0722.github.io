@@ -5,6 +5,12 @@ import { Button, Card, EmptyState, SearchBox } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
 import { NoteListItemCompact, NoteCard } from '../../components/Note';
 import { useI18n } from '../../context/I18nContext';
+import {
+  fetchUserNotesFromApi,
+  getDeletedNoteIdsSet,
+  getUserNotesFromLocalStorage,
+  setUserNotesToLocalStorage,
+} from '../../services/noteRepository';
 
 const LAYOUT_KEY = 'notesLayoutView';
 
@@ -35,14 +41,7 @@ function NoteHome() {
   }, []);
 
   const loadNotes = () => {
-    const getDeletedIds = () => {
-      try {
-        return new Set(JSON.parse(localStorage.getItem('notesDeletedIds') || '[]'));
-      } catch (_) {
-        return new Set();
-      }
-    };
-    const deletedIds = getDeletedIds();
+    const deletedIds = getDeletedNoteIdsSet();
     const base = process.env.PUBLIC_URL || '';
 
     const applyMerge = (noteListData, userNotesList) => {
@@ -52,27 +51,44 @@ function NoteHome() {
       setFilteredNotes(allNotes);
     };
 
-    fetch(`${base}/content/notes/userNotes.json`)
-      .then(r => (r.ok ? r.json() : Promise.resolve(null)))
-      .then(fileUserNotes => {
-        const userNotes = Array.isArray(fileUserNotes) ? fileUserNotes : JSON.parse(localStorage.getItem('userNotes') || '[]');
-        if (Array.isArray(fileUserNotes)) localStorage.setItem('userNotes', JSON.stringify(fileUserNotes));
-        return fetch(`${base}/content/notes/noteList_s.json`)
-          .then(res => res.json())
-          .then(data => applyMerge(data, userNotes));
-      })
-      .catch(() => {
-        const fallbackUserNotes = JSON.parse(localStorage.getItem('userNotes') || '[]');
-        fetch(`${base}/content/notes/noteList_s.json`)
-          .then(response => response.json())
-          .then(data => applyMerge(data, fallbackUserNotes))
-          .catch(err => {
-            console.error('加载笔记失败:', err);
-            const allNotes = fallbackUserNotes.filter(n => !deletedIds.has(String(n.id)));
-            setNotes(allNotes);
-            setFilteredNotes(allNotes);
-          });
-      });
+    (async () => {
+      const apiNotes = await fetchUserNotesFromApi();
+      if (apiNotes !== null) {
+        try {
+          const res = await fetch(`${base}/content/notes/noteList_s.json`);
+          const data = await res.json();
+          applyMerge(data, apiNotes);
+        } catch (err) {
+          console.error('加载笔记失败:', err);
+          const allNotes = apiNotes.filter(n => !deletedIds.has(String(n.id)));
+          setNotes(allNotes);
+          setFilteredNotes(allNotes);
+        }
+        return;
+      }
+
+      fetch(`${base}/content/notes/userNotes.json`)
+        .then(r => (r.ok ? r.json() : Promise.resolve(null)))
+        .then(fileUserNotes => {
+          const userNotes = Array.isArray(fileUserNotes) ? fileUserNotes : getUserNotesFromLocalStorage();
+          if (Array.isArray(fileUserNotes)) setUserNotesToLocalStorage(fileUserNotes);
+          return fetch(`${base}/content/notes/noteList_s.json`)
+            .then(res => res.json())
+            .then(data => applyMerge(data, userNotes));
+        })
+        .catch(() => {
+          const fallbackUserNotes = getUserNotesFromLocalStorage();
+          fetch(`${base}/content/notes/noteList_s.json`)
+            .then(response => response.json())
+            .then(data => applyMerge(data, fallbackUserNotes))
+            .catch(err => {
+              console.error('加载笔记失败:', err);
+              const allNotes = fallbackUserNotes.filter(n => !deletedIds.has(String(n.id)));
+              setNotes(allNotes);
+              setFilteredNotes(allNotes);
+            });
+        });
+    })();
   };
 
   // 筛选笔记（新分类 + 兼容旧分类：生活→日常日记，随笔→随笔写写）
