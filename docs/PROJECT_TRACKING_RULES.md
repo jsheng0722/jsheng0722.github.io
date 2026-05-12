@@ -222,22 +222,20 @@
 
 ## 📊 追踪记录
 
-### 当前状态（2025-02）
+### 当前状态（2025-05-12）
 
 #### 路由状态
-- **总数**: 22+ 个路由（含 404；学习记录含 `/vocabulary`、`/learning-materials`）
+- **总数**: 23 个路由（含 404）
 - **已文档化**: ✅ 全部在 README.md 的「页面路由」表格中
-- **架构数据**: ✅ 需运行 `npm run generate-architecture` 同步
+- **架构数据**: ✅ 通过 `npm run generate-architecture` 同步完成
 
 #### 组件状态
 - **UI组件库**: 21个组件
   - Button, Card, Input, Textarea, Badge
   - Modal, Dialog, ConfirmDialog, Collapsible, Tooltip
   - Navigation, FileList, Form
-  - FloatingButton, FloatingToolbar, FloatingCodeVisualizer
-  - Loading, EmptyState
-  - SearchBox, FileViewer
-  - Pagination, StatCard
+  - FloatingButton, FloatingToolbar, FloatingCodeVisualizer, SearchBox, FileViewer
+  - Loading, EmptyState, Pagination, StatCard, DataExportImport
 - **布局组件**: PageLayout, Header, Footer
 - **已文档化**: ✅ 根 README.md + `docs/UI_COMPONENTS_API.md`
 
@@ -246,21 +244,28 @@
 - **文档结构**: ✅ 已整理
 - **文档链接**: ✅ 已检查
 
-#### 组件应用状态
-- **PageLayout**: 
-  - ✅ 已应用: Music.js, NoteHome.js, VocabularyPage.js, LearningMaterialsPage.js, AccountingPage.js 等
-  - ⚠️ 待应用: 部分页面
-- **SearchBox**: 
-  - ✅ 已应用: NoteHome.js, VocabularyPage.js
-  - ⚠️ 待应用: BlogHome, VideoPlayer, ShopHome, Products
-- **FileViewer**: 
-  - ⚠️ 待应用: Products, Folder
-- **Pagination / StatCard / EmptyState / Loading**: 
-  - ✅ 已应用: AccountingPage（记账页）
+#### 代码清理状态
+- **已删除未使用文件**: ✅ 完成
+  - 删除：`autoLyricsGenerator.js`, `MigrationTool.js`, `Weather.js`
+  - 删除：`image-guide.md`, `file-storage-guide.md`, `notes/sample-note.md`
+- **已修复警告**: ✅ 完成
+  - PdfViewer.js: useEffect 依赖警告
+  - UniversalViewer.js: useEffect 依赖警告  
+  - ImageLabPage.js: useEffect 依赖警告
 
-#### 学习记录与文档
-- **单词本**（`/vocabulary`）：✅ 功能完整（含近义词、备注；已移除来源），已记录于 LEARNING_RECORDS.md、README 与路由表
-- **学习资料**（`/learning-materials`）：✅ 已实现并列入路由与文档
+#### 功能调整记录
+- **单词本**（`/vocabulary`）：✅ 已重构，移除添加/编辑/删除功能，保留单词展示、搜索筛选和发音播放
+- **学习资料**（`/learning-materials`）：✅ 已移除添加功能
+- **笔记系统**（`/notes`）：✅ 已移除写笔记按钮，保留查看功能
+- **记账**（`/accounting`）：✅ 已移除添加收支记录功能，保留查看和导入导出
+- **视频收藏**（`/video`）：✅ 已移除添加视频功能
+- **商品收藏**（`/shop`）：✅ 已移除添加商品功能
+- **博客动态**（`/blog`）：✅ 已移除发布动态功能
+- **学习资料**（`/learning-materials`）：✅ 已移除添加资料功能
+
+#### 示例文件
+- **文件存储**: ✅ 16个示例文件已放置在 `public/files/` 目录
+- **分类**: 文档(4)、媒体(1)、数据(8)、代码(2)、其他(1)
 
 ---
 
@@ -286,5 +291,5 @@
 
 ---
 
-**最后更新**: 2025-02  
-**状态**: ✅ 规则已制定；单词本（近义词/备注）、学习资料已文档化并与代码同步
+**最后更新**: 2025-05-12  
+**状态**: ✅ 代码审核完成，文档同步更新，构建验证通过

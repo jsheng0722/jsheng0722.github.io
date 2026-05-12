@@ -51,13 +51,8 @@
       "icon": "FaMusic"
     },
     {
-      "path": "/music/simple-recorder",
-      "component": "SimpleTextRecorder",
-      "icon": "FaFileAlt"
-    },
-    {
       "path": "/files",
-      "component": "FileManagerPage",
+      "component": "UniversalFilesPage",
       "icon": "FaFileAlt"
     },
     {
@@ -74,11 +69,6 @@
       "path": "/shop",
       "component": "ShopHome",
       "icon": "FaHome"
-    },
-    {
-      "path": "/shop/add",
-      "component": "AddProduct",
-      "icon": "FaImage"
     },
     {
       "path": "/visualization",
@@ -127,12 +117,6 @@
     }
   ],
   "components": [
-    {
-      "name": "Algorithm",
-      "type": "folder",
-      "path": "components\\Algorithm",
-      "children": []
-    },
     {
       "name": "AlgorithmVisualizer",
       "type": "folder",
@@ -261,12 +245,6 @@
       ]
     },
     {
-      "name": "Desktop",
-      "type": "folder",
-      "path": "components\\Desktop",
-      "children": []
-    },
-    {
       "name": "DiagramEditor",
       "type": "folder",
       "path": "components\\DiagramEditor",
@@ -289,20 +267,14 @@
       ]
     },
     {
-      "name": "Dialog",
-      "type": "folder",
-      "path": "components\\Dialog",
-      "children": []
-    },
-    {
       "name": "FileManager",
       "type": "folder",
       "path": "components\\FileManager",
       "children": [
         {
-          "name": "FileManager.js",
+          "name": "UniversalFileBrowser.js",
           "type": "file",
-          "path": "components\\FileManager\\FileManager.js"
+          "path": "components\\FileManager\\UniversalFileBrowser.js"
         }
       ]
     },
@@ -416,6 +388,12 @@
           ]
         }
       ]
+    },
+    {
+      "name": "MigrationTool",
+      "type": "folder",
+      "path": "components\\MigrationTool",
+      "children": []
     },
     {
       "name": "MusicPlayer",
@@ -665,12 +643,6 @@
           ]
         },
         {
-          "name": "FloatingCodeVisualizer",
-          "type": "folder",
-          "path": "components\\UI\\FloatingCodeVisualizer",
-          "children": []
-        },
-        {
           "name": "FloatingToolbar",
           "type": "folder",
           "path": "components\\UI\\FloatingToolbar",
@@ -827,6 +799,88 @@
       ]
     },
     {
+      "name": "UniversalViewer",
+      "type": "folder",
+      "path": "components\\UniversalViewer",
+      "children": [
+        {
+          "name": "AudioPlayer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\AudioPlayer.js"
+        },
+        {
+          "name": "CodeViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\CodeViewer.js"
+        },
+        {
+          "name": "DocxViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\DocxViewer.js"
+        },
+        {
+          "name": "EnhancedUnsupportedViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\EnhancedUnsupportedViewer.js"
+        },
+        {
+          "name": "ExcelViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\ExcelViewer.js"
+        },
+        {
+          "name": "FullscreenViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\FullscreenViewer.js"
+        },
+        {
+          "name": "HtmlViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\HtmlViewer.js"
+        },
+        {
+          "name": "ImageViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\ImageViewer.js"
+        },
+        {
+          "name": "index.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\index.js"
+        },
+        {
+          "name": "MarkdownViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\MarkdownViewer.js"
+        },
+        {
+          "name": "PdfViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\PdfViewer.js"
+        },
+        {
+          "name": "TextViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\TextViewer.js"
+        },
+        {
+          "name": "UniversalViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\UniversalViewer.js"
+        },
+        {
+          "name": "UnsupportedViewer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\UnsupportedViewer.js"
+        },
+        {
+          "name": "VideoPlayer.js",
+          "type": "file",
+          "path": "components\\UniversalViewer\\VideoPlayer.js"
+        }
+      ]
+    },
+    {
       "name": "UserRelated",
       "type": "folder",
       "path": "components\\UserRelated",
@@ -903,12 +957,6 @@
           "path": "components\\Visualizations\\expressionEvaluator.js"
         },
         {
-          "name": "tools",
-          "type": "folder",
-          "path": "components\\Visualizations\\tools",
-          "children": []
-        },
-        {
           "name": "VisualizationToolkit.js",
           "type": "file",
           "path": "components\\Visualizations\\VisualizationToolkit.js"
@@ -981,11 +1029,6 @@
           "name": "OptimizedWeather.js",
           "type": "file",
           "path": "components\\Weather\\OptimizedWeather.js"
-        },
-        {
-          "name": "Weather.js",
-          "type": "file",
-          "path": "components\\Weather\\Weather.js"
         }
       ]
     },
@@ -1045,28 +1088,16 @@
       ]
     },
     {
-      "name": "Desktop",
-      "type": "folder",
-      "path": "pages\\Desktop",
-      "children": []
-    },
-    {
       "name": "FileManager",
       "type": "folder",
       "path": "pages\\FileManager",
       "children": [
         {
-          "name": "FileManagerPage.js",
+          "name": "UniversalFilesPage.js",
           "type": "file",
-          "path": "pages\\FileManager\\FileManagerPage.js"
+          "path": "pages\\FileManager\\UniversalFilesPage.js"
         }
       ]
-    },
-    {
-      "name": "Finance",
-      "type": "folder",
-      "path": "pages\\Finance",
-      "children": []
     },
     {
       "name": "Folder",
@@ -1145,11 +1176,6 @@
           "name": "Music.js",
           "type": "file",
           "path": "pages\\Music\\Music.js"
-        },
-        {
-          "name": "SimpleTextRecorder.js",
-          "type": "file",
-          "path": "pages\\Music\\SimpleTextRecorder.js"
         }
       ]
     },
@@ -1372,11 +1398,6 @@
       "path": "pages\\Shop",
       "children": [
         {
-          "name": "AddProduct.js",
-          "type": "file",
-          "path": "pages\\Shop\\AddProduct.js"
-        },
-        {
           "name": "ShopHome.js",
           "type": "file",
           "path": "pages\\Shop\\ShopHome.js"
@@ -1413,16 +1434,6 @@
       "path": "pages\\Vocabulary",
       "children": [
         {
-          "name": "PhoneticKeyboard.js",
-          "type": "file",
-          "path": "pages\\Vocabulary\\PhoneticKeyboard.js"
-        },
-        {
-          "name": "rootsAffixesData.js",
-          "type": "file",
-          "path": "pages\\Vocabulary\\rootsAffixesData.js"
-        },
-        {
           "name": "VocabularyPage.js",
           "type": "file",
           "path": "pages\\Vocabulary\\VocabularyPage.js"
@@ -1454,15 +1465,19 @@
       "path": "utils\\accountingDB.js"
     },
     {
-      "name": "algorithm",
-      "type": "folder",
-      "path": "utils\\algorithm",
-      "children": []
-    },
-    {
       "name": "dataExport.js",
       "type": "file",
       "path": "utils\\dataExport.js"
+    },
+    {
+      "name": "fileTypeDetector.js",
+      "type": "file",
+      "path": "utils\\fileTypeDetector.js"
+    },
+    {
+      "name": "localStorageMigrator.js",
+      "type": "file",
+      "path": "utils\\localStorageMigrator.js"
     },
     {
       "name": "lrcParser.js",
@@ -1480,5 +1495,5 @@
       "path": "utils\\WeatherAPI.js"
     }
   ],
-  "generatedAt": "2026-03-14T11:18:46.056Z"
+  "generatedAt": "2026-05-11T14:57:55.149Z"
 }

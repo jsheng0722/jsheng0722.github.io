@@ -1,0 +1,20 @@
+[
+  {
+    "id": "inspiration-001",
+    "content": "这是一段美妙的旋律灵感",
+    "timestamp": "2025-01-15T10:00:00Z",
+    "category": "旋律"
+  },
+  {
+    "id": "inspiration-002",
+    "content": "歌词灵感：人生如歌，唱不尽的悲欢离合",
+    "timestamp": "2025-01-14T15:30:00Z",
+    "category": "歌词"
+  },
+  {
+    "id": "inspiration-003",
+    "content": "节奏想法：轻快的鼓点配合钢琴",
+    "timestamp": "2025-01-13T09:00:00Z",
+    "category": "节奏"
+  }
+]

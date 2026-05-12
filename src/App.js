@@ -10,12 +10,10 @@ import NotFoundPage from './pages/NotFoundPage';
 import Portfolio from './pages/Portfolio/Portfolio';
 import Products from "./pages/Products/Products";
 import Music from './pages/Music/Music';
-import SimpleTextRecorder from './pages/Music/SimpleTextRecorder';
-import FileManagerPage from './pages/FileManager/FileManagerPage';
+import UniversalFilesPage from './pages/FileManager/UniversalFilesPage';
 import BlogHome from './pages/Blog/BlogHome';
 import VideoPlayer from './pages/Video/VideoPlayer';
 import ShopHome from './pages/Shop/ShopHome';
-import AddProduct from './pages/Shop/AddProduct';
 import VisualizationPage from './pages/Visualization/VisualizationPage';
 import ArchitecturePage from './pages/Architecture/ArchitecturePage';
 import PdfPage from './pages/Pdf/PdfPage';
@@ -29,7 +27,6 @@ import { I18nProvider } from './context/I18nContext';
 import { SessionProvider } from './context/SessionContext';
 import GlobalMusicToolbar from './components/MusicPlayer/GlobalMusicToolbar';
 
-// GitHub Pages 需要 basename（对于根路径部署，basename 为空字符串）
 const basename = process.env.PUBLIC_URL || '';
 
 function App() {
@@ -50,12 +47,10 @@ function App() {
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/products" element={<Products />} />
             <Route path="/music" element={<Music />} />
-            <Route path="/music/simple-recorder" element={<SimpleTextRecorder />} />
-            <Route path="/files" element={<FileManagerPage />} />
+            <Route path="/files" element={<UniversalFilesPage />} />
             <Route path="/blog" element={<BlogHome />} />
             <Route path="/video" element={<VideoPlayer />} />
             <Route path="/shop" element={<ShopHome />} />
-            <Route path="/shop/add" element={<AddProduct />} />
             <Route path="/visualization" element={<VisualizationPage />} />
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/pdf" element={<PdfPage />} />

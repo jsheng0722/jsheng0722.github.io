@@ -128,7 +128,13 @@
 - 筛选搜索
 - 文件浏览器功能
 
-### 7. 📁 文件管理系统（新增）⭐
+### 7. 📝 博客系统
+- 动态列表展示
+- 分类和标签筛选
+- 搜索功能
+- **静态展示**：作为静态网站，博客不包含点赞、评论、分享等互动功能
+
+### 8. 📁 文件管理系统（新增）⭐
 - **文件管理器页面** (`/files`)
   - 统一管理所有内容（笔记、视频、音乐、商品等）
   - 文件夹结构展示
@@ -259,19 +265,17 @@ react-basic/
 | `/notes/editor` | NoteEditor | 笔记编辑器（Markdown + 流程图） |
 | `/notes/view/:id` | NoteView | 笔记查看（完整渲染） |
 | `/notes/old` | Note | 旧版笔记（保留） |
-| `/vocabulary` | VocabularyPage | 单词本（生词/熟词、音标读音、词根词缀、近义词/备注、同步到项目） |
+| `/vocabulary` | VocabularyPage | 单词本（从 `public/data/vocabulary.json` 加载） |
 | `/learning-materials` | LearningMaterialsPage | 学习资料（条目管理、链接打开） |
 
 ### 内容管理
 | 路由 | 页面组件 | 说明 |
 |------|----------|------|
-| `/music` | Music | 音乐库首页 |
-| `/music/simple-recorder` | SimpleTextRecorder | 简单文本记录 |
+| `/music` | Music | 音乐库首页（从 `public/data/music.json` 和 `public/data/music-inspirations.json` 加载） |
 | `/files` | FileManagerPage | 文件管理器（统一管理） |
-| `/blog` | BlogHome | 博客动态发布 |
+| `/blog` | BlogHome | 博客动态（从 `public/data/blog-posts.json` 加载，静态展示） |
 | `/video` | VideoPlayer | 视频收藏和管理 |
 | `/shop` | ShopHome | 商品收藏 |
-| `/shop/add` | AddProduct | 添加商品 |
 
 ### 展示页面
 | 路由 | 页面组件 | 说明 |
@@ -285,7 +289,7 @@ react-basic/
 | `/accounting` | AccountingPage | 记账（IndexedDB 本地存储） |
 | `/pdf` | PdfPage | PDF 查看 |
 | `/pdf/editor` | PdfEditorPage | PDF 编辑 |
-| `/visualization` | VisualizationPage | 算法可视化 |
+| `/visualization` | VisualizationPage | 算法可视化（可通过顶部导航「工具」菜单访问） |
 | `/architecture` | ArchitecturePage | 项目架构可视化 |
 | `/image-lab` | ImageLabPage | 图像实验室（翻转/旋转、OCR、马赛克笔刷等） |
 
@@ -575,9 +579,30 @@ Jihui
 
 ---
 
-**最后更新**: 2024-10-13  
-**版本**: 3.0.0  
-**状态**: ✅ 生产就绪 - 笔记系统全面升级
+**最后更新**: 2025-05-12  
+**版本**: 3.3.1  
+**状态**: ✅ 代码审核完成，文档同步更新
+
+## 📝 变更追踪（v3.3.2）
+
+### 数据文件统一管理
+- **单词本**：更新为从 `public/data/vocabulary.json` 加载数据
+- **音乐页面**：更新为从 `public/data/music.json` 和 `public/data/music-inspirations.json` 加载数据
+- **博客页面**：更新为从 `public/data/blog-posts.json` 加载数据
+
+### 博客系统优化
+- 移除点赞、评论、分享等互动功能（静态网站不需要）
+- 简化博客页面布局，专注内容展示
+
+### 代码可视化集成
+- 在顶部导航「工具」菜单中添加了「算法可视化」入口
+- 路径：`/visualization`
+
+### 未使用组件归档
+- 创建 `src/components/UnusedComponents/` 文件夹用于存放暂未使用但可能未来需要的组件
+- `PostInteractions` 组件已归档到该目录，带保护注释防止误删除
+
+---
 
 ## 📝 变更追踪（v3.1.0）
 
@@ -599,15 +624,7 @@ Jihui
 
 ---
 
-最后更新: 2025-02  
-版本: 3.3.0  
-状态: ✅ 中英切换（i18n）全项目优化完成
-
----
-
-## 📝 变更追踪（v3.1.0）
-
-最后更新: 2025-10-30  
-版本: 3.1.0  
-状态: ✅ 通用组件库落地，主要页面完成替换
+最后更新: 2026-05-12  
+版本: 3.3.2  
+状态: ✅ 代码审核完成，文档同步更新
 

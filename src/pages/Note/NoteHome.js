@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBook, FaPencilAlt, FaCode, FaHeart, FaGraduationCap, FaPlus, FaThLarge, FaList } from 'react-icons/fa';
-import { Button, Card, EmptyState, SearchBox } from '../../components/UI';
+import { FaBook, FaPencilAlt, FaCode, FaHeart, FaGraduationCap, FaThLarge, FaList } from 'react-icons/fa';
+import { Card, EmptyState, SearchBox } from '../../components/UI';
 import PageLayout from '../../components/Layout/PageLayout';
 import { NoteListItemCompact, NoteCard } from '../../components/Note';
 import { useI18n } from '../../context/I18nContext';
@@ -9,7 +9,6 @@ import {
   fetchUserNotesFromApi,
   getDeletedNoteIdsSet,
   getUserNotesFromLocalStorage,
-  setUserNotesToLocalStorage,
 } from '../../services/noteRepository';
 
 const LAYOUT_KEY = 'notesLayoutView';
@@ -71,7 +70,6 @@ function NoteHome() {
         .then(r => (r.ok ? r.json() : Promise.resolve(null)))
         .then(fileUserNotes => {
           const userNotes = Array.isArray(fileUserNotes) ? fileUserNotes : getUserNotesFromLocalStorage();
-          if (Array.isArray(fileUserNotes)) setUserNotesToLocalStorage(fileUserNotes);
           return fetch(`${base}/content/notes/noteList_s.json`)
             .then(res => res.json())
             .then(data => applyMerge(data, userNotes));
@@ -127,10 +125,6 @@ function NoteHome() {
     if (cat === '随笔') return '随笔写写';
     return cat || '随笔写写';
   }
-
-  const handleCreateNote = () => {
-    navigate('/notes/editor');
-  };
 
   const handleNoteClick = (note) => {
     navigate(`/notes/view/${note.id}`, { state: { note } });
@@ -247,14 +241,6 @@ function NoteHome() {
             </button>
           </div>
 
-          <Button
-            onClick={handleCreateNote}
-            icon={<FaPlus />}
-            iconPosition="left"
-            className="whitespace-nowrap"
-          >
-            {t('NoteWriteNote')}
-          </Button>
         </div>
       </Card>
 
@@ -263,16 +249,7 @@ function NoteHome() {
           <EmptyState
               icon="inbox"
               title={searchTerm ? t('NoteNoMatch') : t('NoteNoNotes')}
-              description={searchTerm ? '尝试其他搜索关键词' : '点击"写笔记"按钮创建您的第一篇笔记'}
-              action={!searchTerm ? (
-                <Button
-                  onClick={handleCreateNote}
-                  icon={<FaPlus />}
-                  iconPosition="left"
-                >
-                  开始写笔记
-                </Button>
-              ) : null}
+              description={searchTerm ? '尝试其他搜索关键词' : '暂无笔记'}
             />
         ) : layoutView === 'compact' ? (
           <Card className="overflow-hidden p-0">

@@ -1,9 +1,7 @@
 /**
- * 词根词缀词典：默认数据 + localStorage 持久化，支持在页面中增删改查
+ * 词根词缀词典：默认数据
  * 结构：{ id?, word, type: '词根'|'词缀', meaning, example? }
  */
-const STORAGE_KEY_ROOTS = 'rootsAffixesDictionary';
-
 export const ROOTS_AFFIXES = [
   { word: 'bio', type: '词根', meaning: '生命', example: 'biology 生物学' },
   { word: 'graph', type: '词根', meaning: '写、画', example: 'autograph 亲笔签名' },
@@ -53,29 +51,12 @@ export const ROOTS_AFFIXES = [
   { word: '-en', type: '词缀', meaning: '使…', example: 'widen 加宽' }
 ];
 
-function withIds(list) {
-  return list.map((item, i) => ({ ...item, id: item.id ?? `ra-${i}-${(item.word || '').slice(0, 5)}` }));
-}
-
 export function getRootsAffixesList() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_ROOTS);
-    if (raw) {
-      const list = JSON.parse(raw);
-      return Array.isArray(list) ? withIds(list) : seedAndGet();
-    }
-  } catch (_) {}
-  return seedAndGet();
-}
-
-function seedAndGet() {
-  const list = ROOTS_AFFIXES.map((item, i) => ({ ...item, id: `ra-${i}-${(item.word || '').slice(0, 5)}` }));
-  localStorage.setItem(STORAGE_KEY_ROOTS, JSON.stringify(list));
-  return list;
+  return ROOTS_AFFIXES.map((item, i) => ({ ...item, id: `ra-${i}-${(item.word || '').slice(0, 5)}` }));
 }
 
 export function saveRootsAffixesList(list) {
-  localStorage.setItem(STORAGE_KEY_ROOTS, JSON.stringify(list));
+  // 不再保存到 localStorage
 }
 
 export function searchRootsAffixes(keyword, list) {

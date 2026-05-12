@@ -1,0 +1,28 @@
+[
+  {
+    "id": "track-001",
+    "title": "示例音乐 1",
+    "artist": "示例艺术家",
+    "album": "示例专辑",
+    "duration": "3:45",
+    "url": "/files/music/sample-track.json",
+    "genre": "流行",
+    "year": 2025,
+    "createdAt": "2025-01-15T10:00:00Z",
+    "playCount": 0,
+    "favorite": false
+  },
+  {
+    "id": "track-002",
+    "title": "示例音乐 2",
+    "artist": "另一位艺术家",
+    "album": "另一张专辑",
+    "duration": "4:20",
+    "url": "/files/music/sample-track.json",
+    "genre": "摇滚",
+    "year": 2024,
+    "createdAt": "2025-01-14T15:30:00Z",
+    "playCount": 5,
+    "favorite": true
+  }
+]

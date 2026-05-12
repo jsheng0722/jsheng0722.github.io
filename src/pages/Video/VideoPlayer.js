@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaExternalLinkAlt, FaTrash, FaClock } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaClock } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { useI18n } from '../../context/I18nContext';
@@ -10,25 +10,18 @@ function VideoPlayer() {
   const [filteredVideos, setFilteredVideos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('全部');
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newVideo, setNewVideo] = useState({
-    title: '',
-    url: '',
-    category: '教程',
-    description: '',
-    reason: ''
-  });
 
   const categories = ['全部', '教程', '娱乐', '音乐', '新闻', '科技', '教育', '生活', '其他'];
 
 
-  // 从localStorage加载用户收藏的视频
+  // 从静态文件加载视频数据
   useEffect(() => {
-    const loadUserVideos = () => {
+    const loadVideos = async () => {
       try {
-        const savedVideos = localStorage.getItem('userVideos');
-        if (savedVideos) {
-          const videos = JSON.parse(savedVideos);
+        const base = process.env.PUBLIC_URL || '';
+        const response = await fetch(`${base}/data/videos.json`);
+        if (response.ok) {
+          const videos = await response.json();
           setVideos(videos);
           setFilteredVideos(videos);
         } else {
@@ -42,7 +35,7 @@ function VideoPlayer() {
       }
     };
 
-    loadUserVideos();
+    loadVideos();
   }, []);
 
   // 更新筛选后的视频列表
@@ -64,188 +57,21 @@ function VideoPlayer() {
     }
   };
 
-  // 删除视频
-  const handleDeleteVideo = (videoId, e) => {
-    e.stopPropagation(); // 防止触发列表项的点击事件
-    if (window.confirm(t('VideoConfirmDelete'))) {
-      const updatedVideos = videos.filter(video => video.id !== videoId);
-      setVideos(updatedVideos);
-      setFilteredVideos(updatedVideos);
-      localStorage.setItem('userVideos', JSON.stringify(updatedVideos));
-    }
-  };
-
-  // 添加视频收藏
-  const handleAddVideo = () => {
-    if (!newVideo.title.trim() || !newVideo.url.trim()) {
-      alert(t('VideoRequiredTitleUrl'));
-      return;
-    }
-
-    const videoData = {
-      id: Date.now(),
-      title: newVideo.title.trim(),
-      url: newVideo.url.trim(),
-      category: newVideo.category,
-      description: newVideo.description.trim() || '',
-      reason: newVideo.reason.trim() || '',
-      addedDate: new Date().toISOString().split('T')[0]
-    };
-
-    // 保存到localStorage
-    const localVideos = JSON.parse(localStorage.getItem('userVideos') || '[]');
-    const updatedVideos = [videoData, ...localVideos];
-    localStorage.setItem('userVideos', JSON.stringify(updatedVideos));
-
-    // 更新状态
-    setVideos(updatedVideos);
-    setFilteredVideos(updatedVideos);
-
-    // 重置表单
-    setNewVideo({
-      title: '',
-      url: '',
-      category: '教程',
-      description: '',
-      reason: ''
-    });
-    setShowAddForm(false);
-
-    alert(t('VideoSaved'));
-  };
-
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 页面标题 */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
-                {t('VideoMyCollection')}
-              </h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">
-                {t('VideoSubtitle')}
-              </p>
-            </div>
-            <div className="flex space-x-3">
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-              >
-                ➕ {t('VideoAddFavorite')}
-              </button>
-            </div>
-          </div>
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+            {t('VideoMyCollection')}
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            {t('VideoSubtitle')}
+          </p>
         </div>
-
-        {/* 收藏视频表单 */}
-        {showAddForm && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t('VideoAddFormTitle')}</h2>
-              <button
-                onClick={() => setShowAddForm(false)}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* 视频标题 */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  视频标题 *
-                </label>
-                <input
-                  type="text"
-                  value={newVideo.title}
-                  onChange={(e) => setNewVideo(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('VideoTitlePlaceholder')}
-                />
-              </div>
-
-              {/* 视频链接 */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  视频链接 *
-                </label>
-                <input
-                  type="url"
-                  value={newVideo.url}
-                  onChange={(e) => setNewVideo(prev => ({ ...prev, url: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="https://www.youtube.com/watch?v=..."
-                />
-              </div>
-
-              {/* 分类 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  分类
-                </label>
-                <select
-                  value={newVideo.category}
-                  onChange={(e) => setNewVideo(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
-                >
-                  {categories.filter(cat => cat !== '全部').map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* 描述（可选） */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  描述（可选）
-                </label>
-                <textarea
-                  value={newVideo.description}
-                  onChange={(e) => setNewVideo(prev => ({ ...prev, description: e.target.value }))}
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('VideoDescPlaceholder')}
-                />
-              </div>
-
-              {/* 推荐理由（可选） */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  推荐理由（可选）
-                </label>
-                <textarea
-                  value={newVideo.reason}
-                  onChange={(e) => setNewVideo(prev => ({ ...prev, reason: e.target.value }))}
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('VideoReasonPlaceholder')}
-                />
-              </div>
-
-              {/* 操作按钮 */}
-              <div className="md:col-span-2 flex justify-end space-x-3 pt-4">
-                <button
-                  onClick={() => setShowAddForm(false)}
-                  className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  取消
-                </button>
-                <button
-                  onClick={handleAddVideo}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  收藏视频
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 搜索和筛选 */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
@@ -277,19 +103,11 @@ function VideoPlayer() {
               <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 {videos.length === 0 ? '还没有收藏任何视频' : '没有找到匹配的视频'}
               </h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-gray-500 dark:text-gray-400">
                 {videos.length === 0 
-                  ? '点击右上角的"收藏视频"按钮开始收藏您喜欢的视频吧！'
+                  ? '暂无视频收藏'
                   : '试试调整搜索条件或分类筛选'}
               </p>
-              {videos.length === 0 && (
-                <button
-                  onClick={() => setShowAddForm(true)}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  收藏第一个视频
-                </button>
-              )}
             </div>
           ) : (
             filteredVideos.map(video => (
@@ -298,18 +116,9 @@ function VideoPlayer() {
                 className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
                 <div className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex-1 line-clamp-2">
-                      {video.title}
-                    </h3>
-                    <button
-                      onClick={(e) => handleDeleteVideo(video.id, e)}
-                      className="ml-2 text-gray-400 hover:text-red-500 transition-colors"
-                      title={t('Delete')}
-                    >
-                      <FaTrash className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3 line-clamp-2">
+                    {video.title}
+                  </h3>
 
                   {video.description && (
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">

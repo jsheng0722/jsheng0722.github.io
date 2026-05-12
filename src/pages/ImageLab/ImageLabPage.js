@@ -59,6 +59,7 @@ function ImageLabPage() {
     setHistory([]);
     setOcrText('');
     return () => URL.revokeObjectURL(url);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFile?.id]);
 
   const addFiles = useCallback((newFiles) => {

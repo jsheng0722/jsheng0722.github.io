@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaSearch, FaCalendar, FaEye, FaHeart, FaComment, FaThumbsUp, FaShare, FaImage, FaVideo, FaCode, FaBook, FaTrash, FaFolderOpen } from 'react-icons/fa';
-import { ConfirmDialog } from '../../components/UI';
+import { FaSearch, FaCalendar, FaImage, FaVideo, FaCode, FaBook, FaFolderOpen } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { useI18n } from '../../context/I18nContext';
@@ -14,22 +13,6 @@ function BlogHome() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [selectedTag, setSelectedTag] = useState('全部');
-  const [showPublishForm, setShowPublishForm] = useState(false);
-  const [editingPost, setEditingPost] = useState(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [postToDelete, setPostToDelete] = useState(null);
-  const [newPost, setNewPost] = useState({
-    title: '',
-    content: '',
-    category: '生活',
-    customCategory: '',
-    tags: [],
-    mood: '😊',
-    location: '',
-    weather: '☀️',
-    images: [],
-    video: ''
-  });
 
   const categories = ['全部', '技术', '生活', '随笔', '教程', '新闻', '分享', '其他'];
   const tags = ['全部', 'React', 'JavaScript', 'Python', 'Web开发', 'AI', '设计', '学习', '工作', '生活'];
@@ -48,34 +31,18 @@ function BlogHome() {
       try {
         const response = await fetch('/data/blog-posts.json');
         const data = await response.json();
-        // 只显示已发布的动态，标记为远程动态
+        // 只显示已发布的动态
         const publishedPosts = data.filter(post => post.status === 'published').map(post => ({
           ...post,
           isLocal: false
         }));
         
-        // 加载本地存储的动态，标记为本地动态
-        const localPosts = (JSON.parse(localStorage.getItem('blogPosts') || '[]')).map(post => ({
-          ...post,
-          isLocal: true
-        }));
-        
-        // 合并数据，本地动态在前
-        const allPosts = [...localPosts, ...publishedPosts].sort((a, b) => 
-          new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time)
-        );
-        
-        setPosts(allPosts);
-        setFilteredPosts(allPosts);
+        setPosts(publishedPosts);
+        setFilteredPosts(publishedPosts);
       } catch (error) {
         console.error('加载动态数据失败:', error);
-        // 如果加载失败，只加载本地数据
-        const localPosts = (JSON.parse(localStorage.getItem('blogPosts') || '[]')).map(post => ({
-          ...post,
-          isLocal: true
-        }));
-        setPosts(localPosts);
-        setFilteredPosts(localPosts);
+        setPosts([]);
+        setFilteredPosts([]);
       }
     };
 
@@ -103,257 +70,6 @@ function BlogHome() {
 
     setFilteredPosts(filtered);
   }, [posts, selectedCategory, selectedTag, searchTerm]);
-
-  const handlePublishPost = () => {
-    if (!newPost.title.trim() || !newPost.content.trim()) {
-      alert(t('RequiredTitleAndContent'));
-      return;
-    }
-
-    const now = new Date();
-    const resolvedCategory = newPost.category === '其他' ? ((newPost.customCategory || '').trim() || '其他') : newPost.category;
-    const newPostData = {
-      id: Date.now(),
-      ...newPost,
-      category: resolvedCategory,
-      author: 'jihui',
-      date: now.toISOString().split('T')[0],
-      time: now.toTimeString().split(' ')[0].slice(0, 5),
-      readTime: Math.ceil(newPost.content.length / 200) + t('BlogReadTimeMin'),
-      views: 0,
-      likes: 0,
-      comments: 0,
-      cover: '/images/blog/default.jpg',
-      type: 'article',
-      images: Array.isArray(newPost.images) ? newPost.images : [],
-      video: (newPost.video || '').trim() || undefined,
-      status: 'published',
-      isLocal: true
-    };
-
-    // 保存到localStorage
-    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-    const updatedPosts = [newPostData, ...localPosts];
-    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
-
-    // 更新状态
-    setPosts(prev => [newPostData, ...prev]);
-    setFilteredPosts(prev => [newPostData, ...prev]);
-
-    // 重置表单
-    setNewPost({
-      title: '',
-      content: '',
-      category: '生活',
-      customCategory: '',
-      tags: [],
-      mood: '😊',
-      location: '',
-      weather: '☀️',
-      images: [],
-      video: ''
-    });
-    setShowPublishForm(false);
-
-    alert(t('PostPublished'));
-  };
-
-  const handleInputChange = (field, value) => {
-    setNewPost(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const addTag = (tag) => {
-    if (tag && !newPost.tags.includes(tag)) {
-      setNewPost(prev => ({
-        ...prev,
-        tags: [...prev.tags, tag]
-      }));
-    }
-  };
-
-  const removeTag = (tagToRemove) => {
-    setNewPost(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
-  // 开始编辑动态
-  const handleEditPost = (post) => {
-    if (!post.isLocal) {
-      alert(t('CannotEditOthers'));
-      return;
-    }
-    const catList = ['技术', '生活', '随笔', '教程', '新闻', '分享', '其他'];
-    const isOther = !catList.includes(post.category);
-    setEditingPost(post);
-    setNewPost({
-      title: post.title,
-      content: post.content,
-      category: isOther ? '其他' : post.category,
-      customCategory: isOther ? post.category : '',
-      tags: post.tags || [],
-      mood: post.mood || '😊',
-      location: post.location || '',
-      weather: post.weather || '☀️',
-      images: Array.isArray(post.images) ? post.images : [],
-      video: post.video || ''
-    });
-    setShowPublishForm(true);
-  };
-
-  // 保存编辑
-  const handleUpdatePost = () => {
-    if (!newPost.title.trim() || !newPost.content.trim()) {
-      alert(t('RequiredTitleAndContent'));
-      return;
-    }
-
-    const now = new Date();
-    const resolvedCategory = newPost.category === '其他' ? ((newPost.customCategory || '').trim() || '其他') : newPost.category;
-    const updatedPost = {
-      ...editingPost,
-      ...newPost,
-      category: resolvedCategory,
-      readTime: Math.ceil(newPost.content.length / 200) + t('BlogReadTimeMin'),
-      date: now.toISOString().split('T')[0],
-      time: now.toTimeString().split(' ')[0].slice(0, 5),
-      isLocal: true
-    };
-
-    // 更新localStorage
-    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-    const updatedPosts = localPosts.map(post => 
-      post.id === updatedPost.id ? updatedPost : post
-    );
-    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
-
-    // 更新状态
-    setPosts(prev => prev.map(post => 
-      post.id === updatedPost.id ? updatedPost : post
-    ));
-    setFilteredPosts(prev => prev.map(post => 
-      post.id === updatedPost.id ? updatedPost : post
-    ));
-
-    // 重置表单
-    setNewPost({
-      title: '',
-      content: '',
-      category: '生活',
-      customCategory: '',
-      tags: [],
-      mood: '😊',
-      location: '',
-      weather: '☀️',
-      images: [],
-      video: ''
-    });
-    setEditingPost(null);
-    setShowPublishForm(false);
-
-    alert(t('PostUpdated'));
-  };
-
-  // 删除动态
-  const handleDeletePost = (post) => {
-    if (!post.isLocal) {
-      alert(t('CannotDeleteOthers'));
-      return;
-    }
-    setPostToDelete(post);
-    setShowDeleteDialog(true);
-  };
-
-  // 确认删除
-  const confirmDelete = () => {
-    if (!postToDelete) return;
-
-    // 从localStorage删除
-    const localPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-    const updatedPosts = localPosts.filter(post => post.id !== postToDelete.id);
-    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
-
-    // 更新状态
-    setPosts(prev => prev.filter(post => post.id !== postToDelete.id));
-    setFilteredPosts(prev => prev.filter(post => post.id !== postToDelete.id));
-
-    setShowDeleteDialog(false);
-    setPostToDelete(null);
-    alert(t('PostDeleted'));
-  };
-
-  // 取消编辑
-  const cancelEdit = () => {
-    setEditingPost(null);
-    setNewPost({
-      title: '',
-      content: '',
-      category: '生活',
-      customCategory: '',
-      tags: [],
-      mood: '😊',
-      location: '',
-      weather: '☀️',
-      images: [],
-      video: ''
-    });
-    setShowPublishForm(false);
-  };
-
-  const handleImageFiles = (e) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
-    if (files.length === 0) return;
-    e.target.value = '';
-    const maxSize = 2 * 1024 * 1024; // 单张建议 2MB 内
-    const next = (index, acc) => {
-      if (index >= files.length) {
-        if (acc.length) setNewPost(prev => ({ ...prev, images: [...(prev.images || []), ...acc] }));
-        return;
-      }
-      const file = files[index];
-      if (file.size > maxSize && !window.confirm(t('BlogImageLargeConfirm').replace('{name}', file.name).replace('{size}', (file.size / 1024 / 1024).toFixed(1)))) {
-        next(index + 1, acc);
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const dataUrl = ev.target?.result;
-        const nextAcc = dataUrl ? [...acc, dataUrl] : acc;
-        next(index + 1, nextAcc);
-      };
-      reader.readAsDataURL(file);
-    };
-    next(0, []);
-  };
-
-  const handleVideoFile = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      alert(t('VideoUploadTip'));
-      e.target.value = '';
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result;
-      if (dataUrl) setNewPost(prev => ({ ...prev, video: dataUrl }));
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-  };
-
-  const removeImageAt = (index) => {
-    setNewPost(prev => ({
-      ...prev,
-      images: (prev.images || []).filter((_, i) => i !== index)
-    }));
-  };
 
 
   const getTypeIcon = (type) => {
@@ -387,7 +103,7 @@ function BlogHome() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
       <Header />
 
       {/* 右侧固定工具栏：不收缩，作品集大按钮常显 */}
@@ -404,7 +120,7 @@ function BlogHome() {
       </div>
 
       {/* 主内容区：艺术字绝对定位在内容左侧外侧，不占流；中间正文保持 max-w-4xl 全宽 */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+      <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
         {/* 艺术字：绝对定位在内容区左侧外侧，不参与布局 */}
         <div
           className="absolute right-full top-8 mr-6 sm:mr-8 md:mr-10 whitespace-nowrap"
@@ -461,220 +177,8 @@ function BlogHome() {
               <option key={tag} value={tag}>{getTagDisplayName(tag)}</option>
             ))}
             </select>
-
-            {/* 发布动态按钮 */}
-            <button 
-              onClick={() => setShowPublishForm(true)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
-            >
-              <FaEdit className="w-4 h-4" />
-              {t('PublishPost')}
-            </button>
           </div>
         </div>
-
-        {/* 发布/编辑动态表单 */}
-        {showPublishForm && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {editingPost ? t('EditPost') : t('NewPost')}
-              </h2>
-              <button
-                onClick={cancelEdit}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {/* 标题 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('TitleRequired')}
-                </label>
-                <input
-                  type="text"
-                  value={newPost.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('TitlePlaceholder')}
-                />
-              </div>
-
-              {/* 内容 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('ContentRequired')}
-                </label>
-                <textarea
-                  value={newPost.content}
-                  onChange={(e) => handleInputChange('content', e.target.value)}
-                  rows={6}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={t('ContentPlaceholder')}
-                />
-              </div>
-
-              {/* 图片 / 视频：小图标上传 */}
-              <div className="flex items-center gap-2 flex-wrap">
-                <label className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" title={t('BlogUploadImage')}>
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageFiles} />
-                  <FaImage className="w-4 h-4" />
-                </label>
-                <label className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors" title={t('BlogUploadVideo')}>
-                  <input type="file" accept="video/*" className="hidden" onChange={handleVideoFile} />
-                  <FaVideo className="w-4 h-4" />
-                </label>
-                {(newPost.images || []).length > 0 && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('BlogSelectedImagesCount').replace('{count}', (newPost.images || []).length)}</span>
-                )}
-                {newPost.video && (
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{t('BlogSelectedVideo')}</span>
-                )}
-              </div>
-              {(newPost.images || []).length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1">
-                  {(newPost.images || []).map((url, index) => (
-                    <div key={index} className="relative">
-                      <img src={url} alt="" className="w-14 h-14 object-cover rounded border border-gray-200 dark:border-gray-600" onError={(e) => { e.target.style.display = 'none'; }} />
-                      <button type="button" onClick={() => removeImageAt(index)} className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white rounded-full text-xs leading-none flex items-center justify-center hover:bg-red-600">×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* 标签：已选标签在上，输入框固定在下 */}
-              <div className="py-3 px-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/80 text-sm space-y-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide shrink-0">{t('BlogTagsLabel')}</span>
-                  {newPost.tags.map(tag => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-md text-xs font-medium"
-                    >
-                      #{tag}
-                      <button type="button" onClick={() => removeTag(tag)} className="hover:text-blue-900 dark:hover:text-blue-100 leading-none opacity-70 hover:opacity-100" aria-label={t('BlogRemoveTag')}>×</button>
-                    </span>
-                  ))}
-                </div>
-                <div className="flex items-center gap-2 pt-0.5">
-                  <input
-                    type="text"
-                    id="blog-tag-input"
-                    placeholder={t('BlogTagInputPlaceholder')}
-                    className="w-36 py-1.5 px-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const v = e.target.value.trim();
-                        if (v) { addTag(v); e.target.value = ''; }
-                      }
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const input = document.getElementById('blog-tag-input');
-                      if (input?.value?.trim()) { addTag(input.value.trim()); input.value = ''; }
-                    }}
-                    className="py-1.5 px-2.5 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors"
-                  >
-                    {t('BlogAdd')}
-                  </button>
-                </div>
-              </div>
-
-              {/* 分类 / 心情 / 位置 / 天气：一行，位置不填则留空；分类选「其他」可自定义 */}
-              <div className="flex flex-wrap items-center gap-3 py-3 px-4 rounded-xl bg-gray-50 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700/80 text-sm">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogCategoryLabel')}</span>
-                  <select
-                    value={newPost.category}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      handleInputChange('category', v);
-                      if (v !== '其他') handleInputChange('customCategory', '');
-                    }}
-                    className="py-1.5 pl-2 pr-6 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400 text-sm appearance-none cursor-pointer"
-                  >
-                    {categories.filter(cat => cat !== '全部').map(category => (
-                      <option key={category} value={category}>{getCategoryDisplayName(category)}</option>
-                    ))}
-                  </select>
-                  {newPost.category === '其他' && (
-                    <input
-                      type="text"
-                      value={newPost.customCategory || ''}
-                      onChange={(e) => handleInputChange('customCategory', e.target.value)}
-                      placeholder={t('BlogCustomCategoryPlaceholder')}
-                      className="w-24 py-1.5 px-2 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
-                    />
-                  )}
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogMoodLabel')}</span>
-                  <select
-                    value={newPost.mood}
-                    onChange={(e) => handleInputChange('mood', e.target.value)}
-                    className="py-1.5 pl-2 pr-7 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm cursor-pointer"
-                  >
-                    <option value="😊">😊</option>
-                    <option value="😢">😢</option>
-                    <option value="😴">😴</option>
-                    <option value="🤔">🤔</option>
-                    <option value="🎉">🎉</option>
-                    <option value="😌">😌</option>
-                    <option value="🤩">🤩</option>
-                    <option value="😤">😤</option>
-                  </select>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogLocationLabel')}</span>
-                  <input
-                    type="text"
-                    value={newPost.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    className="w-24 py-1.5 px-2.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm placeholder-gray-400"
-                    placeholder={t('BlogLocationPlaceholder')}
-                  />
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray-400 dark:text-gray-500 text-xs font-medium uppercase tracking-wide">{t('BlogWeatherLabel')}</span>
-                  <select
-                    value={newPost.weather}
-                    onChange={(e) => handleInputChange('weather', e.target.value)}
-                    className="py-1.5 pl-2 pr-7 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-500/50 text-sm cursor-pointer"
-                  >
-                    <option value="☀️">☀️</option>
-                    <option value="☁️">☁️</option>
-                    <option value="🌧️">🌧️</option>
-                    <option value="❄️">❄️</option>
-                    <option value="🌩️">🌩️</option>
-                    <option value="🌤️">🌤️</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* 操作按钮 */}
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  onClick={cancelEdit}
-                  className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {t('BlogCancel')}
-                </button>
-                <button
-                  onClick={editingPost ? handleUpdatePost : handlePublishPost}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  {editingPost ? t('BlogUpdatePost') : t('BlogPublishPostButton')}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* 动态列表 */}
         <div className="space-y-6">
@@ -718,25 +222,6 @@ function BlogHome() {
                       {getTypeIcon(post.type)}
                     </div>
                   </div>
-                  {/* 编辑和删除按钮（仅本地动态显示） */}
-                  {post.isLocal && (
-                    <div className="flex items-center space-x-2 mt-2">
-                      <button
-                        onClick={() => handleEditPost(post)}
-                        className="px-3 py-1 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-lg transition-colors flex items-center gap-1"
-                      >
-                        <FaEdit className="w-3 h-3" />
-                        {t('BlogEdit')}
-                      </button>
-                      <button
-                        onClick={() => handleDeletePost(post)}
-                        className="px-3 py-1 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-colors flex items-center gap-1"
-                      >
-                        <FaTrash className="w-3 h-3" />
-                        {t('BlogDelete')}
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 {/* 心情和标题 */}
@@ -810,36 +295,7 @@ function BlogHome() {
                 </div>
               </div>
 
-              {/* 互动区域 */}
-              <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-6">
-                    <button className="flex items-center space-x-2 text-gray-500 hover:text-red-500 transition-colors">
-                      <FaHeart className="w-4 h-4" />
-                      <span>{post.likes}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors">
-                      <FaComment className="w-4 h-4" />
-                      <span>{post.comments}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 text-gray-500 hover:text-green-500 transition-colors">
-                      <FaShare className="w-4 h-4" />
-                      <span>{t('BlogShare')}</span>
-                    </button>
-                  </div>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center space-x-1">
-                      <FaEye className="w-3 h-3" />
-                      <span>{post.views}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <FaThumbsUp className="w-3 h-3" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
+              </article>
           ))}
         </div>
 
@@ -850,28 +306,13 @@ function BlogHome() {
             <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
               {searchTerm ? t('BlogNoResults') : t('BlogNoPostsYet')}
             </h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-6">
+            <p className="text-gray-500 dark:text-gray-400">
               {searchTerm ? t('BlogNoResultsHint') : t('BlogNoPostsHint')}
             </p>
           </div>
         )}
         </div>
       </main>
-
-      {/* 删除确认对话框 */}
-      <ConfirmDialog
-        isOpen={showDeleteDialog}
-        onConfirm={confirmDelete}
-        onCancel={() => {
-          setShowDeleteDialog(false);
-          setPostToDelete(null);
-        }}
-        title={t('ConfirmDeletePost')}
-        message={`${postToDelete?.title ? `"${postToDelete.title}"` : ''} ${t('ConfirmDeletePostMessage')}`}
-        confirmText={t('Delete')}
-        cancelText={t('Cancel')}
-        type="danger"
-      />
 
       <Footer />
     </div>

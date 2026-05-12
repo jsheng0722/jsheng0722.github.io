@@ -1,0 +1,20 @@
+{
+  "id": "vocab-sample-001",
+  "word": "ephemeral",
+  "phonetic": "/ɪˈfemərəl/",
+  "translation": "短暂的，瞬息的",
+  "partOfSpeech": "形容词",
+  "level": "advanced",
+  "frequency": 3,
+  "tags": ["文学", "哲学", "GRE"],
+  "definition": "lasting for a very short time",
+  "example": "Fame is ephemeral.",
+  "exampleCN": "名声是短暂的。",
+  "synonyms": ["temporary", "transient", "fleeting"],
+  "antonyms": ["permanent", "eternal"],
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z",
+  "mastery": 0.85,
+  "reviewCount": 12,
+  "nextReview": "2024-01-20T10:00:00Z"
+}

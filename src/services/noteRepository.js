@@ -14,24 +14,12 @@ export function getUserNotesFromLocalStorage() {
   }
 }
 
-export function setUserNotesToLocalStorage(notes) {
-  localStorage.setItem(NOTE_STORAGE_KEYS.userNotes, JSON.stringify(notes));
-}
-
 export function getDeletedNoteIdsSet() {
-  try {
-    return new Set(JSON.parse(localStorage.getItem(NOTE_STORAGE_KEYS.deletedIds) || '[]'));
-  } catch {
-    return new Set();
-  }
+  return new Set();
 }
 
 export function recordDeletedNoteId(idStr) {
-  try {
-    const deletedIds = JSON.parse(localStorage.getItem(NOTE_STORAGE_KEYS.deletedIds) || '[]');
-    if (!deletedIds.includes(idStr)) deletedIds.push(idStr);
-    localStorage.setItem(NOTE_STORAGE_KEYS.deletedIds, JSON.stringify(deletedIds));
-  } catch (_) {}
+  // 不再保存到 localStorage
 }
 
 /**
@@ -50,7 +38,6 @@ export async function fetchUserNotesFromApi() {
         ? data
         : null;
     if (!Array.isArray(arr)) return null;
-    setUserNotesToLocalStorage(arr);
     return arr;
   } catch (e) {
     console.warn('[noteRepository] 远程笔记列表拉取失败', e);

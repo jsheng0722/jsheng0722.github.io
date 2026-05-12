@@ -23,18 +23,9 @@ function Calendar() {
   const month = today.getMonth() + 1;
   const date = today.getDate();
 
-  // 从localStorage加载事件
-  useEffect(() => {
-    const savedEvents = localStorage.getItem('calendarEvents');
-    if (savedEvents) {
-      setEvents(JSON.parse(savedEvents));
-    }
-  }, []);
-
-  // 保存事件到localStorage
+  // 保存事件
   const saveEvents = (newEvents) => {
     setEvents(newEvents);
-    localStorage.setItem('calendarEvents', JSON.stringify(newEvents));
   };
 
   // 请求通知权限
@@ -54,12 +45,7 @@ function Calendar() {
           const reminderTime = new Date(eventDateTime.getTime() - event.reminderMinutes * 60000);
           
           if (now >= reminderTime && now <= eventDateTime) {
-            // 检查是否已经提醒过
-            const reminderKey = `reminder_${event.id}_${event.date}_${event.time}`;
-            if (!localStorage.getItem(reminderKey)) {
-              showNotification(event);
-              localStorage.setItem(reminderKey, 'true');
-            }
+            showNotification(event);
           }
         }
       });

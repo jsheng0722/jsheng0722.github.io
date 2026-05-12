@@ -1,0 +1,41 @@
+[
+  {
+    "id": "product-001",
+    "name": "示例商品 1",
+    "description": "这是一个示例商品描述",
+    "price": 99.99,
+    "rating": 4.5,
+    "category": "电子产品",
+    "status": "收藏中",
+    "tags": ["电子", "科技"],
+    "addedDate": "2025-01-15T10:00:00Z",
+    "image": "https://via.placeholder.com/150",
+    "reason": "看起来很有用"
+  },
+  {
+    "id": "product-002",
+    "name": "示例商品 2",
+    "description": "另一个示例商品",
+    "price": 199.99,
+    "rating": 4.8,
+    "category": "服装",
+    "status": "已购买",
+    "tags": ["时尚", "服装"],
+    "addedDate": "2025-01-14T15:30:00Z",
+    "image": "https://via.placeholder.com/150",
+    "reason": "很喜欢这个款式"
+  },
+  {
+    "id": "product-003",
+    "name": "示例商品 3",
+    "description": "第三个示例商品",
+    "price": 49.99,
+    "rating": 4.2,
+    "category": "图书",
+    "status": "考虑中",
+    "tags": ["书籍", "学习"],
+    "addedDate": "2025-01-13T09:00:00Z",
+    "image": "https://via.placeholder.com/150",
+    "reason": "想学习新技能"
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "word-001",
+    "word": "example",
+    "phonetic": "/ɪɡˈzɑːmpl/",
+    "meaning": "例子，实例",
+    "partOfSpeech": "n.",
+    "sentence": "This is a good example.",
+    "sentenceCn": "这是一个很好的例子。",
+    "tags": ["基础", "名词"],
+    "level": 1,
+    "addedDate": "2025-01-15T10:00:00Z",
+    "reviewCount": 0,
+    "lastReviewDate": null
+  },
+  {
+    "id": "word-002",
+    "word": "vocabulary",
+    "phonetic": "/voʊˈkæbjəleri/",
+    "meaning": "词汇，词汇量",
+    "partOfSpeech": "n.",
+    "sentence": "Building vocabulary is important for learning English.",
+    "sentenceCn": "积累词汇对学习英语很重要。",
+    "tags": ["学习", "名词"],
+    "level": 2,
+    "addedDate": "2025-01-14T15:30:00Z",
+    "reviewCount": 2,
+    "lastReviewDate": "2025-01-16T09:00:00Z"
+  },
+  {
+    "id": "word-003",
+    "word": "practice",
+    "phonetic": "/ˈpræktɪs/",
+    "meaning": "练习，实践",
+    "partOfSpeech": "v.",
+    "sentence": "Practice makes perfect.",
+    "sentenceCn": "熟能生巧。",
+    "tags": ["动词", "谚语"],
+    "level": 1,
+    "addedDate": "2025-01-13T09:00:00Z",
+    "reviewCount": 5,
+    "lastReviewDate": "2025-01-17T10:00:00Z"
+  }
+]

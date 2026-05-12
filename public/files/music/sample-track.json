@@ -1,0 +1,15 @@
+{
+  "id": "sample-track-001",
+  "title": "示例音乐",
+  "artist": "示例艺术家",
+  "album": "示例专辑",
+  "duration": "3:45",
+  "url": "/files/music/sample.mp3",
+  "coverImage": "/files/music/covers/sample.jpg",
+  "genre": "流行",
+  "year": 2025,
+  "createdAt": "2025-01-15T10:00:00Z",
+  "updatedAt": "2025-01-15T10:00:00Z",
+  "playCount": 0,
+  "favorite": false
+}

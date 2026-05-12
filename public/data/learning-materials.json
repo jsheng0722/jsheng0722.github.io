@@ -1,0 +1,29 @@
+[
+  {
+    "id": "material-001",
+    "title": "React 学习指南",
+    "type": "course",
+    "filePath": "https://react.dev/",
+    "description": "React 官方学习文档",
+    "tags": ["React", "前端", "学习"],
+    "addedDate": "2025-01-15T10:00:00Z"
+  },
+  {
+    "id": "material-002",
+    "title": "JavaScript 高级教程",
+    "type": "doc",
+    "filePath": "/files/documents/javascript-advanced.md",
+    "description": "JavaScript 高级概念详解",
+    "tags": ["JavaScript", "前端", "进阶"],
+    "addedDate": "2025-01-14T15:30:00Z"
+  },
+  {
+    "id": "material-003",
+    "title": "算法入门课程",
+    "type": "video",
+    "filePath": "https://www.youtube.com/",
+    "description": "算法入门视频教程",
+    "tags": ["算法", "编程", "入门"],
+    "addedDate": "2025-01-13T09:00:00Z"
+  }
+]

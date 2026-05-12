@@ -1,0 +1,512 @@
+{
+  "lastUpdated": "2026-05-12T09:15:13.554Z",
+  "totalFiles": 16,
+  "categories": {
+    "documents": {
+      "name": "Documents",
+      "path": "/files/documents",
+      "icon": "file-alt",
+      "color": "blue",
+      "subcategories": [
+        "markdown",
+        "word",
+        "pdf",
+        "excel",
+        "text"
+      ]
+    },
+    "media": {
+      "name": "Media",
+      "path": "/files/media",
+      "icon": "media",
+      "color": "purple",
+      "subcategories": [
+        "image",
+        "audio",
+        "video"
+      ]
+    },
+    "data": {
+      "name": "Data",
+      "path": "/files/data",
+      "icon": "database",
+      "color": "green",
+      "subcategories": [
+        "json",
+        "csv",
+        "xml"
+      ]
+    },
+    "code": {
+      "name": "Code",
+      "path": "/files/code",
+      "icon": "code",
+      "color": "gray",
+      "subcategories": [
+        "javascript",
+        "typescript",
+        "python",
+        "css",
+        "html"
+      ]
+    },
+    "other": {
+      "name": "Other",
+      "path": "/files/other",
+      "icon": "folder",
+      "color": "yellow",
+      "subcategories": [
+        "unknown"
+      ]
+    }
+  },
+  "files": [
+    {
+      "id": "code-sample-script-1778577313549",
+      "name": "sample-script",
+      "filename": "sample-script.js",
+      "path": "/files/code/javascript/sample-script.js",
+      "type": "code",
+      "category": "code",
+      "subcategory": "code",
+      "tags": [],
+      "createdAt": "2026-05-11T10:13:14.294Z",
+      "updatedAt": "2026-05-11T10:13:14.393Z",
+      "size": 1056,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "code-data_processor-1778577313549",
+      "name": "data_processor",
+      "filename": "data_processor.py",
+      "path": "/files/code/python/data_processor.py",
+      "type": "code",
+      "category": "code",
+      "subcategory": "code",
+      "tags": [],
+      "createdAt": "2026-05-11T10:13:32.798Z",
+      "updatedAt": "2026-05-11T10:13:32.863Z",
+      "size": 1766,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-expenses-1778577313549",
+      "name": "expenses",
+      "filename": "expenses.csv",
+      "path": "/files/data/csv/expenses.csv",
+      "type": "csv",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:13:26.008Z",
+      "updatedAt": "2026-05-11T10:13:26.112Z",
+      "size": 249,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-accounting-example-1778577313550",
+      "name": "accounting-example.json",
+      "filename": "accounting-example.json",
+      "path": "/files/data/json/accounting-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:38.901Z",
+      "updatedAt": "2026-05-11T10:26:38.989Z",
+      "size": 221,
+      "metadata": {
+        "title": "accounting-example.json",
+        "originalData": {
+          "id": "acc-sample-001",
+          "type": "expense",
+          "amount": 35.5,
+          "category": "餐饮",
+          "date": "2024-01-15",
+          "note": "午餐外卖",
+          "createdAt": "2024-01-15T12:30:00Z",
+          "updatedAt": "2024-01-15T12:30:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-learning-materials-example-1778577313550",
+      "name": "React 学习指南",
+      "filename": "learning-materials-example.json",
+      "path": "/files/data/json/learning-materials-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:47.902Z",
+      "updatedAt": "2026-05-11T10:26:47.954Z",
+      "size": 408,
+      "metadata": {
+        "title": "React 学习指南",
+        "originalData": {
+          "id": "material-sample-001",
+          "title": "React 学习指南",
+          "type": "course",
+          "filePath": "/files/documents/pdf/react-guide.pdf",
+          "description": "全面的 React 学习资源，包含基础到高级的完整教程",
+          "tags": [
+            "React",
+            "前端",
+            "JavaScript"
+          ],
+          "author": "社区贡献",
+          "source": "官方文档",
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-product-example-1778577313550",
+      "name": "无线蓝牙耳机",
+      "filename": "product-example.json",
+      "path": "/files/data/json/product-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:27:08.742Z",
+      "updatedAt": "2026-05-11T10:27:08.847Z",
+      "size": 488,
+      "metadata": {
+        "title": "无线蓝牙耳机",
+        "originalData": {
+          "id": "product-sample-001",
+          "name": "无线蓝牙耳机",
+          "description": "高品质音效，超长续航",
+          "price": 299,
+          "originalPrice": 399,
+          "currency": "CNY",
+          "category": "电子产品",
+          "brand": "示例品牌",
+          "image": "/files/media/images/products/headphone.jpg",
+          "stock": 156,
+          "sold": 2341,
+          "rating": 4.8,
+          "reviewCount": 523,
+          "tags": [
+            "耳机",
+            "蓝牙",
+            "无线"
+          ],
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-shop-example-1778577313550",
+      "name": "智能手表",
+      "filename": "shop-example.json",
+      "path": "/files/data/json/shop-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:27:12.319Z",
+      "updatedAt": "2026-05-11T10:27:12.387Z",
+      "size": 381,
+      "metadata": {
+        "title": "智能手表",
+        "originalData": {
+          "id": "shop-item-sample-001",
+          "name": "智能手表",
+          "description": "健康监测，运动追踪",
+          "price": 899,
+          "currency": "CNY",
+          "category": "智能穿戴",
+          "image": "/files/media/images/shop/smartwatch.jpg",
+          "stock": 89,
+          "sold": 1234,
+          "rating": 4.6,
+          "isFavorite": true,
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-user-profile-1778577313551",
+      "name": "John Doe",
+      "filename": "user-profile.json",
+      "path": "/files/data/json/user-profile.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:13:18.425Z",
+      "updatedAt": "2026-05-11T10:13:18.491Z",
+      "size": 476,
+      "metadata": {
+        "title": "John Doe",
+        "originalData": {
+          "id": "user-001",
+          "username": "john_doe",
+          "email": "john@example.com",
+          "name": "John Doe",
+          "avatar": "/files/media/images/avatars/john.jpg",
+          "bio": "热爱编程和写作",
+          "location": "中国北京",
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-06-20T15:30:00Z",
+          "settings": {
+            "theme": "dark",
+            "language": "zh-CN",
+            "notifications": true
+          },
+          "stats": {
+            "notesCount": 42,
+            "filesCount": 156,
+            "wordsCount": 12580
+          }
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-video-example-1778577313551",
+      "name": "React 入门教程",
+      "filename": "video-example.json",
+      "path": "/files/data/json/video-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:58.947Z",
+      "updatedAt": "2026-05-11T10:26:59.033Z",
+      "size": 542,
+      "metadata": {
+        "title": "React 入门教程",
+        "originalData": {
+          "id": "video-sample-001",
+          "title": "React 入门教程",
+          "url": "https://www.youtube.com/watch?v=Ke90Tje7VS0",
+          "thumbnail": "/files/media/images/video-thumbnails/react-intro.jpg",
+          "duration": "45:32",
+          "category": "教程",
+          "tags": [
+            "React",
+            "前端",
+            "入门"
+          ],
+          "channel": "YouTube",
+          "channelName": "FreeCodeCamp",
+          "description": "从零开始学习 React，适合初学者",
+          "addedAt": "2024-01-15T10:00:00Z",
+          "viewCount": 125000,
+          "favorite": true,
+          "progress": 0.65,
+          "lastWatchTime": "2024-01-18T15:30:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "data-vocabulary-example-1778577313551",
+      "name": "vocabulary-example.json",
+      "filename": "vocabulary-example.json",
+      "path": "/files/data/json/vocabulary-example.json",
+      "type": "json",
+      "category": "data",
+      "subcategory": "data",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:36.152Z",
+      "updatedAt": "2026-05-11T10:26:36.209Z",
+      "size": 616,
+      "metadata": {
+        "title": "vocabulary-example.json",
+        "originalData": {
+          "id": "vocab-sample-001",
+          "word": "ephemeral",
+          "phonetic": "/ɪˈfemərəl/",
+          "translation": "短暂的，瞬息的",
+          "partOfSpeech": "形容词",
+          "level": "advanced",
+          "frequency": 3,
+          "tags": [
+            "文学",
+            "哲学",
+            "GRE"
+          ],
+          "definition": "lasting for a very short time",
+          "example": "Fame is ephemeral.",
+          "exampleCN": "名声是短暂的。",
+          "synonyms": [
+            "temporary",
+            "transient",
+            "fleeting"
+          ],
+          "antonyms": [
+            "permanent",
+            "eternal"
+          ],
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z",
+          "mastery": 0.85,
+          "reviewCount": 12,
+          "nextReview": "2024-01-20T10:00:00Z"
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "documents-blog-example-1778577313552",
+      "name": "blog-example",
+      "filename": "blog-example.md",
+      "path": "/files/documents/markdown/blog-example.md",
+      "type": "markdown",
+      "category": "documents",
+      "subcategory": "documents",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:54.399Z",
+      "updatedAt": "2026-05-11T10:26:54.478Z",
+      "size": 1079,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 103,
+        "readingTime": "1 min"
+      }
+    },
+    {
+      "id": "documents-note-example-1778577313552",
+      "name": "note-example",
+      "filename": "note-example.md",
+      "path": "/files/documents/markdown/note-example.md",
+      "type": "markdown",
+      "category": "documents",
+      "subcategory": "documents",
+      "tags": [],
+      "createdAt": "2026-05-11T10:26:31.086Z",
+      "updatedAt": "2026-05-11T10:26:31.142Z",
+      "size": 919,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 111,
+        "readingTime": "1 min"
+      }
+    },
+    {
+      "id": "documents-sample-note-1778577313553",
+      "name": "sample-note",
+      "filename": "sample-note.md",
+      "path": "/files/documents/markdown/notes/sample-note.md",
+      "type": "markdown",
+      "category": "documents",
+      "subcategory": "documents",
+      "tags": [],
+      "createdAt": "2026-05-10T10:18:52.739Z",
+      "updatedAt": "2026-05-11T02:32:00.954Z",
+      "size": 511,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 69,
+        "readingTime": "1 min"
+      }
+    },
+    {
+      "id": "documents-vocabulary-guide-1778577313553",
+      "name": "vocabulary-guide",
+      "filename": "vocabulary-guide.md",
+      "path": "/files/documents/markdown/vocabulary-guide.md",
+      "type": "markdown",
+      "category": "documents",
+      "subcategory": "documents",
+      "tags": [],
+      "createdAt": "2026-05-11T10:27:19.968Z",
+      "updatedAt": "2026-05-11T10:27:20.041Z",
+      "size": 1335,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 180,
+        "readingTime": "1 min"
+      }
+    },
+    {
+      "id": "media-sample-track-1778577313554",
+      "name": "示例音乐",
+      "filename": "sample-track.json",
+      "path": "/files/music/sample-track.json",
+      "type": "json",
+      "category": "media",
+      "subcategory": "music",
+      "tags": [],
+      "createdAt": "2026-05-11T02:40:36.605Z",
+      "updatedAt": "2026-05-11T02:40:36.647Z",
+      "size": 378,
+      "metadata": {
+        "title": "示例音乐",
+        "originalData": {
+          "id": "sample-track-001",
+          "title": "示例音乐",
+          "artist": "示例艺术家",
+          "album": "示例专辑",
+          "duration": "3:45",
+          "url": "/files/music/sample.mp3",
+          "coverImage": "/files/music/covers/sample.jpg",
+          "genre": "流行",
+          "year": 2025,
+          "createdAt": "2025-01-15T10:00:00Z",
+          "updatedAt": "2025-01-15T10:00:00Z",
+          "playCount": 0,
+          "favorite": false
+        },
+        "author": "Unknown",
+        "wordCount": 0,
+        "readingTime": null
+      }
+    },
+    {
+      "id": "other-README-1778577313554",
+      "name": "README",
+      "filename": "README.md",
+      "path": "/files/README.md",
+      "type": "markdown",
+      "category": "other",
+      "subcategory": "README.md",
+      "tags": [],
+      "createdAt": "2026-05-10T10:17:51.384Z",
+      "updatedAt": "2026-05-11T02:32:01.046Z",
+      "size": 2170,
+      "metadata": {
+        "author": "Unknown",
+        "wordCount": 267,
+        "readingTime": "2 min"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "product-sample-001",
+  "name": "无线蓝牙耳机",
+  "description": "高品质音效，超长续航",
+  "price": 299.00,
+  "originalPrice": 399.00,
+  "currency": "CNY",
+  "category": "电子产品",
+  "brand": "示例品牌",
+  "image": "/files/media/images/products/headphone.jpg",
+  "stock": 156,
+  "sold": 2341,
+  "rating": 4.8,
+  "reviewCount": 523,
+  "tags": ["耳机", "蓝牙", "无线"],
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}

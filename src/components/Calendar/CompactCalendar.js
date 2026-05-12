@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaPlus, FaBell } from 'react-icons/fa';
 
 function CompactCalendar() {
@@ -16,18 +16,9 @@ function CompactCalendar() {
   const month = today.getMonth() + 1;
   const date = today.getDate();
 
-  // 从localStorage加载事件
-  useEffect(() => {
-    const savedEvents = localStorage.getItem('calendarEvents');
-    if (savedEvents) {
-      setEvents(JSON.parse(savedEvents));
-    }
-  }, []);
-
   // 保存事件
   const saveEvents = (newEvents) => {
     setEvents(newEvents);
-    localStorage.setItem('calendarEvents', JSON.stringify(newEvents));
   };
 
   // 获取指定日期的事件

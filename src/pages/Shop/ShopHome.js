@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaHeart, FaExternalLinkAlt, FaStar, FaSearch, FaPlus } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaHeart, FaExternalLinkAlt, FaStar, FaSearch } from 'react-icons/fa';
 import Header from '../../components/Layout/Header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { useI18n } from '../../context/I18nContext';
@@ -20,16 +19,16 @@ function ShopHome() {
   };
 
   useEffect(() => {
-    // 从localStorage加载用户收藏的商品
-    const loadUserProducts = () => {
+    // 从静态文件加载商品数据
+    const loadProducts = async () => {
       try {
-        const savedProducts = localStorage.getItem('userProducts');
-        if (savedProducts) {
-          const products = JSON.parse(savedProducts);
+        const base = process.env.PUBLIC_URL || '';
+        const response = await fetch(`${base}/data/products.json`);
+        if (response.ok) {
+          const products = await response.json();
           setProducts(products);
           setFilteredProducts(products);
         } else {
-          // 如果没有保存的商品，显示空状态
           setProducts([]);
           setFilteredProducts([]);
         }
@@ -40,7 +39,7 @@ function ShopHome() {
       }
     };
 
-    loadUserProducts();
+    loadProducts();
   }, []);
 
   useEffect(() => {
@@ -158,14 +157,7 @@ function ShopHome() {
               <option value="date">{t('ShopSortByDate')}</option>
             </select>
 
-            {/* 添加商品按钮 */}
-            <Link
-              to="/shop/add"
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
-            >
-              <FaPlus className="w-4 h-4" />
-              {t('ShopAddProduct')}
-            </Link>
+
           </div>
         </div>
 
@@ -320,15 +312,6 @@ function ShopHome() {
             <p className="text-gray-500 dark:text-gray-400 mb-4">
               {products.length === 0 ? t('ShopNoDataHint') : t('ShopNoResultHint')}
             </p>
-            {products.length === 0 && (
-              <Link
-                to="/shop/add"
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
-              >
-                <FaPlus className="w-4 h-4" />
-                {t('ShopAddFirst')}
-              </Link>
-            )}
           </div>
         )}
       </main>

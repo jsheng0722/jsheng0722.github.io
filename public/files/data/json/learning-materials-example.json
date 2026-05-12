@@ -1,0 +1,12 @@
+{
+  "id": "material-sample-001",
+  "title": "React 学习指南",
+  "type": "course",
+  "filePath": "/files/documents/pdf/react-guide.pdf",
+  "description": "全面的 React 学习资源，包含基础到高级的完整教程",
+  "tags": ["React", "前端", "JavaScript"],
+  "author": "社区贡献",
+  "source": "官方文档",
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}

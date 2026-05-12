@@ -12,7 +12,6 @@ import { useI18n } from '../../context/I18nContext';
 import { isApiConfigured } from '../../config/dataBackend';
 import {
   getUserNotesFromLocalStorage,
-  setUserNotesToLocalStorage,
   upsertUserNoteRemote,
 } from '../../services/noteRepository';
 
@@ -131,8 +130,6 @@ function NoteEditor() {
       } else {
         existingNotes.push(noteData);
       }
-
-      setUserNotesToLocalStorage(existingNotes);
 
       let remoteOk = true;
       if (isApiConfigured()) {

@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { FaPlus, FaTrash, FaWallet, FaArrowDown, FaArrowUp, FaCalendarAlt, FaExpandAlt, FaCompressAlt } from 'react-icons/fa';
+import { FaWallet, FaArrowDown, FaArrowUp, FaCalendarAlt, FaExpandAlt, FaCompressAlt } from 'react-icons/fa';
 import PageLayout from '../../components/Layout/PageLayout';
 import { Card, Pagination, StatCard, EmptyState, Loading, DataExportImport } from '../../components/UI';
-import { addEntry, getEntriesByMonth, getEntriesByYear, deleteEntry } from '../../utils/accountingDB';
+import { getEntriesByMonth, getEntriesByYear } from '../../utils/accountingDB';
 import { useI18n } from '../../context/I18nContext';
-
-const INCOME_CATEGORIES = ['工资', '奖金', '兼职', '理财', '其他'];
-const EXPENSE_CATEGORIES = ['餐饮', '交通', '购物', '娱乐', '住房', '医疗', '教育', '其他'];
 
 function getCurrentYearMonth() {
   const d = new Date();
@@ -44,13 +41,6 @@ function AccountingPage() {
   const [exportScope, setExportScope] = useState('month');
   const [loading, setLoading] = useState(true);
   const printRef = React.useRef(null);
-  const [form, setForm] = useState({
-    type: 'expense',
-    amount: '',
-    category: EXPENSE_CATEGORIES[0],
-    date: new Date().toISOString().slice(0, 10),
-    note: '',
-  });
 
   const [calYear, calMonth] = yearMonth.split('-').map(Number);
 
@@ -115,85 +105,22 @@ function AccountingPage() {
 
   const exportData = React.useMemo(() => {
     if (exportScope === 'day') {
-      const d = selectedDate || form.date;
+      const d = selectedDate || new Date().toISOString().slice(0, 10);
       return d ? entries.filter((e) => e.date === d) : [];
     }
     if (exportScope === 'year') return entriesYear;
     return entries;
-  }, [exportScope, selectedDate, form.date, entries, entriesYear]);
+  }, [exportScope, selectedDate, entries, entriesYear]);
 
   const exportDataForCSV = React.useMemo(
     () => exportData.map((e) => ({ type: e.type === 'income' ? '收入' : '支出', amount: e.amount, category: e.category, date: e.date, note: e.note || '' })),
     [exportData]
   );
 
-  const exportScopeLabel = exportScope === 'day' ? (selectedDate || form.date) + ' 当天' : exportScope === 'month' ? yearMonth + ' 当月' : calYear + ' 当年';
-  const exportFilename = `记账-${exportScope === 'day' ? selectedDate || form.date : exportScope === 'month' ? yearMonth : calYear}.csv`;
-
-  const handleImport = (rows) => {
-    const typeMap = { 收入: 'income', 支出: 'expense', income: 'income', expense: 'expense' };
-    let added = 0;
-    const next = () => {
-      if (added >= rows.length) {
-        loadEntries();
-        if (exportScope === 'year') getEntriesByYear(calYear).then(setEntriesYear);
-        window.alert(t('AccImported').replace('{n}', String(added)));
-        return;
-      }
-      const row = rows[added];
-      const type = typeMap[row.类型 || row.type] || (row.类型 === '收入' ? 'income' : 'expense');
-      const amount = Number(String(row.金额 || row.amount).trim()) || 0;
-      const date = String(row.日期 || row.date || '').trim() || new Date().toISOString().slice(0, 10);
-      const category = String(row.分类 || row.category || '').trim() || (type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]);
-      const note = String(row.备注 || row.note || '').trim();
-      addEntry({ type, amount, category, date, note }).then(() => { added++; next(); }).catch(() => next());
-    };
-    next();
-  };
+  const exportScopeLabel = exportScope === 'day' ? (selectedDate || new Date().toISOString().slice(0, 10)) + ' 当天' : exportScope === 'month' ? yearMonth + ' 当月' : calYear + ' 当年';
+  const exportFilename = `记账-${exportScope === 'day' ? selectedDate || new Date().toISOString().slice(0, 10) : exportScope === 'month' ? yearMonth : calYear}.csv`;
 
   const calendarDays = getCalendarDays(yearMonth);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const payload = {
-      type: form.type,
-      amount: form.amount,
-      category: form.category,
-      date: form.date,
-      note: form.note.trim(),
-    };
-    if (!payload.amount || Number(payload.amount) <= 0) return;
-    const addedDate = payload.date;
-    const addedYearMonth = addedDate.slice(0, 7);
-    addEntry(payload)
-      .then(() => {
-        setForm((f) => ({ ...f, amount: '', note: '' }));
-        setYearMonth(addedYearMonth);
-        setSelectedDate(addedDate);
-        setLoading(true);
-        return getEntriesByMonth(addedYearMonth);
-      })
-      .then((list) => {
-        setEntries(list);
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  };
-
-  const handleDelete = (id) => {
-    if (!window.confirm(t('AccConfirmDelete'))) return;
-    deleteEntry(id).then(loadEntries).catch(console.error);
-  };
-
-  const setFormType = (type) => {
-    setForm((f) => ({
-      ...f,
-      type,
-      category: type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0],
-    }));
-  };
-
-  const categories = form.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
 
   return (
     <PageLayout className="max-w-6xl mx-auto px-4 py-8">
@@ -243,7 +170,6 @@ function AccountingPage() {
               data={exportDataForCSV}
               columns={ACCOUNTING_COLUMNS}
               filename={exportFilename}
-              onImport={handleImport}
               printTitle={`记账 ${exportScopeLabel}`}
               printRef={printRef}
               scopeLabel={exportScopeLabel}
@@ -309,89 +235,6 @@ function AccountingPage() {
             />
           </div>
 
-          {/* Add form */}
-          <Card className="mb-6">
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
-              <FaPlus className="w-4 h-4" />
-              {t('AccAddOne')}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="flex flex-wrap gap-3">
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setFormType('income')}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      form.type === 'income'
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                    }`}
-                  >
-                    {t('AccIncome')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormType('expense')}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      form.type === 'expense'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                    }`}
-                  >
-                    {t('AccExpense')}
-                  </button>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    placeholder={t('AccAmountPlaceholder')}
-                    value={form.amount}
-                    onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                    className="w-24 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
-                  />
-                  <select
-                    value={form.category}
-                    onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                    className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
-                  >
-                    {categories.map((c) => (
-                      <option key={c} value={c}>{c}</option>
-                    ))}
-                  </select>
-<input
-                type="date"
-                value={form.date}
-                onChange={(e) => {
-                  const d = e.target.value;
-                  setForm((f) => ({ ...f, date: d }));
-                  setSelectedDate(d);
-                  if (d) {
-                    const ym = d.slice(0, 7);
-                    if (ym !== yearMonth) setYearMonth(ym);
-                  }
-                }}
-                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
-              />
-                  <input
-                    type="text"
-                    placeholder={t('AccNotePlaceholder')}
-                    value={form.note}
-                    onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
-                    className="flex-1 min-w-[80px] rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100"
-                  />
-                  <button
-                    type="submit"
-                    className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
-                  >
-                    {t('AccAdd')}
-                  </button>
-                </div>
-              </div>
-            </form>
-          </Card>
-
           {/* Entry list */}
           <Card>
             <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
@@ -455,14 +298,6 @@ function AccountingPage() {
                       >
                         {entry.type === 'income' ? '+' : '-'}¥{Number(entry.amount).toFixed(2)}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(entry.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                        title={t('Delete')}
-                      >
-                        <FaTrash className="w-3.5 h-3.5" />
-</button>
                 </div>
               </li>
             ))}
@@ -518,7 +353,6 @@ function AccountingPage() {
                     type="button"
                     onClick={() => {
                       setSelectedDate(dateStr);
-                      setForm((f) => ({ ...f, date: dateStr }));
                     }}
                     className={`rounded flex flex-col items-center justify-start text-left w-full transition-colors ${
                       calendarExpanded ? 'aspect-square p-0.5 min-h-[36px]' : 'h-6 min-h-[24px] justify-center'

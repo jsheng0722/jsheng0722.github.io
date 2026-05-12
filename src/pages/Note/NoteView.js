@@ -12,7 +12,6 @@ import { useI18n } from '../../context/I18nContext';
 import { isApiConfigured } from '../../config/dataBackend';
 import {
   getUserNotesFromLocalStorage,
-  setUserNotesToLocalStorage,
   recordDeletedNoteId,
   deleteUserNoteRemote,
 } from '../../services/noteRepository';
@@ -62,9 +61,6 @@ function NoteView() {
       return;
     }
     const idStr = String(note.id);
-    const userNotes = getUserNotesFromLocalStorage();
-    const updatedNotes = userNotes.filter(n => String(n.id) !== idStr);
-    setUserNotesToLocalStorage(updatedNotes);
     recordDeletedNoteId(idStr);
 
     if (isApiConfigured()) {

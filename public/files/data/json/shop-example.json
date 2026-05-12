@@ -1,0 +1,15 @@
+{
+  "id": "shop-item-sample-001",
+  "name": "智能手表",
+  "description": "健康监测，运动追踪",
+  "price": 899.00,
+  "currency": "CNY",
+  "category": "智能穿戴",
+  "image": "/files/media/images/shop/smartwatch.jpg",
+  "stock": 89,
+  "sold": 1234,
+  "rating": 4.6,
+  "isFavorite": true,
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}

@@ -50,7 +50,8 @@ function Header() {
               { label: t('Accounting'), path: '/accounting' },
               { label: t('Architecture'), path: '/architecture' },
               { label: t('PDF'), path: '/pdf' },
-              { label: t('ImageLab'), path: '/image-lab' }
+              { label: t('ImageLab'), path: '/image-lab' },
+              { label: t('ProductsFeatureVisualization'), path: '/visualization' }
             ]
           }
         ]} />

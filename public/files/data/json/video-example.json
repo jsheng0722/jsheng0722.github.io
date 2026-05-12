@@ -1,0 +1,17 @@
+{
+  "id": "video-sample-001",
+  "title": "React 入门教程",
+  "url": "https://www.youtube.com/watch?v=Ke90Tje7VS0",
+  "thumbnail": "/files/media/images/video-thumbnails/react-intro.jpg",
+  "duration": "45:32",
+  "category": "教程",
+  "tags": ["React", "前端", "入门"],
+  "channel": "YouTube",
+  "channelName": "FreeCodeCamp",
+  "description": "从零开始学习 React，适合初学者",
+  "addedAt": "2024-01-15T10:00:00Z",
+  "viewCount": 125000,
+  "favorite": true,
+  "progress": 0.65,
+  "lastWatchTime": "2024-01-18T15:30:00Z"
+}
